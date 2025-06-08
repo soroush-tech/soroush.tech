@@ -7,13 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-.env
-prod.env
-build
+
 
 # Editor directories and files
 .vscode/*
@@ -29,7 +23,16 @@ build
 
 
 # Covrage
-coverage/*
+coverage
 
-#build
+# Build
+node_modules
 build
+dist
+dist-ssr
+*.local
+.env
+prod.env
+
+# Test
+mockServiceWorker.js
