@@ -2,10 +2,13 @@ import { useState } from 'react'
 import reactLogo from 'src/assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useUser } from './hooks/useUser.ts'
 
 function App() {
   const [count, setCount] = useState(0)
-
+  const { data, isLoading, error } = useUser()
+  if (isLoading) return <p>Loading...</p>
+  if (error) return <p>Error: {(error as Error).message}</p>
   return (
     <>
       <div>
