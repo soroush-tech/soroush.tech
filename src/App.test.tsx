@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { queryWrapper as wrapper } from 'src/test/utils/queryWrapper.tsx'
 import App from './App'
 
