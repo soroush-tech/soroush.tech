@@ -18,11 +18,14 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:silent": "vitest run --silent",
+    "test:coverage:ui": "vitest run --coverage && open coverage/index.html",
+    "test:silent": "vitest run --silent --no-watch",
     "prepare": "husky"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.80.2",
+    "axios": "^1.9.0",
+    "query-string": "^9.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
