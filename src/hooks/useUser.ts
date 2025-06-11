@@ -1,13 +1,12 @@
-// src/hooks/useUser.ts
-import { useQuery } from '@tanstack/react-query'
+import { useCustomQuery } from 'src/hooks/useCustomQuery.ts'
 
 export function useUser() {
-  return useQuery({
+  const config = {
+    url: `/api/user`,
+    method: 'get',
+  }
+  return useCustomQuery({
     queryKey: ['user'],
-    queryFn: async () => {
-      const res = await fetch('/api/user')
-      if (!res.ok) throw new Error('Network response was not ok')
-      return res.json()
-    },
+    config,
   })
 }

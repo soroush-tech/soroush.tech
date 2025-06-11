@@ -1,7 +1,16 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { queryWrapper as wrapper } from 'src/test/utils/queryWrapper.tsx'
 import App from './App'
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  vi.resetModules()
+})
+afterEach(() => {
+  vi.resetModules()
+  vi.restoreAllMocks()
+})
 
 describe('App', () => {
   it('shows loading state initially', async () => {
@@ -77,5 +86,12 @@ describe('App', () => {
         screen.getByText(/Click on the Vite and React logos to learn more/i)
       ).toBeInTheDocument()
     })
+  })
+
+  it.skip('displays error message when API request fails', async () => {
+    // Re-import App to use the mocked hook
+    const { default: AppWithMockedHook } = await import('./App')
+    render(<AppWithMockedHook />, { wrapper })
+    expect(screen.getByText('Error: Test error message')).toBeInTheDocument()
   })
 })
