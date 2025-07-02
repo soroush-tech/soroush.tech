@@ -1,4 +1,5 @@
 {
+  "plugins": ["@emotion/css-prettifier"],
   "semi": false,
   "singleQuote": true,
   "trailingComma": "es5",
