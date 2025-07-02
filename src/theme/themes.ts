@@ -1,5 +1,5 @@
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
-import { greenSteel, midnight, scarletRed, solarEmber, tealGreen } from 'src/theme/colors'
+import { greenSteel, midnight, neutral, scarletRed, solarEmber, tealGreen } from 'src/theme/colors'
 // interface FaceFont {
 //   regular: string
 //   light: string
@@ -7,20 +7,13 @@ import { greenSteel, midnight, scarletRed, solarEmber, tealGreen } from 'src/the
 //   bold: string
 //   black: string
 // }
-
-interface Shadow {
-  boxShadow: string
-}
-
 export interface Theme {
   name: string
-  shadows: Shadow[]
-  palette: {
-    default: string
-    primary: string
-    secondary: string
+  space: {
+    auto: string
+  } & {
+    [key in SpaceUnits]: number | string
   }
-  spacing: (arg0: SpaceUnits) => string
   border: {
     light?: string
     primary: string
@@ -40,6 +33,12 @@ export interface Theme {
     primary: string
     secondary?: string
     paper: string
+  }
+  colors: {
+    default: string
+    primary: string
+    secondary: string
+    [key: string]: string
   }
   fonts: {
     body: string
@@ -70,13 +69,35 @@ export const fonts = {
 }
 
 const baseTheme = {
-  name: 'unknown',
+  name: 'base',
   shadows,
   spacing,
   radii,
   fontSizes,
   lineHeights,
   fonts,
+  space: {
+    0: 0,
+    0.5: spacing(0.5),
+    1: spacing(1),
+    1.5: spacing(1.5),
+    2: spacing(2),
+    3: spacing(3),
+    4: spacing(4),
+    5: spacing(5),
+    6: spacing(6),
+    7: spacing(7),
+    8: spacing(8),
+    auto: 'auto',
+  },
+  // get space() {
+  //   return new Proxy(
+  //     {},
+  //     {
+  //       get: (_, unit: SpaceUnits) => spacing(unit),
+  //     }
+  //   )
+  // },
 }
 
 export const light: Theme = {
@@ -89,30 +110,23 @@ export const light: Theme = {
     secondary: '#e9e9e9',
     paper: '#ffffff',
   },
-  palette: {
-    default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
-  },
-
-  // text_dark: {
-  //   inherit: 'rgba(0, 0, 0, .5)',
-  //   initial: '#f5f5f5',
-  //   primary: '#000000',
-  //   secondary: '#333333',
-  //   error: '#ff0000',
-  //   success: '#19B988',
-  // },
   text: {
     inherit: 'rgba(0, 0, 0, .5)',
     initial: '#333',
-    primary: '#fff',
+    primary: neutral[100],
     secondary: '#666',
     error: scarletRed[500],
     success: tealGreen[500],
   },
   border: {
-    primary: '#c0c0c0',
+    light: neutral[300],
+    primary: neutral[500],
+    dark: neutral[700],
+  },
+  colors: {
+    default: '#e0e0e0',
+    primary: greenSteel[900],
+    secondary: solarEmber[600],
   },
 }
 
@@ -126,11 +140,6 @@ export const dark: Theme = {
     secondary: '#1A262C',
     paper: '#000000',
   },
-  palette: {
-    default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
-  },
   text: {
     inherit: 'rgba(255, 255, 255, 0.87)',
     initial: '#fff',
@@ -141,6 +150,11 @@ export const dark: Theme = {
   },
   border: {
     primary: '#4c565b',
+  },
+  colors: {
+    default: '#e0e0e0',
+    primary: greenSteel[900],
+    secondary: solarEmber[600],
   },
 }
 
