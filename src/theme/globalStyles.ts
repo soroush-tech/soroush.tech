@@ -5,6 +5,7 @@ const globalStyles = (theme: Theme) => css`
   *::before,
   *::after {
     box-sizing: border-box;
+    //display: flex;
   }
 
   html,
