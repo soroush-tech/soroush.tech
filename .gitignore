@@ -36,3 +36,5 @@ prod.env
 
 # Test
 mockServiceWorker.js
+*storybook.log
+storybook-static
