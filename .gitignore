@@ -24,6 +24,8 @@ lerna-debug.log*
 
 # Covrage
 coverage
+playwright-report
+
 
 # Build
 node_modules
@@ -38,3 +40,4 @@ prod.env
 mockServiceWorker.js
 *storybook.log
 storybook-static
+test-results
