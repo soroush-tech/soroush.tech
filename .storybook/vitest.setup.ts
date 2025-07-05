@@ -1,25 +1,19 @@
-import '@testing-library/jest-dom/vitest'
-import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview'
-import { beforeAll, afterEach, afterAll, vi } from 'vitest'
-import { server } from '../src/test/mocks/server'
+import { beforeAll, afterAll, vi } from 'vitest'
 import { setProjectAnnotations } from '@storybook/react-vite'
+import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview'
 import * as projectAnnotations from './preview'
 
-const annotations = setProjectAnnotations([a11yAddonAnnotations, projectAnnotations])
+// Apply story configuration
+// More info at: https://storybook.js.org/docs/api/portable-stories/portable-stories-vitest#setprojectannotations
+const annotations = setProjectAnnotations([projectAnnotations, a11yAddonAnnotations])
 
 beforeAll(() => {
-  server.listen()
   vi.clearAllMocks()
   vi.resetModules()
   annotations.beforeAll()
 })
 
 afterAll(() => {
-  server.close()
   vi.resetModules()
   vi.restoreAllMocks()
-})
-
-afterEach(() => {
-  server.resetHandlers()
 })
