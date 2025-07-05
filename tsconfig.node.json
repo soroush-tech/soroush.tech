@@ -21,7 +21,10 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"]
-  // Rule: his global vitest variable is prohibited.
-  //  "types": ["vitest/globals"]
+  "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"],
+  "types": [
+    "@vitest/browser/providers/playwright"
+    // Rule: his global vitest variable is prohibited.
+    // "vitest/globals", "@playwright/test"
+  ]
 }
