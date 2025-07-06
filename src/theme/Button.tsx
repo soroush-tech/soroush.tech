@@ -18,7 +18,7 @@ import {
 } from 'styled-system'
 import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import type { Theme } from 'styled-system' // Make sure your theme is typed somewhere
-import type { BoxProps } from 'src/theme/Box.tsx'
+import type { ViewProps } from 'src/theme/View.tsx'
 
 // Create the prop forwarding logic
 const shouldForwardProp = createShouldForwardProp([...props])
@@ -85,7 +85,7 @@ const buttonVariants = variant({
 
 const styleProps = compose(space, layout, border, typography, position)
 
-export const BaseBox = styled('div', { shouldForwardProp })<BoxProps>(
+export const BaseBox = styled('div', { shouldForwardProp })<ViewProps>(
   space,
   layout,
   color,
