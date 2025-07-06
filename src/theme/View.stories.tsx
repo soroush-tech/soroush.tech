@@ -73,9 +73,9 @@ export const Default: Story = {}
 
 export const WithPaddingAndBg: Story = {
   args: {
-    p: '24px',
+    p: 2,
     bg: '#f0f0f0',
-    borderRadius: '12px',
+    borderRadius: 'sm',
     children: 'Padded container with background',
   },
 }
@@ -96,7 +96,7 @@ export const Positioned: Story = {
     position: 'relative',
     height: '150px',
     children: (
-      <View position="absolute" top="20px" left="20px" p="8px" bg="lightblue" border="primary">
+      <View position="absolute" top="20px" left="20px" p={1} bg="lightblue" border="primary">
         Absolutely positioned inner view
       </View>
     ),
