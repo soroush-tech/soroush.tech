@@ -7,6 +7,18 @@ import { greenSteel, midnight, neutral, scarletRed, solarEmber, tealGreen } from
 //   bold: string
 //   black: string
 // }
+// export type FontWeights = {
+//   thin?: number
+//   extraLight?: number
+//   light?: number
+//   normal?: number
+//   medium?: number
+//   semiBold?: number
+//   bold?: number
+//   extraBold?: number
+//   black?: number
+// }
+
 export interface Theme {
   name: string
   space: {
@@ -45,11 +57,19 @@ export interface Theme {
   }
   lineHeights: string[]
   fontSizes: number[]
-  radii: {
-    sm: string
-    md: string
-    lg: string
-  }
+  radii: Record<'sm' | 'md' | 'lg', string>
+  fontWeights: Record<
+    | 'thin'
+    | 'extraLight'
+    | 'light'
+    | 'normal'
+    | 'medium'
+    | 'semiBold'
+    | 'bold'
+    | 'extraBold'
+    | 'black',
+    number
+  >
 }
 export type Light = typeof light
 export type Dark = typeof dark
@@ -68,6 +88,18 @@ export const fonts = {
   body: `system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif, 'BlinkMacSystemFont', 'Helvetica Neue', Arial, sans-serif;`,
 }
 
+const fontWeights = {
+  thin: 100,
+  extraLight: 200,
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semiBold: 600,
+  bold: 700,
+  extraBold: 800,
+  black: 900,
+}
+
 const baseTheme = {
   name: 'base',
   shadows,
@@ -75,6 +107,7 @@ const baseTheme = {
   radii,
   fontSizes,
   lineHeights,
+  fontWeights,
   fonts,
   space: {
     0: 0,
