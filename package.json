@@ -2,6 +2,7 @@
   "name": "soroush.tech",
   "description": "Soroush.tech blog",
   "private": true,
+  "homepage": "https://soroush.tech",
   "author": {
     "name": "Masoud Soroush",
     "email": "masoud@soroush.tech"
@@ -29,7 +30,8 @@
     "build": "tsc -b && vite build",
     "build:storybook": "storybook build",
     "preview": "vite preview",
-    "preview:storybook": "npx serve storybook-static"
+    "preview:storybook": "npx serve storybook-static",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -83,6 +85,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-storybook": "^9.0.15",
+    "gh-pages": "^6.3.0",
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "jest-environment-jsdom": "^29.7.0",
