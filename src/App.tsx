@@ -1,29 +1,48 @@
-import { useState } from 'react'
-import reactLogo from 'src/assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Logo from '/soroush.svg'
+import { Flex } from 'src/theme/Flex.tsx'
+import { Typography } from 'src/theme/Typography.tsx'
+import Email from 'src/assets/email.svg'
+import LinkedIn from 'src/assets/linkedin.svg'
+import GitHub from 'src/assets/github.svg'
+import { View } from 'src/theme/View.tsx'
 
 function App() {
-  const [count, setCount] = useState(0)
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      bg="primary"
+      minHeight="100vh"
+      px={2}
+      py={3}
+    >
+      <Flex justifyContent="center" alignItems="center" minHeight="80vh">
+        <a href="https://soroush.tech">
+          <img src={Logo} alt="Soroush logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+        <Typography as="h1">SOROUSH™</Typography>
+
+        <Typography fontSize={5}>Coming soon.</Typography>
+        <Typography>Under construction, but worth the wait.</Typography>
+      </Flex>
+      <Flex justifyContent="space-between" alignItems="center" flexDirection="row">
+        <View m={0.5}>
+          <a href="mailto:masoud@soroush.tech">
+            <img width={36} height={36} src={Email} alt="Soroush Email" />
+          </a>
+        </View>
+        <View m={0.5}>
+          <a href="https://www.linkedin.com/in/masoud-soroush-4139b152" target="_blank">
+            <img width={36} height={36} src={LinkedIn} alt="Soroush LinkedIn" />
+          </a>
+        </View>
+        <View m={0.5}>
+          <a href="https://github.com/soroush-tech/soroush.tech">
+            <img width={36} height={36} src={GitHub} alt="Soroush GitHub" />
+          </a>
+        </View>
+      </Flex>
+    </Flex>
   )
 }
 
