@@ -1,5 +1,8 @@
 name: Continuous Deployment to GitHub Pages
 on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
   push:
     branches:
       - main
