@@ -1,12 +1,12 @@
 name: Continuous Deployment to GitHub Pages
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Continuous Integration']
+    types:
+      - completed
+    branches:
+      - main
 permissions:
   contents: read
   pages: write
