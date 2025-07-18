@@ -10,6 +10,13 @@ const config: StorybookConfig = {
     '@storybook/addon-vitest',
     '@storybook/addon-themes',
   ],
+  viteFinal: async (config) => {
+    config.optimizeDeps = {
+      ...(config.optimizeDeps || {}),
+      include: ['react', 'react/jsx-dev-runtime'],
+    }
+    return config
+  },
   framework: {
     name: '@storybook/react-vite',
     options: {},
