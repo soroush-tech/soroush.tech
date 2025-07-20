@@ -27,7 +27,12 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       ...prettierConfig.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'prettier/prettier': 'error',
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
     },
     settings: {
       react: {
