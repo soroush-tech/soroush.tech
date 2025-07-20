@@ -89,5 +89,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Run Lint
+        run: ${{ steps.detect-package-manager.outputs.runner }} run lint
+
       - name: Run Test
         run: ${{ steps.detect-package-manager.outputs.runner }} run test
