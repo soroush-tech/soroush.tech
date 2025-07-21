@@ -2,7 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "dependencyDashboard": true,
-  "packageManager": "pnpm",
   "rebaseWhen": "conflicted",
   "prHourlyLimit": 2,
   "labels": ["dependencies"],
