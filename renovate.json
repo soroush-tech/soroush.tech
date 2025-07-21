@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "packageManager": "pnpm",
+  "rebaseWhen": "conflicted",
+  "prHourlyLimit": 2,
+  "labels": ["dependencies"],
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "devDependencies"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Safe minor/patch updates"
+    },
+    {
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "groupName": "React packages"
+    },
+    {
+      "matchPackagePatterns": ["^@emotion", "^styled-system"],
+      "groupName": "Style packages"
+    },
+    {
+      "matchPackagePatterns": [
+        "^vitest",
+        "^@vitest/",
+        "^@testing-library",
+        "^@types/jest",
+        "^jest",
+        "^playwright",
+        "^jsdom"
+      ],
+      "groupName": "Testing stack"
+    },
+    {
+      "matchPackagePatterns": ["^storybook", "^@storybook/"],
+      "groupName": "Storybook stack"
+    },
+    {
+      "matchPackagePatterns": ["^eslint", "^@typescript-eslint", "^prettier", "^pretty-quick"],
+      "groupName": "Linting and formatting"
+    }
+  ]
+}
