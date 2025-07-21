@@ -1,54 +1,97 @@
-# React + TypeScript + Vite
+# soroush.tech
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Personal website of Masoud Soroush**  
+[https://soroush.tech](https://soroush.tech)
 
-Currently, two official plugins are available:
+This web page is my digital home, where I share my blog posts, showcase my portfolio, and write about web development, tools, performance, design systems, and anything I find worth sharing as I grow and learn.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Built with **React 19** and **Vite**
+- Styling with **@emotion/styled** and **styled-system**
+- State/data fetching with **TanStack Query**
+- End-to-end testing via **Playwright**
+- Unit testing with **Vitest**
+- Storybook integration for UI components
+- Linting with **ESLint** and **Prettier**
+- Mocking with **MSW**
+- Continuous deployment via **GitHub Pages**
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🚀 Getting Started
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This will start the development server on `http://localhost:5173`.
 
-```js
-// xxx.eslint.config.xx.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## 📦 Build
+
+```bash
+pnpm build
 ```
+
+To preview the production build:
+
+```bash
+pnpm preview
+```
+
+---
+
+## 🧪 Testing
+
+### Unit Tests
+
+```bash
+pnpm test
+```
+
+Or with UI:
+
+```bash
+pnpm test:ui
+```
+
+### End-to-End Tests
+
+```bash
+pnpm test:e2e
+```
+
+### Storybook
+
+```bash
+pnpm storybook
+```
+
+Build Storybook:
+
+```bash
+pnpm build:storybook
+```
+
+---
+
+## 📄 License
+
+Custom License – see [LICENSE](./LICENSE.md) file for details.
+
+---
+
+## 📬 Contact
+
+**Masoud Soroush**
+Email: [masoud@soroush.tech](mailto:masoud@soroush.tech)
+Website: [soroush.tech](https://soroush.tech)
+
+---
+
+> This project is a personal space to experiment, write, and share ideas. Contributions and feedback are welcome if you find something useful or inspiring.
