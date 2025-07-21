@@ -94,3 +94,31 @@ jobs:
 
       - name: Run Test
         run: ${{ steps.detect-package-manager.outputs.runner }} run test
+
+      - name: Run Unit Tests with Coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: ${{ steps.detect-package-manager.outputs.runner }} run test:coverage:unit
+
+      - name: Upload Unit Test Coverage
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          slug: soroush-tech/soroush.tech
+          flags: unit
+          name: Unit
+
+      - name: Run Storybook Tests with Coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: ${{ steps.detect-package-manager.outputs.runner }} run test:coverage:storybook
+
+      - name: Upload Coverage to Codecov
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          slug: soroush-tech/soroush.tech
+          flags: storybook
+          name: Storybook

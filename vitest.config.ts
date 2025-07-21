@@ -18,6 +18,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'lcov'],
       exclude: [
         '**/*.d.ts',
         '**/*.config.{ts,js}',
@@ -26,6 +27,8 @@ export default defineConfig({
         'build/**/*',
         'dist/**/*',
         'public/**/*',
+        '.storybook/**/*',
+        'storybook-static/**/*',
       ],
     },
     projects: [
