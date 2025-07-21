@@ -81,6 +81,20 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: ${{ steps.detect-package-manager.outputs.manager }}
 
+      - name: Read Playwright version from package.json
+        id: detect-playwright
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').devDependencies?.['playwright'] || require('./package.json').dependencies?.['playwright']")
+          echo "PLAYWRIGHT_VERSION=${VERSION#^}" >> $GITHUB_ENV
+
+      - name: Restore cache - Playwright binaries
+        uses: actions/cache/restore@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
       - name: Install dependencies
         env:
           CI: true
@@ -88,6 +102,13 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+
+      - name: Save cache - Playwright binaries
+        if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
       - name: Run Lint
         run: ${{ steps.detect-package-manager.outputs.runner }} run lint
