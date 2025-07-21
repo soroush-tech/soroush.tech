@@ -25,6 +25,8 @@
     "test:e2e:debug": "playwright test --debug",
     "test:silent": "vitest run --silent --no-watch",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:storybook": "vitest run --project=storybook --coverage",
+    "test:coverage:unit": "vitest run --project=unit --coverage ",
     "test:coverage:ui": "vitest run --coverage --project=unit && open coverage/index.html",
     "storybook": "storybook dev -p 6006",
     "build": "tsc -b && vite build",

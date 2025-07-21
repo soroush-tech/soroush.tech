@@ -1,0 +1,17 @@
+comment:
+  layout: 'header, diff, flags, files,  components'
+  behavior: default # Add a comment on every PR with updated coverage
+  require_changes: false # Always show comment, even if no coverage change
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        branches:
+          - '!main'
+  individual_components:
+    - component_id: theme
+      name: Theme
+      paths:
+        - src/theme/**

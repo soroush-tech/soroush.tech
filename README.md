@@ -1,3 +1,6 @@
+[![Unit Tests Coverage](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=unit&label=unit)](https://codecov.io/github/soroush-tech/soroush.tech?flag=unit)
+[![Storybook Coverage](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=storybook&label=mss)](https://codecov.io/github/soroush-tech/soroush.tech?flag=storybook)
+
 # soroush.tech
 
 **Personal website of Masoud Soroush**  
