@@ -6,42 +6,58 @@
   "prHourlyLimit": 2,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
+  "lockFileMaintenance": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
       "groupName": "devDependencies"
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "Safe minor/patch updates"
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor updates",
+      "automerge": false
     },
     {
-      "matchPackagePatterns": ["^react", "^@types/react"],
+      "matchUpdateTypes": ["pin"],
+      "groupName": "pin updates",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["/^react/", "/^@types\\/react/"],
       "groupName": "React packages"
     },
     {
-      "matchPackagePatterns": ["^@emotion", "^styled-system"],
+      "matchPackageNames": ["/^@emotion/", "/^styled-system/"],
       "groupName": "Style packages"
     },
     {
-      "matchPackagePatterns": [
-        "^vitest",
-        "^@vitest/",
-        "^@testing-library",
-        "^@types/jest",
-        "^jest",
-        "^playwright",
-        "^jsdom"
+      "matchPackageNames": [
+        "/^vitest/",
+        "/^@vitest\\//",
+        "/^@testing-library/",
+        "/^@types\\/jest/",
+        "/^jest/",
+        "/^playwright/",
+        "/^jsdom/"
       ],
       "groupName": "Testing stack"
     },
     {
-      "matchPackagePatterns": ["^storybook", "^@storybook/"],
+      "matchPackageNames": ["/^storybook/", "/^@storybook\\//"],
       "groupName": "Storybook stack"
     },
     {
-      "matchPackagePatterns": ["^eslint", "^@typescript-eslint", "^prettier", "^pretty-quick"],
+      "matchPackageNames": ["/^eslint/", "/^@typescript-eslint/", "/^prettier/", "/^pretty-quick/"],
       "groupName": "Linting and formatting"
+    },
+    {
+      "matchUpdateTypes": ["digest", "patch"],
+      "groupName": "Safe digest/patch updates",
+      "automerge": true,
+      "automergeType": "pr"
     }
-  ]
+  ],
+  "platformAutomerge": true
 }
