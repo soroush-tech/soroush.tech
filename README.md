@@ -12,7 +12,7 @@ This web page is my digital home, where I share my blog posts, showcase my portf
 
 ## ✨ Features
 
-- Built with **React 19** and **Vite**
+- Built with **React 19** and **Vite** using an **Isomorphic** strategy
 - Styling with **@emotion/styled** and **styled-system**
 - State/data fetching with **TanStack Query**
 - End-to-end testing via **Playwright**
@@ -30,8 +30,6 @@ This web page is my digital home, where I share my blog posts, showcase my portf
 pnpm install
 pnpm dev
 ```
-
-This will start the development server on `http://localhost:5173`.
 
 ---
 
