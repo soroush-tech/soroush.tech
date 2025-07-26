@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import vike from 'vike/plugin'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
@@ -19,6 +20,7 @@ export default defineConfig({
         ],
       },
     }),
+    vike(),
   ],
   resolve: {
     alias: {
