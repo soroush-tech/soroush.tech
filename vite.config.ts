@@ -12,6 +12,7 @@ export default defineConfig({
           [
             '@emotion',
             {
+              key: 'soroush',
               autoLabel: 'dev-only',
               labelFormat: '[local]--[filename]',
               cssPropOptimization: true,
@@ -20,7 +21,7 @@ export default defineConfig({
         ],
       },
     }),
-    vike(),
+    process.env.NODE_ENV !== 'storybook' && vike(),
   ],
   resolve: {
     alias: {

@@ -13,7 +13,7 @@ export const NavLink = styled(Link, { shouldForwardProp })<NavLinkProps>(({ href
 
   // Determine if the link is active
   const isActive =
-    href === '/' ? urlPathname === href : href !== undefined && urlPathname.startsWith(href)
+    href === '/' ? urlPathname === href : href !== undefined && urlPathname?.startsWith(href)
 
   // Combine the passed className with the 'active' class if applicable
   const combinedClassName = [className, isActive && 'active'].filter(Boolean).join(' ')

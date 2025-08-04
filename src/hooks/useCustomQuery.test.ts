@@ -12,6 +12,7 @@ describe('useCustomQuery', () => {
     const config = {
       url: '/api/user',
       method: 'get',
+      baseURL: '',
     }
     const { result } = renderHook(
       () =>

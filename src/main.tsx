@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { initMSW } from 'src/utils'
-import { Providers } from './Providers.tsx'
+import { Providers } from './common/Providers.tsx'
 import App from './App.tsx'
 import './index.css'
 ;(async () => {

@@ -1,5 +1,10 @@
-import { ThemeProvider as DefaultThemeProvider, type ThemeProviderProps } from '@emotion/react'
+import {
+  Global,
+  ThemeProvider as DefaultThemeProvider,
+  type ThemeProviderProps,
+} from '@emotion/react'
 import { dark, type Theme } from 'src/theme/themes'
+import globalStyles from 'src/theme/globalStyles.ts'
 
 type Props<T extends object> = Omit<T, 'theme'> & {
   theme?: Theme
@@ -11,5 +16,10 @@ export function ThemeProvider({ children, ...props }: Props<ThemeProviderProps>)
     theme: props?.theme ?? dark,
   }
 
-  return <DefaultThemeProvider {...modifiedProps}>{children}</DefaultThemeProvider>
+  return (
+    <DefaultThemeProvider {...modifiedProps}>
+      <Global styles={globalStyles} />
+      {children}
+    </DefaultThemeProvider>
+  )
 }
