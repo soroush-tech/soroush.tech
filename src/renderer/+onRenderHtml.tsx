@@ -1,25 +1,35 @@
 import { renderToString } from 'react-dom/server'
 import { escapeInject, dangerouslySkipEscape } from 'vike/server'
-import { Bootstrap } from './Bootstrap.tsx'
+import { CacheProvider } from '@emotion/react'
+import createEmotionServer from '@emotion/server/create-instance'
+import { Bootstrap } from './Bootstrap'
 import type { OnRenderHtmlAsync } from 'vike/types'
+import styleCache from 'src/theme/utils/styleCache'
 
 export const onRenderHtml: OnRenderHtmlAsync = async (
   pageContext
 ): ReturnType<OnRenderHtmlAsync> => {
   const { Page } = pageContext
-
-  const viewHtml = dangerouslySkipEscape(
-    renderToString(
-      <Bootstrap pageContext={pageContext}>
-        <Page />
-      </Bootstrap>
-    )
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(styleCache)
+  const html = renderToString(
+    <CacheProvider value={styleCache}>
+      <Bootstrap pageContext={pageContext}>{Page && <Page />}</Bootstrap>
+    </CacheProvider>
   )
-
-  return escapeInject`<!DOCTYPE html>
-    <html>
-      <body>
-        <div id="root">${viewHtml}</div>
-      </body>
-    </html>`
+  const chunks = extractCriticalToChunks(html)
+  const styles = constructStyleTagsFromChunks(chunks)
+  const template = `<!doctype html>
+  <html lang="en">
+   <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/soroush.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOROUSH.TECH</title>
+    ${styles}    
+    </head>
+    <body>
+      <div id="root">${html}</div>
+    </body>
+  </html>`
+  return escapeInject`${dangerouslySkipEscape(template)}`
 }

@@ -22,11 +22,8 @@ export const Header: FC = () => {
           <NavLink href="/projects" mx={1} p={1} color="default">
             Projects
           </NavLink>
-          <NavLink href="/skills" mx={1} p={1} color="default">
-            Skills
-          </NavLink>
-          <NavLink href="/contact" mx={1} p={1} color="default">
-            Contact
+          <NavLink href="/blog" mx={1} p={1} color="default">
+            Blog
           </NavLink>
         </View>
       </Flex>

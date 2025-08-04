@@ -1,10 +1,8 @@
 import { StrictMode, type ReactNode } from 'react'
 import type { PageContext } from 'vike/types'
 import { PageContextProvider } from 'src/hooks/usePageContext'
-import { Providers } from 'src/Providers'
+import { Providers } from 'src/common/Providers.tsx'
 import '../index.css'
-import globalStyles from 'src/theme/globalStyles.ts'
-import { Global } from '@emotion/react'
 
 export function Bootstrap({
   pageContext,
@@ -16,7 +14,6 @@ export function Bootstrap({
   return (
     <StrictMode>
       <Providers>
-        <Global styles={globalStyles} />
         <PageContextProvider pageContext={pageContext}>{children}</PageContextProvider>
       </Providers>
     </StrictMode>
