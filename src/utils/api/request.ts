@@ -31,17 +31,14 @@ export const createRequest = (defaultOptions: AxiosRequestConfig = {}): AxiosIns
     Accept: 'application/json',
     'Content-Type': 'application/json',
     authorization: '',
+    ...(defaultOptions.headers || {}),
   }
-  // example to add token to header
-  // if (token && token.accessToken) {
-  //   headers.authorization = `${accessToken}`
-  // }
 
   const options: AxiosRequestConfig = {
     timeout: REQUEST_TIMEOUT,
     data: {},
-    headers,
     ...defaultOptions,
+    headers,
     paramsSerializer: (params: Record<string, unknown>) => qs.stringify(removeEmptyValues(params)),
     maxContentLength: 20000,
   }
