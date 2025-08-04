@@ -1,7 +1,7 @@
 import createCache from '@emotion/cache'
 import { prefixer } from 'stylis'
 
-export const styleCache = createCache({
+export default createCache({
   key: 'soroush',
   stylisPlugins: [prefixer],
 })

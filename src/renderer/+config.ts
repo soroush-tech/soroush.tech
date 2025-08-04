@@ -1,4 +1,6 @@
 import type { Config } from 'vike/types'
+import vikeReact from 'vike-react/config'
+import vikeReactQuery from 'vike-react-query/config'
 
 // https://vike.dev/config
 export const config = {
@@ -6,6 +8,7 @@ export const config = {
   passToClient: [],
   clientRouting: true,
   hydrationCanBeAborted: true,
+  extends: [vikeReact, vikeReactQuery],
   meta: {
     title: {
       env: {

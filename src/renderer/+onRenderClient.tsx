@@ -2,7 +2,7 @@ import { createRoot, hydrateRoot, type Root } from 'react-dom/client'
 import type { OnRenderClientAsync } from 'vike/types'
 import { Bootstrap } from './Bootstrap.tsx'
 import { initMSW } from 'src/utils'
-import { styleCache } from 'src/theme/utils/styleCache.ts'
+import styleCache from 'src/theme/utils/styleCache'
 import { CacheProvider } from '@emotion/react'
 // import { getPageTitle } from 'src/utils/getPageTitle'
 
@@ -13,9 +13,7 @@ export const onRenderClient: OnRenderClientAsync = async (
   const { Page } = pageContext
   const page = (
     <CacheProvider value={styleCache}>
-      <Bootstrap pageContext={pageContext}>
-        <Page />
-      </Bootstrap>
+      <Bootstrap pageContext={pageContext}>{Page && <Page />}</Bootstrap>
     </CacheProvider>
   )
   if (!root) {
