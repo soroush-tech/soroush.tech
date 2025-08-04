@@ -27,10 +27,10 @@
     "test:coverage": "vitest run --coverage",
     "test:coverage:storybook": "vitest run --project=storybook --coverage",
     "test:coverage:unit": "vitest run --project=unit --coverage ",
-    "test:coverage:ui": "vitest run --coverage --project=unit && open coverage/index.html",
-    "storybook": "storybook dev -p 6006",
+    "test:coverage:ui": "vitest run --coverage --project=unit && open coverage/lcov-report/index.html",
+    "storybook": "cross-env NODE_ENV=storybook storybook dev -p 6006",
     "build": "tsc -b && vite build",
-    "build:storybook": "storybook build",
+    "build:storybook": "cross-env NODE_ENV=storybook storybook build",
     "preview": "vite preview",
     "preview:storybook": "npx serve storybook-static",
     "deploy": "gh-pages -d build"
@@ -47,9 +47,12 @@
     "query-string": "^9.2.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "styled-system": "^5.1.5",
     "stylis": "^4.3.6",
-    "vike": "^0.4.236"
+    "vike": "^0.4.236",
+    "vike-react": "^0.6.5",
+    "vike-react-query": "^0.1.5"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",
@@ -81,6 +84,7 @@
     "@vitest/browser": "3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
+    "cross-env": "^10.0.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
