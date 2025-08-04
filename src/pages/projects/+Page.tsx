@@ -10,7 +10,6 @@ function Projects() {
         as="main"
         justifyContent="space-between"
         alignItems="center"
-        bg="primary"
         minHeight="100vh"
         px={2}
         py={3}

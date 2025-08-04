@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react'
 import type { PageContext as PageContext } from 'vike/types'
 import styleCache from 'src/theme/utils/styleCache'
 import { Routes } from 'src/common/Routes'
-import { Providers } from 'src/Providers'
+import { Providers } from 'src/common/Providers'
 import '../index.css'
 
 export function Bootstrap({ pageContext }: { pageContext: PageContext }) {

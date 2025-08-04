@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { useQuery } from '@tanstack/react-query'
-import { Providers } from './Providers'
+import { Providers } from './Providers.tsx'
 
 // Your component
 function UserComponent() {
