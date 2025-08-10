@@ -1,0 +1,60 @@
+name: Task 🛠️
+description: Create a technical task linked to a User Story, with clear completion criteria.
+title: '[Task] '
+labels: ['type: task']
+type: 'Task'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please write a concise, action-oriented task title above ⬆️.  
+        Example: "Implement API for saving payment information" or "Design checkout form UI".
+
+  - type: textarea
+    attributes:
+      label: Task Description ✏️
+      description: |
+        Describe the technical or operational work needed to deliver part of a User Story.  
+        Reference the parent Story if available (e.g., STORY-01).
+
+  - type: textarea
+    attributes:
+      label: Acceptance Criteria ✅
+      description: |
+        Define specific conditions that indicate this task is complete.  
+        Keep these testable and measurable.
+      placeholder: |
+        - API endpoint accepts valid payment data and rejects invalid data
+        - Data stored encrypted using AES-256
+        - Unit tests cover validation and encryption logic
+
+  - type: textarea
+    attributes:
+      label: Dependencies 🔗
+      description: |
+        List any blocking Stories or Tasks that must be completed first.
+
+  - type: textarea
+    attributes:
+      label: Definition of Ready (DoR) 📋
+      description: |
+        What must be true before starting this task? Examples:
+        - Implementation approach decided
+        - Dependencies resolved
+        - Story acceptance criteria reviewed
+
+  - type: textarea
+    attributes:
+      label: Definition of Done (DoD) 🏁
+      description: |
+        What must be true before closing this task? Examples:
+        - Code implemented and reviewed
+        - Automated tests passing in CI
+        - Deployed to staging
+        - Confirmed working as expected
+
+  - type: textarea
+    attributes:
+      label: Additional Notes or Resources 📎
+      description: |
+        Add any diagrams, documents, code references, or links relevant to this task.
