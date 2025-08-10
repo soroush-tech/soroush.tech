@@ -1,0 +1,30 @@
+name: Epic 🪡
+description: An "epic" represents a high-level concept or goal that can be broken down into smaller, more manageable tasks or stories.
+labels: ['epic']
+title: '[Epic] '
+type: 'Feature'
+body:
+  - type: textarea
+    attributes:
+      label: Epic Description
+      value: |
+        [Provide a detailed description of the epic here.]
+
+        ### Overview
+        Briefly describe the high-level goal or concept that this epic represents. Include any relevant context or background information.
+
+        ### Implementation
+        Describe any key implementation details, including code examples if applicable.
+
+        ### Key Features
+        Outline the main features or objectives of this epic. 
+
+        | Feature        | Description                                                                                           |
+        | -------------- | ----------------------------------------------------------------------------------------------------- |
+        | Example Feature | Description of the feature, including any relevant details or constraints.                          |
+
+        ### Dependencies
+        List any dependencies or related epics/stories that are relevant to this epic.
+
+        ### Acceptance Criteria
+        Define the criteria that must be met for this epic to be considered complete.
