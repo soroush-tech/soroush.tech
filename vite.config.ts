@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import vike from 'vike/plugin'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
@@ -11,6 +12,7 @@ export default defineConfig({
           [
             '@emotion',
             {
+              key: 'soroush',
               autoLabel: 'dev-only',
               labelFormat: '[local]--[filename]',
               cssPropOptimization: true,
@@ -19,6 +21,7 @@ export default defineConfig({
         ],
       },
     }),
+    process.env.NODE_ENV !== 'storybook' && vike(),
   ],
   resolve: {
     alias: {
