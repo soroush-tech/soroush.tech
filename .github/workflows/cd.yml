@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build:
     if: github.event.workflow_run.conclusion == 'success'
+    environment: github-pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -66,16 +67,17 @@ jobs:
 
       - name: Build project
         run: ${{ steps.detect-package-manager.outputs.runner }} run build
+        env:
+          VITE_BASE_URL: ${{ vars.VITE_BASE_URL }}
+          VITE_GITHUB_KEY: ${{ secrets.VITE_GITHUB_KEY }}
 
       - name: Upload artifact
-        if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./build/client
 
   # Deployment job
   deploy:
-    if: github.event_name == 'push'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
