@@ -42,7 +42,7 @@
     "@emotion/styled": "^11.14.1",
     "@styled-system/should-forward-prop": "^5.1.5",
     "@tanstack/react-query": "^5.83.0",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "clsx": "^2.1.1",
     "query-string": "^9.2.2",
     "react": "^19.1.0",
