@@ -89,7 +89,7 @@ jobs:
           echo "PLAYWRIGHT_VERSION=${VERSION#^}" >> $GITHUB_ENV
 
       - name: Restore cache - Playwright binaries
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -105,7 +105,7 @@ jobs:
 
       - name: Save cache - Playwright binaries
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
