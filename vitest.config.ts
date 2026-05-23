@@ -29,6 +29,7 @@ export default defineConfig({
         'public/**/*',
         '.storybook/**/*',
         'storybook-static/**/*',
+        '.claude/**/*',
       ],
     },
     projects: [
