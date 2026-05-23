@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { bg, m, opacity, p } from 'src/theme/utils/test/storiesArgs'
 import {
   alignTokens,
   asTokens,
-  backgroundTokens,
   fontFamilyTokens,
   fontSizeIndices,
+  fontStyleTokens,
   fontWeightTokens,
   letterSpacingTokens,
   lineHeightTokens,
-  spaceTokens,
   textColorTokens,
-  variantTokens,
-} from 'src/theme/storybookOptions'
+  typographyVariantTokens,
+} from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
 import { View } from 'src/theme/View'
 import { Typography } from './Typography'
@@ -54,7 +54,7 @@ const meta: Meta<typeof Typography> = {
     },
     variant: {
       control: { type: 'select' },
-      options: variantTokens,
+      options: typographyVariantTokens,
       description: 'Sets typographic scale and maps to a semantic HTML element via variantMapping.',
       table: { category: 'Typography', defaultValue: { summary: 'body1' } },
     },
@@ -86,29 +86,10 @@ const meta: Meta<typeof Typography> = {
       description: 'Semantic text color — resolves from theme.text.',
       table: { category: 'Visual' },
     },
-    bg: {
-      control: { type: 'select' },
-      options: backgroundTokens,
-      description: 'Background color — resolves from theme.background.',
-      table: { category: 'Visual' },
-    },
-    opacity: {
-      control: { type: 'range', min: 0, max: 1, step: 0.05 },
-      description: 'CSS opacity (0–1).',
-      table: { category: 'Visual' },
-    },
-    m: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Margin — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
-    p: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Padding — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
+    bg,
+    opacity,
+    m,
+    p,
     fontFamily: {
       control: { type: 'inline-radio' },
       options: fontFamilyTokens,
@@ -130,7 +111,7 @@ const meta: Meta<typeof Typography> = {
     },
     fontStyle: {
       control: { type: 'inline-radio' },
-      options: ['normal', 'italic', 'oblique'],
+      options: fontStyleTokens,
       description: 'CSS font-style.',
       table: { category: 'Typography' },
     },
@@ -283,7 +264,7 @@ export const LineHeights: Story = {
 
 export const NoWrap: Story = {
   render: () => (
-    <View width="240px" border="1px dashed" borderColor="textDisabled" p={1.5}>
+    <View width="240px" border="1px dashed" borderColor="light" p={1.5}>
       <Typography variant="body1" noWrap m={0}>
         This very long text will be truncated with an ellipsis when it overflows its container.
       </Typography>
@@ -296,7 +277,7 @@ export const NoWrap: Story = {
 
 export const GutterBottom: Story = {
   render: () => (
-    <View border="1px dashed" borderColor="textDisabled" p={1.5} maxWidth="480px">
+    <View border="1px dashed" borderColor="light" p={1.5} maxWidth="480px">
       <Typography variant="h4" gutterBottom>
         Heading with gutterBottom
       </Typography>

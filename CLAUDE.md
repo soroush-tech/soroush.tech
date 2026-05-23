@@ -248,40 +248,6 @@ Copy `default.env` to `.env` locally and fill in values; never commit secrets.
 
 Full architecture is documented in `src/theme/design-system.md`. Key rules for working in `src/theme/`:
 
-**Every component lives in its own folder** `src/theme/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
-
-**Prop types** — derive from `Theme` (imported from `@emotion/react`, which is augmented via `@types/emotion_react/index.d.ts`), never write manual unions:
-
-- `color?: keyof Theme['text']`
-- `bg?: keyof Theme['background']`
-- Font/space scales → `keyof Theme['fontWeights']` etc.
-
-**Custom props → theme scales** — wire through `system()` in `@emotion/styled`. Key mappings:
-
-- `color` → `scale: 'text'`
-- `bg` → `scale: 'background'`
-
-**Storybook options** — all option arrays live in `src/theme/test/utils/storybookOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storybookOptions.ts`.
-
-**Storybook argType rules:**
-
-- Always use `controls.include` whitelist — never rely on autodiscovery
-- Every prop in `controls.include` **must** have a matching `argType` entry — missing argTypes cause the control to silently disappear or leak raw props to the DOM. Verify the lists match before finishing a story.
-- Do NOT use top-level `name:` in argTypes (breaks `controls.include` matching)
-- Always add `table.category` — use: Content · Typography · Layout · Visual · Spacing — make sure it matches the category; if unsure, suggest a name and verify before implementing.
-
-**No hardcoded hex values** anywhere in `src/theme/` — all colors reference palette constants from `src/theme/colors/`. Rgba opacity uses hex suffix pattern: `${kineticSurface[100]}B3`.
-
-**`Typography` is the reference implementation** — follow its structure for every new component.
-
-**To scaffold a new component** — use the `/new_theme_component` skill:
-
-```
-/new_theme_component Button
-```
-
-This reads the current Typography files and `design-system.md` before generating, so output always matches the live codebase. It creates all four required files and updates `storybookOptions.ts` if new token arrays are needed.
-
 ## Quick Checklist Before Pushing
 
 1. `pnpm lint`

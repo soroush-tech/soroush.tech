@@ -63,7 +63,39 @@ type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | 
 
 ## Component Architecture
 
-`src/theme/Typography/` is the reference implementation. Every new component follows the same structure.
+**Every component lives in its own folder** `src/theme/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
+
+**Prop types** — derive from `Theme` (imported from `@emotion/react`, which is augmented via `@types/emotion_react/index.d.ts`), never write manual unions:
+
+- `color?: keyof Theme['text']`
+- `bg?: keyof Theme['background']`
+- Font/space scales → `keyof Theme['fontWeights']` etc.
+
+**Custom props → theme scales** — wire through `system()` in `@emotion/styled`. Key mappings:
+
+- `color` → `scale: 'text'`
+- `bg` → `scale: 'background'`
+
+**Storybook options** — all option arrays live in `src/theme/test/utils/storiesOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storiesOptions.ts`.
+
+**Storybook argType rules:**
+
+- Always use `controls.include` whitelist — never rely on autodiscovery
+- Every prop in `controls.include` **must** have a matching `argType` entry — missing argTypes cause the control to silently disappear or leak raw props to the DOM. Verify the lists match before finishing a story.
+- Do NOT use top-level `name:` in argTypes (breaks `controls.include` matching)
+- Always add `table.category` — use: Content · Typography · Layout · Visual · Spacing — make sure it matches the category; if unsure, suggest a name and verify before implementing.
+
+**No hardcoded hex values** anywhere in `src/theme/` — all colors reference palette constants from `src/theme/colors/`. Rgba opacity uses hex suffix pattern: `${kineticSurface[100]}B3`.
+
+**`Typography` is the reference implementation** — follow its structure for every new component.
+
+**To scaffold a new component** — use the `/new_theme_component` skill:
+
+```
+/new_theme_component Button
+```
+
+This reads the current Typography files and `design-system.md` before generating, so output always matches the live codebase. It creates all four required files and updates `storiesOptions.ts` if new token arrays are needed.
 
 ### 1. Prop interface
 
@@ -88,7 +120,7 @@ export interface MyComponentProps
   }
 ```
 
-Export prop types — Storybook's `storybookOptions.ts` will import and use them in `satisfies` constraints.
+Export prop types — Storybook's `storiesOptions.ts` will import and use them in `satisfies` constraints.
 
 ### 2. Prop forwarding
 
@@ -173,7 +205,7 @@ Documents every prop the component accepts. Rules:
 
 ### `ComponentName.stories.tsx`
 
-Import all option arrays from `src/theme/storybookOptions.ts`. Never hardcode arrays inline in a story file.
+Import all option arrays from `src/theme/test/utils/storiesOptions.ts`. Never hardcode arrays inline in a story file.
 
 ```ts
 import {
@@ -182,7 +214,7 @@ import {
   spaceTokens,
   fontWeightTokens,
   // ... others as needed
-} from 'src/theme/storybookOptions'
+} from 'src/theme/utils/test/storiesOptions'
 ```
 
 ArgType categories — use exactly these names for consistency across all components:
@@ -212,7 +244,9 @@ Minimum coverage:
 
 ---
 
-## Storybook Options (`src/theme/storybookOptions.ts`)
+## Storybook Options (`src/theme/utils/test/storiesOptions.ts`)
+
+For props shared across components (`bg`, `opacity`, `p`, `m`, all border props, etc.), `src/theme/utils/test/storiesArgs.ts` exports pre-built argType objects — import and spread directly into `argTypes` instead of composing from option arrays.
 
 Single source of truth for all option arrays used in Storybook stories. Add new arrays here when building new components. Each array uses `satisfies` to stay in sync with the Theme type — TypeScript will error if a key is missing or misspelled.
 
@@ -244,9 +278,9 @@ Use `/new_theme_component ComponentName` to scaffold all files automatically.
 - [ ] `ComponentName/index.ts` — `export * from './ComponentName'`
 - [ ] `ComponentName/ComponentName.tsx` — styled base + wrapper, `shouldForwardProp`, `system()` for custom scales
 - [ ] Prop types derived from `Theme` (`keyof Theme['scaleName']`), not manual unions
-- [ ] Custom prop types exported for use in `storybookOptions.ts`
+- [ ] Custom prop types exported for use in `storiesOptions.ts`
 - [ ] `ComponentName/README.md` — all props documented, no hex codes
-- [ ] `ComponentName/ComponentName.stories.tsx` — imports from `storybookOptions`, `controls.include` whitelist, argType categories
-- [ ] New token arrays added to `src/theme/storybookOptions.ts` with `satisfies`
+- [ ] `ComponentName/ComponentName.stories.tsx` — imports from `storiesArgs` (shared props) or `storiesOptions` (component-specific), `controls.include` whitelist, argType categories
+- [ ] New token arrays added to `src/theme/test/utils/storiesOptions.ts` with `satisfies`
 - [ ] `ComponentName/ComponentName.test.tsx` — prop→CSS, element mapping, HTML passthrough
 - [ ] No hardcoded hex values anywhere in `src/theme/`
