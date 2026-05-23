@@ -9,7 +9,7 @@ import prettierConfig from 'eslint-config-prettier'
 import react from 'eslint-plugin-react'
 
 export default tseslint.config(
-  { ignores: ['dist', 'build', 'coverage', 'public'] },
+  { ignores: ['dist', 'build', 'coverage', 'public', '.claude'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -30,7 +30,7 @@ export default tseslint.config(
       'prettier/prettier': [
         'error',
         {
-          endOfLine: 'auto',
+          endOfLine: 'lf',
         },
       ],
     },
