@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { objectFitTokens, spaceTokens } from 'src/theme/storybookOptions'
+import { height, m, p, width } from 'src/theme/utils/test/storiesArgs'
+import { objectFitTokens } from 'src/theme/utils/test/storiesOptions'
 import { Image } from './Image'
 
 const DEMO_IMG = '/soroush.svg'
@@ -35,34 +36,16 @@ const meta: Meta<typeof Image> = {
       description: 'Fallback URL tried when primary source fails. `onError` fires when both fail.',
       table: { category: 'Content' },
     },
-    width: {
-      control: 'text',
-      description: 'CSS width — accepts any valid CSS value or theme.space token.',
-      table: { category: 'Layout' },
-    },
-    height: {
-      control: 'text',
-      description: 'CSS height — accepts any valid CSS value or theme.space token.',
-      table: { category: 'Layout' },
-    },
+    width,
+    height,
     objectFit: {
       control: { type: 'select' },
       options: objectFitTokens,
       description: 'CSS object-fit — controls how the image fills its container.',
       table: { category: 'Layout' },
     },
-    m: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Outer margin — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
-    p: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Padding — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
+    m,
+    p,
   },
 }
 

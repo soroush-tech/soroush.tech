@@ -1,25 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { gap, maxHeight, maxWidth, minHeight, minWidth } from 'src/theme/utils/test/storiesArgs'
 import {
-  spaceTokens,
-  backgroundTokens,
-  borderRadiiTokens,
-  borderColorTokens,
-  borderWidthTokens,
-} from 'src/theme/storybookOptions'
+  flexAlignItemsTokens,
+  flexDirectionTokens,
+  flexJustifyContentTokens,
+  flexWrapTokens,
+} from 'src/theme/utils/test/storiesOptions'
 import { View } from 'src/theme/View'
 import { Flex } from './Flex'
-
-const flexDirectionOptions = ['row', 'row-reverse', 'column', 'column-reverse']
-const justifyContentOptions = [
-  'flex-start',
-  'flex-end',
-  'center',
-  'space-between',
-  'space-around',
-  'space-evenly',
-]
-const alignItemsOptions = ['stretch', 'flex-start', 'flex-end', 'center', 'baseline']
-const flexWrapOptions = ['nowrap', 'wrap', 'wrap-reverse']
 
 const meta: Meta<typeof Flex> = {
   title: 'Theme/Flex',
@@ -62,7 +50,7 @@ const meta: Meta<typeof Flex> = {
   argTypes: {
     flexDirection: {
       control: { type: 'select' },
-      options: flexDirectionOptions,
+      options: flexDirectionTokens,
       description: 'CSS flex-direction.',
       table: {
         category: 'Layout',
@@ -72,19 +60,19 @@ const meta: Meta<typeof Flex> = {
     },
     justifyContent: {
       control: { type: 'select' },
-      options: justifyContentOptions,
+      options: flexJustifyContentTokens,
       description: 'CSS justify-content.',
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     alignItems: {
       control: { type: 'select' },
-      options: alignItemsOptions,
+      options: flexAlignItemsTokens,
       description: 'CSS align-items.',
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     flexWrap: {
       control: { type: 'select' },
-      options: flexWrapOptions,
+      options: flexWrapTokens,
       description: 'CSS flex-wrap.',
       table: {
         category: 'Layout',
@@ -92,102 +80,11 @@ const meta: Meta<typeof Flex> = {
         defaultValue: { summary: 'nowrap' },
       },
     },
-    gap: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Gap between flex items — resolves from `theme.space`.',
-      table: { category: 'Spacing', type: { summary: 'GapToken' }, defaultValue: { summary: '0' } },
-    },
-    p: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Padding — resolves from `theme.space`.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
-    m: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Margin — resolves from `theme.space`.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
-    bg: {
-      control: { type: 'select' },
-      options: backgroundTokens,
-      description: 'Background — resolves from `theme.background`.',
-      table: { category: 'Visual', type: { summary: 'ViewBackgroundToken' } },
-    },
-    opacity: {
-      control: { type: 'range', min: 0, max: 1, step: 0.05 },
-      description: 'CSS opacity (0–1).',
-      table: { category: 'Visual', type: { summary: 'number' } },
-    },
-    width: {
-      control: 'text',
-      description: 'CSS width — resize to see flexWrap in action.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    height: {
-      control: 'text',
-      description: 'CSS height — resize to see justifyContent and alignItems in action.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    minWidth: {
-      control: 'text',
-      description: 'CSS min-width.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    minHeight: {
-      control: 'text',
-      description: 'CSS min-height.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    maxWidth: {
-      control: 'text',
-      description: 'CSS max-width.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    maxHeight: {
-      control: 'text',
-      description: 'CSS max-height.',
-      table: { category: 'Layout', type: { summary: 'string | number' } },
-    },
-    border: {
-      control: 'text',
-      description:
-        'CSS border shorthand (e.g. `"1px solid"`). Width and style are raw CSS — use `borderRadius` for theme tokens.',
-      table: { category: 'Visual', type: { summary: 'string' } },
-    },
-    borderWidth: {
-      control: { type: 'select' },
-      options: borderWidthTokens,
-      description:
-        'Border width — resolves from `theme.borderWidths`: none (0) · thin (1px) · base (2px) · thick (4px).',
-      table: { category: 'Visual', type: { summary: 'none | thin | base | thick' } },
-    },
-    borderStyle: {
-      control: { type: 'select' },
-      options: ['solid', 'dashed', 'dotted', 'double', 'none'],
-      description: 'CSS border-style.',
-      table: { category: 'Visual', type: { summary: 'string' } },
-    },
-    borderColor: {
-      control: { type: 'select' },
-      options: borderColorTokens,
-      description: 'Border color — resolves from `theme.border`.',
-      table: { category: 'Visual', type: { summary: 'ViewBorderColorToken' } },
-    },
-    borderRadius: {
-      control: { type: 'select' },
-      options: borderRadiiTokens,
-      description: 'Border radius — resolves from `theme.radii`: sm (4px) · md (8px) · lg (16px).',
-      table: { category: 'Visual', type: { summary: 'sm | md | lg' } },
-    },
-    position: {
-      control: { type: 'select' },
-      options: ['static', 'relative', 'absolute', 'fixed', 'sticky'],
-      description: 'CSS position.',
-      table: { category: 'Layout', type: { summary: 'string' } },
-    },
+    gap,
+    minWidth,
+    minHeight,
+    maxWidth,
+    maxHeight,
   },
   args: {
     flexDirection: 'column',

@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { bg, m } from 'src/theme/utils/test/storiesArgs'
 import {
   avatarSizeTokens,
   avatarVariantTokens,
-  backgroundTokens,
   borderColorTokens,
   borderWidthTokens,
-  spaceTokens,
-} from 'src/theme/storybookOptions'
+} from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { Avatar } from './Avatar'
@@ -96,18 +95,8 @@ const meta: Meta<typeof Avatar> = {
       description: 'Ring width — resolves against theme.borderWidths.',
       table: { category: 'Visual' },
     },
-    bg: {
-      control: { type: 'select' },
-      options: backgroundTokens,
-      description: 'Background color for fallback state — resolves from theme.background.',
-      table: { category: 'Visual' },
-    },
-    m: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Outer margin — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
+    bg,
+    m,
   },
 }
 

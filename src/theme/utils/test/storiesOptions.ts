@@ -1,0 +1,191 @@
+import type { TypographyAlign } from 'src/theme/Typography'
+import type { AvatarVariant } from 'src/theme/Avatar'
+import {
+  dark,
+  radii,
+  borderWidths,
+  fontSizes,
+  lineHeights,
+  letterSpacings,
+  fonts,
+  fontWeights,
+  avatar,
+  space,
+  typography,
+} from 'src/theme/themes'
+import type { CSSObject } from 'storybook/theming'
+
+const objectKeys = <T extends object>(obj: T) => Object.keys(obj) as Array<keyof T>
+
+// --- Derived from component mappings ---
+
+export const typographyVariantTokens = objectKeys(typography)
+export const textColorTokens = objectKeys(dark.text)
+export const backgroundTokens = objectKeys(dark.background)
+export const borderColorTokens = objectKeys(dark.border)
+
+export const spaceTokens = objectKeys(space).map((k) => (k === 'auto' ? k : Number(k)))
+
+export const fontFamilyTokens = objectKeys(fonts)
+export const fontSizeIndices = fontSizes.map((_, i) => i)
+export const fontWeightTokens = objectKeys(fontWeights)
+export const lineHeightTokens = objectKeys(lineHeights)
+export const letterSpacingTokens = objectKeys(letterSpacings)
+export const borderRadiiTokens = objectKeys(radii)
+export const borderWidthTokens = objectKeys(borderWidths)
+export const avatarSizeTokens = objectKeys(avatar)
+
+// --- Hardcoded: no theme/component backing ---
+
+// TypographyAlign is a union type with no runtime object
+export const alignTokens = [
+  'left',
+  'center',
+  'right',
+  'justify',
+  'inherit',
+] satisfies TypographyAlign[]
+
+// HTML element names — arbitrary set chosen for the as prop
+export const asTokens = [
+  'p',
+  'span',
+  'div',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'label',
+  'li',
+] as const
+
+// AvatarVariant has no runtime mapping object in Avatar.tsx
+export const avatarVariantTokens = ['circular', 'rounded', 'square'] satisfies AvatarVariant[]
+
+// Raw CSS values — not backed by any theme scale
+export const objectFitTokens = [
+  'cover',
+  'contain',
+  'fill',
+  'none',
+  'scale-down',
+] satisfies CSSObject['objectFit']
+
+export const fontStyleTokens = ['normal', 'italic', 'oblique'] satisfies CSSObject['fontStyle']
+
+export const displayTokens = [
+  'block',
+  'flex',
+  'inline',
+  'inline-flex',
+  'inline-block',
+  'grid',
+  'none',
+] satisfies CSSObject['display']
+
+export const positionTokens = [
+  'static',
+  'relative',
+  'absolute',
+  'fixed',
+  'sticky',
+] satisfies CSSObject['position']
+
+export const cursorTokens = [
+  'auto',
+  'default',
+  'pointer',
+  'move',
+  'not-allowed',
+  'wait',
+  'text',
+  'crosshair',
+  'grab',
+  'grabbing',
+  'zoom-in',
+  'zoom-out',
+  'none',
+] satisfies CSSObject['cursor']
+
+export const borderStyleTokens = [
+  'solid',
+  'dashed',
+  'dotted',
+  'double',
+  'none',
+] satisfies CSSObject['borderStyle']
+
+export const flexDirectionTokens = [
+  'row',
+  'row-reverse',
+  'column',
+  'column-reverse',
+] satisfies CSSObject['flexDirection']
+
+export const flexJustifyContentTokens = [
+  'flex-start',
+  'flex-end',
+  'center',
+  'space-between',
+  'space-around',
+  'space-evenly',
+] satisfies CSSObject['justifyContent']
+
+export const flexAlignItemsTokens = [
+  'stretch',
+  'flex-start',
+  'flex-end',
+  'center',
+  'baseline',
+] satisfies CSSObject['alignItems']
+
+export const flexWrapTokens = ['nowrap', 'wrap', 'wrap-reverse'] satisfies CSSObject['flexWrap']
+
+export const gridAutoFlowTokens = [
+  'row',
+  'column',
+  'dense',
+  'row dense',
+  'column dense',
+] satisfies CSSObject['gridAutoFlow']
+
+export const gridJustifyContentTokens = [
+  'normal',
+  'start',
+  'end',
+  'center',
+  'stretch',
+  'space-between',
+  'space-around',
+  'space-evenly',
+] satisfies CSSObject['justifyContent']
+
+export const gridAlignItemsTokens = [
+  'normal',
+  'start',
+  'end',
+  'center',
+  'stretch',
+  'baseline',
+] satisfies CSSObject['alignItems']
+
+export const gridAlignContentTokens = [
+  'normal',
+  'start',
+  'end',
+  'center',
+  'stretch',
+  'space-between',
+  'space-around',
+  'space-evenly',
+] satisfies CSSObject['alignContent']
+
+export const gridJustifyItemsTokens = [
+  'normal',
+  'start',
+  'end',
+  'center',
+  'stretch',
+] satisfies CSSObject['justifyItems']

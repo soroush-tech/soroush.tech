@@ -1,5 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { spaceTokens } from 'src/theme/storybookOptions'
+import { gap } from 'src/theme/utils/test/storiesArgs'
+import {
+  gridAlignContentTokens,
+  gridAlignItemsTokens,
+  gridAutoFlowTokens,
+  gridJustifyContentTokens,
+  gridJustifyItemsTokens,
+  spaceTokens,
+} from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
 import { View } from 'src/theme/View'
 import { Typography } from 'src/theme/Typography'
@@ -63,7 +71,7 @@ const meta: Meta<typeof Grid> = {
     },
     gridAutoFlow: {
       control: { type: 'inline-radio' },
-      options: ['row', 'column', 'dense', 'row dense', 'column dense'],
+      options: gridAutoFlowTokens,
       description:
         'Controls the auto-placement algorithm direction. `row` fills each row before moving to the next; `column` fills each column first; `dense` backfills holes left by larger items.',
       table: { category: 'Layout', type: { summary: 'string' }, defaultValue: { summary: 'row' } },
@@ -79,15 +87,9 @@ const meta: Meta<typeof Grid> = {
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     gap: {
-      control: { type: 'select' },
-      options: spaceTokens,
+      ...gap,
       description:
         'Gap between all rows and columns — resolves from `theme.space`. Unlike the other grid props, this uses theme tokens (not a raw CSS string).',
-      table: {
-        category: 'Spacing',
-        type: { summary: 'GapToken' },
-        defaultValue: { summary: '0' },
-      },
     },
     columnGap: {
       control: { type: 'select' },
@@ -105,57 +107,27 @@ const meta: Meta<typeof Grid> = {
     },
     justifyContent: {
       control: { type: 'select' },
-      options: [
-        'normal',
-        'start',
-        'end',
-        'center',
-        'stretch',
-        'space-between',
-        'space-around',
-        'space-evenly',
-      ],
+      options: gridJustifyContentTokens,
       description: 'Aligns grid tracks along the inline (row) axis when there is extra space.',
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     alignItems: {
       control: { type: 'select' },
-      options: ['normal', 'start', 'end', 'center', 'stretch', 'baseline'],
+      options: gridAlignItemsTokens,
       description: 'Aligns grid items within their cell along the block (column) axis.',
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     alignContent: {
       control: { type: 'select' },
-      options: [
-        'normal',
-        'start',
-        'end',
-        'center',
-        'stretch',
-        'space-between',
-        'space-around',
-        'space-evenly',
-      ],
+      options: gridAlignContentTokens,
       description: 'Aligns grid tracks along the block (column) axis when there is extra space.',
       table: { category: 'Layout', type: { summary: 'string' } },
     },
     justifyItems: {
       control: { type: 'select' },
-      options: ['normal', 'start', 'end', 'center', 'stretch'],
+      options: gridJustifyItemsTokens,
       description: 'Aligns grid items within their cell along the inline (row) axis.',
       table: { category: 'Layout', type: { summary: 'string' } },
-    },
-    p: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Padding — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
-    },
-    m: {
-      control: { type: 'select' },
-      options: spaceTokens,
-      description: 'Margin — theme.space token.',
-      table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
     },
   },
 }

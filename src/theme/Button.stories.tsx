@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
-import { Button } from 'src/theme/Button.tsx'
+import { Button } from 'src/theme/Button'
 
 const meta: Meta<typeof Button> = {
   title: 'Theme/Button',
