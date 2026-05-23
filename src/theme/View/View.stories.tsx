@@ -10,6 +10,21 @@ import { View } from './View'
 
 const displayOptions = ['block', 'flex', 'inline', 'inline-flex', 'inline-block', 'grid', 'none']
 const positionOptions = ['static', 'relative', 'absolute', 'fixed', 'sticky']
+const cursorOptions = [
+  'auto',
+  'default',
+  'pointer',
+  'move',
+  'not-allowed',
+  'wait',
+  'text',
+  'crosshair',
+  'grab',
+  'grabbing',
+  'zoom-in',
+  'zoom-out',
+  'none',
+]
 
 const meta: Meta<typeof View> = {
   title: 'Theme/View',
@@ -38,6 +53,7 @@ const meta: Meta<typeof View> = {
         'borderColor',
         'borderRadius',
         'position',
+        'cursor',
       ],
     },
   },
@@ -121,6 +137,12 @@ const meta: Meta<typeof View> = {
       options: positionOptions,
       description: 'CSS position property.',
       table: { category: 'Layout', type: { summary: 'string' } },
+    },
+    cursor: {
+      control: { type: 'select' },
+      options: cursorOptions,
+      description: 'CSS cursor — controls the mouse pointer style.',
+      table: { category: 'Visual', type: { summary: 'CSSProperties["cursor"]' } },
     },
   },
   args: {
