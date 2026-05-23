@@ -1,6 +1,6 @@
-import { Flex } from 'src/theme/Flex.tsx'
+import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
-import { View } from 'src/theme/View.tsx'
+import { View } from 'src/theme/View'
 import { useGistById } from 'src/hooks/useGistById.ts'
 import Markdown from 'react-markdown'
 

@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider } from 'src/theme/ThemeProvider'
+import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
 import {
   Typography,
@@ -8,8 +8,6 @@ import {
   type TypographyVariant,
   type TextColorToken,
 } from './Typography'
-
-const renderWithTheme = (ui: React.ReactNode) => render(<ThemeProvider>{ui}</ThemeProvider>)
 
 describe('Typography', () => {
   // ─── children ────────────────────────────────────────────────────────────────
