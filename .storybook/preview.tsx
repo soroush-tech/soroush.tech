@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react-vite'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
 import { initialize, mswLoader } from 'msw-storybook-addon'
-import { ThemeProvider } from '../src/theme/ThemeProvider'
+import { GlobalStyles, ThemeProvider } from '../src/theme/ThemeProvider'
 import { light, dark } from '../src/theme/themes'
 
 initialize()
@@ -31,6 +31,7 @@ const preview: Preview = {
       },
       defaultTheme: 'light',
       Provider: ThemeProvider,
+      GlobalStyles,
     }),
   ],
 }
