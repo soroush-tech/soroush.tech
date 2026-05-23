@@ -115,3 +115,14 @@ export const letterSpacingTokens = [
   'wider',
   'widest',
 ] satisfies (keyof Theme['letterSpacings'])[]
+
+export const borderRadiiTokens = ['sm', 'md', 'lg'] satisfies (keyof Theme['radii'])[]
+
+export const borderColorTokens = ['light', 'primary', 'dark'] satisfies (keyof Theme['border'])[]
+
+export const borderWidthTokens = [
+  'none',
+  'thin',
+  'base',
+  'thick',
+] satisfies (keyof Theme['borderWidths'])[]
