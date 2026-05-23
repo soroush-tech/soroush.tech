@@ -15,6 +15,7 @@
     "dev": "vite",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives --cache --max-warnings 0",
     "format": "prettier --write .",
+    "git:refresh": "git update-index -q --refresh",
     "test": "vitest",
     "test:unit": "vitest --project=unit",
     "test:ui": "vitest --ui",
