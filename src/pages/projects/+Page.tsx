@@ -1,7 +1,7 @@
 import { Layout } from 'src/common/Layout.tsx'
-import { Flex } from 'src/theme/Flex.tsx'
-import { Typography } from 'src/theme/Typography.tsx'
-import { View } from 'src/theme/View.tsx'
+import { Flex } from 'src/theme/Flex'
+import { Typography } from 'src/theme/Typography'
+import { View } from 'src/theme/View'
 
 function Projects() {
   return (

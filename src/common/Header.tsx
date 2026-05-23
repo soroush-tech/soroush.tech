@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { NavLink } from 'src/common/NavLink'
 import { View } from 'src/theme/View'
 import Logo from '/soroush.svg'
-import { Flex } from 'src/theme/Flex.tsx'
+import { Flex } from 'src/theme/Flex'
 
 export const Header: FC = () => {
   return (
