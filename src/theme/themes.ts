@@ -55,6 +55,7 @@ export interface Theme {
   letterSpacings: Record<'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest', string>
   fontSizes: number[]
   radii: Record<'sm' | 'md' | 'lg', string>
+  borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   fontWeights: Record<
     | 'thin'
     | 'extraLight'
@@ -80,6 +81,13 @@ export const radii = {
   sm: '4px',
   md: '8px',
   lg: '16px',
+}
+
+export const borderWidths = {
+  none: '0',
+  thin: '1px',
+  base: '2px',
+  thick: '4px',
 }
 
 export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
@@ -125,6 +133,7 @@ const baseTheme = {
   shadows,
   spacing,
   radii,
+  borderWidths,
   fontSizes,
   lineHeights,
   letterSpacings,
