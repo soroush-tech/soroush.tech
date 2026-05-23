@@ -1,5 +1,5 @@
 import { Layout } from 'src/common/Layout.tsx'
-import { Typography } from 'src/theme/Typography.tsx'
+import { Typography } from 'src/theme/Typography'
 import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 

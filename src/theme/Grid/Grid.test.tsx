@@ -1,9 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider } from 'src/theme/ThemeProvider'
-import { Grid } from './Grid'
-
-const renderWithTheme = (ui: React.ReactNode) => render(<ThemeProvider>{ui}</ThemeProvider>)
+import { renderWithTheme } from 'src/test/utils/wrapper'
+import { Grid } from '../Grid'
 
 describe('Grid', () => {
   // ─── children ────────────────────────────────────────────────────────────────
