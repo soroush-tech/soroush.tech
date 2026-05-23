@@ -64,7 +64,7 @@ const meta: Meta<typeof Button> = {
       control: { type: 'inline-radio' },
       options: buttonSizeTokens,
       description: 'Controls padding and font size.',
-      table: { category: 'Visual', defaultValue: { summary: 'medium' } },
+      table: { category: 'Visual', defaultValue: { summary: 'md' } },
     },
     fullWidth: {
       control: 'boolean',
@@ -113,7 +113,7 @@ export const Default: Story = {
   args: {
     variant: 'contained',
     color: 'primary',
-    size: 'medium',
+    size: 'md',
     children: 'Action',
   },
 }
@@ -154,9 +154,9 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <Flex flexDirection="row" gap={2} alignItems="center" flexWrap="wrap">
-      <Button size="small">Small</Button>
-      <Button size="medium">Medium</Button>
-      <Button size="large">Large</Button>
+      <Button size="sm">Small</Button>
+      <Button size="md">Medium</Button>
+      <Button size="lg">Large</Button>
     </Flex>
   ),
 }

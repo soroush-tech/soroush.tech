@@ -43,13 +43,13 @@ Default: `"primary"`.
 
 Maps to `theme.space` (padding) and `theme.fontSizes` (font size).
 
-| Size       | `paddingY`          | `paddingX`          | `fontSize`            |
-| ---------- | ------------------- | ------------------- | --------------------- |
-| `"small"`  | `space[0.5]` (4px)  | `space[1.5]` (12px) | `fontSizes[0]` (12px) |
-| `"medium"` | `space[1]` (8px)    | `space[2]` (16px)   | `fontSizes[1]` (14px) |
-| `"large"`  | `space[1.5]` (12px) | `space[3]` (24px)   | `fontSizes[1]` (14px) |
+| Size   | `paddingY`          | `paddingX`          | `fontSize`            |
+| ------ | ------------------- | ------------------- | --------------------- |
+| `"sm"` | `space[0.5]` (4px)  | `space[1.5]` (12px) | `fontSizes[0]` (12px) |
+| `"md"` | `space[1]` (8px)    | `space[2]` (16px)   | `fontSizes[1]` (14px) |
+| `"lg"` | `space[1.5]` (12px) | `space[3]` (24px)   | `fontSizes[1]` (14px) |
 
-Default: `"medium"`.
+Default: `"md"`.
 
 ---
 
@@ -157,8 +157,8 @@ All buttons apply these styles regardless of variant:
 <Button color="warning" variant="outlined">Proceed with caution</Button>
 
 // Sizes
-<Button size="small">SM</Button>
-<Button size="large">Deploy System</Button>
+<Button size="sm">SM</Button>
+<Button size="lg">Deploy System</Button>
 
 // Icons
 <Button startIcon={<Icon />}>Upload</Button>
