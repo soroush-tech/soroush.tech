@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { queryWrapperWithSuspense as wrapper } from 'src/test/utils/wrapper.tsx'
+import { queryWrapperWithSuspense as wrapper } from 'src/test/utils/wrapper'
 import { useCustomQuery } from './useCustomQuery'
 
 describe('useCustomQuery', () => {

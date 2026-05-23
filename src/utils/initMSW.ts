@@ -1,4 +1,4 @@
-import { MSW_ACTIVE } from 'src/config.ts'
+import { MSW_ACTIVE } from 'src/config'
 
 export async function initMSW() {
   if (MSW_ACTIVE) {

@@ -261,7 +261,7 @@ Full architecture is documented in `src/theme/design-system.md`. Key rules for w
 - `color` → `scale: 'text'`
 - `bg` → `scale: 'background'`
 
-**Storybook options** — all option arrays live in `src/theme/storybookOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storybookOptions.ts`.
+**Storybook options** — all option arrays live in `src/theme/test/utils/storybookOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storybookOptions.ts`.
 
 **Storybook argType rules:**
 

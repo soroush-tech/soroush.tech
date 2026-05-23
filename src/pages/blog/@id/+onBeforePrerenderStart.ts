@@ -1,4 +1,4 @@
-import { getGists } from 'src/hooks/useGists.ts'
+import { getGists } from 'src/hooks/useGists'
 
 export { onBeforePrerenderStart }
 

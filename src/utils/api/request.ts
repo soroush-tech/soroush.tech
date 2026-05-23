@@ -5,7 +5,7 @@ import axios, {
   type RawAxiosRequestHeaders,
 } from 'axios'
 import { removeEmptyValues } from 'src/utils/removeEmptyValues'
-import { REQUEST_TIMEOUT } from 'src/config.ts'
+import { REQUEST_TIMEOUT } from 'src/config'
 
 const errorHandler = (error: Error) => {
   if (error.message.includes('Network Error')) {

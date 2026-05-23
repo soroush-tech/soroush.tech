@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Layout } from 'src/common/Layout'
 import { Post } from 'src/common/Post'
-import { usePageContext } from 'src/hooks/usePageContext.tsx'
+import { usePageContext } from 'src/hooks/usePageContext'
 
 function Page() {
   const { routeParams } = usePageContext()

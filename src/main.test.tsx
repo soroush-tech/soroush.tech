@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import * as ReactDOM from 'react-dom/client'
 import * as React from 'react'
-import * as Config from 'src/config.ts'
+import * as Config from 'src/config'
 
 // Mock dependencies
 vi.mock('react-dom/client', () => ({
