@@ -1,23 +1,12 @@
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
-import { midnight, kineticGreen, kineticSurface, scarletRed, tealGreen } from 'src/theme/colors'
-// interface FaceFont {
-//   regular: string
-//   light: string
-//   medium: string
-//   bold: string
-//   black: string
-// }
-// export type FontWeights = {
-//   thin?: number
-//   extraLight?: number
-//   light?: number
-//   normal?: number
-//   medium?: number
-//   semiBold?: number
-//   bold?: number
-//   extraBold?: number
-//   black?: number
-// }
+import {
+  carbonBlack,
+  cyberCyan,
+  kineticGreen,
+  kineticSurface,
+  neonRed,
+  solarAmber,
+} from 'src/theme/colors'
 
 export interface Theme {
   name: string
@@ -36,8 +25,11 @@ export interface Theme {
     initial: string
     primary: string
     secondary: string
+    disabled: string
     error: string
     success: string
+    info: string
+    warning: string
   }
   background: {
     backdrop: string
@@ -45,6 +37,8 @@ export interface Theme {
     primary: string
     secondary?: string
     paper: string
+    terminal: string
+    grid: string
   }
   colors: {
     default: string
@@ -54,8 +48,11 @@ export interface Theme {
   }
   fonts: {
     body: string
+    heading: string
+    mono: string
   }
-  lineHeights: string[]
+  lineHeights: Record<'none' | 'tight' | 'snug' | 'base' | 'relaxed' | 'loose', number>
+  letterSpacings: Record<'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest', string>
   fontSizes: number[]
   radii: Record<'sm' | 'md' | 'lg', string>
   fontWeights: Record<
@@ -71,21 +68,44 @@ export interface Theme {
     number
   >
 }
+
 export type Light = typeof light
 export type Dark = typeof dark
 
 const shadows = Array.from({ length: 25 }, (_, elevation) => ({
   boxShadow: generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)'),
 }))
+
 export const radii = {
   sm: '4px',
   md: '8px',
   lg: '16px',
 }
+
 export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
-export const lineHeights = ['0px', '2px', '4px', '8px', '40px']
+
+export const lineHeights = {
+  none: 1,
+  tight: 1.2,
+  snug: 1.35,
+  base: 1.5,
+  relaxed: 1.625,
+  loose: 2,
+}
+
+export const letterSpacings = {
+  tighter: '-0.05em',
+  tight: '-0.025em',
+  normal: '0em',
+  wide: '0.05em',
+  wider: '0.1em',
+  widest: '0.2em',
+}
+
 export const fonts = {
-  body: `system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif, 'BlinkMacSystemFont', 'Helvetica Neue', Arial, sans-serif;`,
+  body: "'Space Grotesk', sans-serif",
+  heading: "'Space Grotesk', sans-serif",
+  mono: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
 }
 
 const fontWeights = {
@@ -107,6 +127,7 @@ const baseTheme = {
   radii,
   fontSizes,
   lineHeights,
+  letterSpacings,
   fontWeights,
   fonts,
   space: {
@@ -137,29 +158,34 @@ export const light: Theme = {
   ...baseTheme,
   name: 'light',
   background: {
-    backdrop: '#ffffff',
-    modal: '#f4f4f4',
-    primary: '#f4f4f4',
-    secondary: '#e9e9e9',
-    paper: '#ffffff',
+    backdrop: `${kineticSurface[100]}CC`,
+    modal: kineticSurface[100],
+    primary: kineticSurface[200],
+    secondary: carbonBlack[100],
+    paper: kineticSurface[100],
+    terminal: carbonBlack[100],
+    grid: `${kineticGreen[600]}1A`,
   },
   text: {
-    inherit: 'rgba(0, 0, 0, .5)',
-    initial: '#333',
-    primary: kineticGreen[800],
-    secondary: '#666',
-    error: scarletRed[500],
-    success: tealGreen[500],
+    inherit: 'inherit',
+    initial: kineticSurface[900],
+    primary: kineticSurface[900],
+    secondary: kineticGreen[800],
+    disabled: `${kineticSurface[900]}4D`,
+    error: neonRed[700],
+    success: kineticGreen[700],
+    info: cyberCyan[800],
+    warning: solarAmber[800],
   },
   border: {
-    light: kineticSurface[200],
-    primary: kineticSurface[400],
-    dark: kineticSurface[600],
+    light: `${carbonBlack[900]}0D`,
+    primary: kineticGreen[600],
+    dark: kineticSurface[200],
   },
   colors: {
-    default: '#e0e0e0',
-    primary: kineticGreen[500],
-    secondary: kineticGreen[300],
+    default: kineticSurface[900],
+    primary: kineticGreen[600],
+    secondary: cyberCyan[700],
   },
 }
 
@@ -167,27 +193,34 @@ export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
   background: {
-    backdrop: midnight[900],
-    modal: kineticSurface[600],
+    backdrop: `${carbonBlack[900]}CC`,
+    modal: kineticSurface[800],
     primary: kineticSurface[900],
     secondary: kineticSurface[700],
     paper: kineticSurface[800],
+    terminal: carbonBlack[900],
+    grid: `${kineticGreen[500]}0D`,
   },
   text: {
-    inherit: 'rgba(255, 255, 255, 0.87)',
+    inherit: 'inherit',
     initial: kineticSurface[100],
-    primary: midnight[900],
+    primary: kineticGreen[500],
     secondary: kineticSurface[400],
-    error: scarletRed[500],
-    success: tealGreen[500],
+    disabled: kineticSurface[500],
+    error: neonRed[700],
+    success: kineticGreen[700],
+    info: cyberCyan[500],
+    warning: solarAmber[800],
   },
   border: {
-    primary: kineticSurface[500],
+    light: `${kineticSurface[100]}1A`,
+    primary: kineticGreen[500],
+    dark: kineticSurface[800],
   },
   colors: {
-    default: '#e0e0e0',
+    default: kineticSurface[100],
     primary: kineticGreen[500],
-    secondary: kineticGreen[300],
+    secondary: cyberCyan[500],
   },
 }
 

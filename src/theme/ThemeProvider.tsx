@@ -10,6 +10,8 @@ type Props<T extends object> = Omit<T, 'theme'> & {
   theme?: Theme
 }
 
+export const GlobalStyles = () => <Global styles={globalStyles} />
+
 export function ThemeProvider({ children, ...props }: Props<ThemeProviderProps>) {
   const modifiedProps = {
     ...props,
@@ -18,7 +20,7 @@ export function ThemeProvider({ children, ...props }: Props<ThemeProviderProps>)
 
   return (
     <DefaultThemeProvider {...modifiedProps}>
-      <Global styles={globalStyles} />
+      <GlobalStyles />
       {children}
     </DefaultThemeProvider>
   )
