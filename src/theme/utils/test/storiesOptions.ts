@@ -1,5 +1,10 @@
 import type { TypographyAlign } from 'src/theme/Typography'
 import type { AvatarVariant } from 'src/theme/Avatar'
+import type {
+  CircularProgressColor,
+  CircularProgressEasing,
+  CircularProgressVariant,
+} from 'src/theme/CircularProgress'
 import {
   dark,
   radii,
@@ -34,6 +39,21 @@ export const letterSpacingTokens = objectKeys(letterSpacings)
 export const borderRadiiTokens = objectKeys(radii)
 export const borderWidthTokens = objectKeys(borderWidths)
 export const avatarSizeTokens = objectKeys(avatar)
+export const circularProgressColorTokens = [
+  ...buttonColorTokens,
+  'inherit',
+] satisfies CircularProgressColor[]
+export const circularProgressVariantTokens = [
+  'indeterminate',
+  'determinate',
+] satisfies CircularProgressVariant[]
+export const circularProgressEasingTokens = [
+  'linear',
+  'ease',
+  'ease-in',
+  'ease-out',
+  'ease-in-out',
+] satisfies CircularProgressEasing[]
 
 // --- Hardcoded: no theme/component backing ---
 

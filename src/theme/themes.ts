@@ -43,12 +43,6 @@ export interface Theme {
     terminal: string
     grid: string
   }
-  colors: {
-    default: string
-    primary: string
-    secondary: string
-    [key: string]: string
-  }
   typography: Record<
     TypographyVariant,
     {
@@ -82,6 +76,10 @@ export interface Theme {
     | 'extraBold'
     | 'black',
     number
+  >
+  palette: Record<
+    'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    { main: string; light: string; dark: string; contrastText: string }
   >
 }
 
@@ -220,6 +218,44 @@ const baseTheme = {
 export const light: Theme = {
   ...baseTheme,
   name: 'light',
+  palette: {
+    primary: {
+      main: kineticGreen[600],
+      light: kineticGreen[400],
+      dark: kineticGreen[700],
+      contrastText: kineticGreen[800],
+    },
+    secondary: {
+      main: cyberCyan[700],
+      light: cyberCyan[500],
+      dark: cyberCyan[800],
+      contrastText: kineticSurface[100],
+    },
+    success: {
+      main: kineticGreen[700],
+      light: kineticGreen[500],
+      dark: kineticGreen[800],
+      contrastText: kineticSurface[100],
+    },
+    error: {
+      main: neonRed[700],
+      light: neonRed[500],
+      dark: neonRed[800],
+      contrastText: kineticSurface[100],
+    },
+    info: {
+      main: cyberCyan[800],
+      light: cyberCyan[600],
+      dark: cyberCyan[900],
+      contrastText: kineticSurface[100],
+    },
+    warning: {
+      main: solarAmber[500],
+      light: solarAmber[300],
+      dark: solarAmber[600],
+      contrastText: carbonBlack[900],
+    },
+  },
   background: {
     backdrop: `${kineticSurface[100]}CC`,
     modal: kineticSurface[100],
@@ -245,16 +281,49 @@ export const light: Theme = {
     primary: kineticGreen[600],
     dark: kineticSurface[200],
   },
-  colors: {
-    default: kineticSurface[900],
-    primary: kineticGreen[600],
-    secondary: cyberCyan[700],
-  },
 }
 
 export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
+  palette: {
+    primary: {
+      main: kineticGreen[500],
+      light: kineticGreen[300],
+      dark: kineticGreen[600],
+      contrastText: kineticGreen[800],
+    },
+    secondary: {
+      main: cyberCyan[500],
+      light: cyberCyan[300],
+      dark: cyberCyan[600],
+      contrastText: carbonBlack[900],
+    },
+    success: {
+      main: kineticGreen[700],
+      light: kineticGreen[500],
+      dark: kineticGreen[800],
+      contrastText: kineticSurface[100],
+    },
+    error: {
+      main: neonRed[500],
+      light: neonRed[300],
+      dark: neonRed[600],
+      contrastText: kineticSurface[100],
+    },
+    info: {
+      main: cyberCyan[500],
+      light: cyberCyan[300],
+      dark: cyberCyan[600],
+      contrastText: carbonBlack[900],
+    },
+    warning: {
+      main: solarAmber[400],
+      light: solarAmber[200],
+      dark: solarAmber[500],
+      contrastText: carbonBlack[900],
+    },
+  },
   background: {
     backdrop: `${carbonBlack[900]}CC`,
     modal: kineticSurface[800],
@@ -279,11 +348,6 @@ export const dark: Theme = {
     light: `${kineticSurface[100]}1A`,
     primary: kineticGreen[500],
     dark: kineticSurface[800],
-  },
-  colors: {
-    default: kineticSurface[100],
-    primary: kineticGreen[500],
-    secondary: cyberCyan[500],
   },
 }
 
