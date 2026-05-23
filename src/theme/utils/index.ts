@@ -1,2 +1,2 @@
-export * from './spacing.ts'
-export * from './generateBoxShadow.ts'
+export * from './spacing'
+export * from './generateBoxShadow'

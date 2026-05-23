@@ -1,6 +1,6 @@
 import { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import { createRequest } from './request'
-import { BASE_URL } from '../../config.ts'
+import { BASE_URL } from '../../config'
 
 interface Option extends AxiosRequestConfig {
   baseURL?: string

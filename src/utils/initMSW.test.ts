@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import * as Config from 'src/config.ts'
+import * as Config from 'src/config'
 import { initMSW } from './initMSW'
 
 // Mock the browser worker

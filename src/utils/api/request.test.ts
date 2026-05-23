@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import axios from 'axios'
 import { createRequest } from './request'
-import { REQUEST_TIMEOUT } from 'src/config.ts'
+import { REQUEST_TIMEOUT } from 'src/config'
 import { removeEmptyValues } from 'src/utils/removeEmptyValues'
 import qs from 'query-string'
 

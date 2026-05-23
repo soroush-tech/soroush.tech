@@ -27,6 +27,13 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       ...prettierConfig.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ImportDeclaration[source.value=/\\.tsx?$/]',
+          message: 'Do not include .ts, .js, jsx, .tsx extensions in import paths.',
+        },
+      ],
       'prettier/prettier': [
         'error',
         {

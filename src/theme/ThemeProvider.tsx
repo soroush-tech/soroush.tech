@@ -4,7 +4,7 @@ import {
   type ThemeProviderProps,
 } from '@emotion/react'
 import { dark, type Theme } from 'src/theme/themes'
-import globalStyles from 'src/theme/globalStyles.ts'
+import globalStyles from 'src/theme/globalStyles'
 
 type Props<T extends object> = Omit<T, 'theme'> & {
   theme?: Theme
