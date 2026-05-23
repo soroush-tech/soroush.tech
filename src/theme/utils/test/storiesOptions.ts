@@ -12,6 +12,7 @@ import type {
   CircularProgressEasing,
   CircularProgressVariant,
 } from 'src/theme/CircularProgress'
+import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
 import {
   dark,
   radii,
@@ -70,6 +71,8 @@ export const circularProgressEasingTokens = [
   'ease-out',
   'ease-in-out',
 ] satisfies CircularProgressEasing[]
+export const checkboxColorTokens = ['default', ...buttonColorTokens] satisfies CheckboxColor[]
+export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
 
 // --- Hardcoded: no theme/component backing ---
 
