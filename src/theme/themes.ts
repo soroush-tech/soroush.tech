@@ -1,3 +1,6 @@
+import type { ElementType } from 'react'
+import type { CSSObject } from 'storybook/theming'
+import type { TypographyVariant } from 'src/theme/Typography'
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
 import {
   carbonBlack,
@@ -46,6 +49,16 @@ export interface Theme {
     secondary: string
     [key: string]: string
   }
+  typography: Record<
+    TypographyVariant,
+    {
+      element: ElementType
+      fontSize?: number
+      fontWeight?: string
+      letterSpacing?: string
+      textTransform?: CSSObject['textTransform']
+    }
+  >
   fonts: {
     body: string
     heading: string
@@ -118,7 +131,7 @@ export const fonts = {
   mono: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
 }
 
-const fontWeights = {
+export const fontWeights = {
   thin: 100,
   extraLight: 200,
   light: 300,
@@ -129,13 +142,13 @@ const fontWeights = {
   extraBold: 800,
   black: 900,
 }
-const avatar = {
+export const avatar = {
   sm: spacing(4),
   md: spacing(5),
   lg: spacing(6),
   xl: spacing(7),
 }
-const space = {
+export const space = {
   0: 0,
   0.5: spacing(0.5),
   1: spacing(1),
@@ -150,6 +163,37 @@ const space = {
   auto: 'auto',
 }
 
+export const typography: Theme['typography'] = {
+  h1: { element: 'h1', fontSize: 6, fontWeight: 'bold' },
+  h2: { element: 'h2', fontSize: 5, fontWeight: 'bold' },
+  h3: { element: 'h3', fontSize: 4, fontWeight: 'bold' },
+  h4: { element: 'h4', fontSize: 3, fontWeight: 'bold' },
+  h5: { element: 'h5', fontSize: 2, fontWeight: 'bold' },
+  h6: { element: 'h6', fontSize: 1, fontWeight: 'semiBold' },
+  subtitle1: { element: 'h6', fontSize: 2, fontWeight: 'medium' },
+  subtitle2: { element: 'h6', fontSize: 1, fontWeight: 'medium' },
+  body1: { element: 'p', fontSize: 2, fontWeight: 'normal' },
+  body2: { element: 'p', fontSize: 1, fontWeight: 'normal' },
+  caption: { element: 'span', fontSize: 0, fontWeight: 'normal' },
+  overline: {
+    element: 'span',
+    fontSize: 0,
+    fontWeight: 'medium',
+    textTransform: 'uppercase',
+    letterSpacing: 'wider',
+  },
+  button: {
+    element: 'span',
+    fontSize: 1,
+    fontWeight: 'medium',
+    textTransform: 'uppercase',
+    letterSpacing: 'wide',
+  },
+  inherit: {
+    element: 'span',
+  },
+}
+
 const baseTheme = {
   name: 'base',
   shadows,
@@ -158,6 +202,7 @@ const baseTheme = {
   borderWidths,
   fontSizes,
   lineHeights,
+  typography,
   letterSpacings,
   fontWeights,
   fonts,
