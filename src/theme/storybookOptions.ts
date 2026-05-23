@@ -5,6 +5,7 @@ import type {
   TypographyAlign,
   TypographyVariant,
 } from 'src/theme/Typography'
+import type { AvatarVariant, AvatarSize } from 'src/theme/Avatar'
 
 export const variantTokens = [
   'h1',
@@ -126,3 +127,9 @@ export const borderWidthTokens = [
   'base',
   'thick',
 ] satisfies (keyof Theme['borderWidths'])[]
+
+export const avatarVariantTokens = ['circular', 'rounded', 'square'] satisfies AvatarVariant[]
+
+export const avatarSizeTokens = ['sm', 'md', 'lg', 'xl'] satisfies AvatarSize[]
+
+export const objectFitTokens = ['cover', 'contain', 'fill', 'none', 'scale-down'] as const

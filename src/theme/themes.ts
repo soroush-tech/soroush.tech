@@ -56,6 +56,8 @@ export interface Theme {
   fontSizes: number[]
   radii: Record<'sm' | 'md' | 'lg', string>
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
+  avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
+
   fontWeights: Record<
     | 'thin'
     | 'extraLight'
@@ -127,6 +129,26 @@ const fontWeights = {
   extraBold: 800,
   black: 900,
 }
+const avatar = {
+  sm: spacing(4),
+  md: spacing(5),
+  lg: spacing(6),
+  xl: spacing(7),
+}
+const space = {
+  0: 0,
+  0.5: spacing(0.5),
+  1: spacing(1),
+  1.5: spacing(1.5),
+  2: spacing(2),
+  3: spacing(3),
+  4: spacing(4),
+  5: spacing(5),
+  6: spacing(6),
+  7: spacing(7),
+  8: spacing(8),
+  auto: 'auto',
+}
 
 const baseTheme = {
   name: 'base',
@@ -139,20 +161,8 @@ const baseTheme = {
   letterSpacings,
   fontWeights,
   fonts,
-  space: {
-    0: 0,
-    0.5: spacing(0.5),
-    1: spacing(1),
-    1.5: spacing(1.5),
-    2: spacing(2),
-    3: spacing(3),
-    4: spacing(4),
-    5: spacing(5),
-    6: spacing(6),
-    7: spacing(7),
-    8: spacing(8),
-    auto: 'auto',
-  },
+  avatar,
+  space,
   // get space() {
   //   return new Proxy(
   //     {},
