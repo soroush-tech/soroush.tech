@@ -54,6 +54,7 @@ export default defineConfig({
             '**/build/**',
             '**/public/**',
             '**/e2e/**',
+            '.claude/**',
           ],
         },
       },
