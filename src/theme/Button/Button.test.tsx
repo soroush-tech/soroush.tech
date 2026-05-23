@@ -144,9 +144,9 @@ describe('Button', () => {
 
   describe('size', () => {
     it.each([
-      ['small', '4px', '12px', '12px'] as [ButtonSize, string, string, string],
-      ['medium', '8px', '16px', '14px'] as [ButtonSize, string, string, string],
-      ['large', '12px', '24px', '14px'] as [ButtonSize, string, string, string],
+      ['sm', '4px', '12px', '12px'] as [ButtonSize, string, string, string],
+      ['md', '8px', '16px', '14px'] as [ButtonSize, string, string, string],
+      ['lg', '12px', '24px', '14px'] as [ButtonSize, string, string, string],
     ])('size="%s" → py=%s px=%s fontSize=%s', (size, py, px, fontSize) => {
       renderWithTheme(
         <Button size={size} data-testid="btn">
@@ -162,7 +162,7 @@ describe('Button', () => {
 
     it('does not forward size to DOM', () => {
       renderWithTheme(
-        <Button size="medium" data-testid="btn">
+        <Button size="md" data-testid="btn">
           btn
         </Button>
       )

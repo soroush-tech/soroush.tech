@@ -64,6 +64,7 @@ export interface Theme {
   radii: Record<'sm' | 'md' | 'lg', string>
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
+  sizes: typeof sizes
   shadows: string[]
   fontWeights: Record<
     | 'thin'
@@ -145,6 +146,11 @@ export const avatar = {
   lg: spacing(6),
   xl: spacing(7),
 }
+export const sizes = {
+  sm: { paddingTop: 0.5, paddingBottom: 0.5, paddingLeft: 1.5, paddingRight: 1.5, fontSize: 0 },
+  md: { paddingTop: 1, paddingBottom: 1, paddingLeft: 2, paddingRight: 2, fontSize: 1 },
+  lg: { paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 3, paddingRight: 3, fontSize: 1 },
+} as const
 export const space = {
   0: 0,
   0.5: spacing(0.5),
@@ -204,6 +210,7 @@ const baseTheme = {
   fontWeights,
   fonts,
   avatar,
+  sizes,
   space,
   // get space() {
   //   return new Proxy(

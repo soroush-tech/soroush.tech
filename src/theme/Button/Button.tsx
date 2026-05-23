@@ -15,17 +15,19 @@ import {
   type BorderProps,
   type TypographyProps,
 } from 'styled-system'
+import type { AppBarSize } from 'src/theme/AppBar'
 
 export type ButtonVariant = 'contained' | 'outlined' | 'text'
 export type ButtonColor = keyof Theme['palette']
-export type ButtonSize = 'small' | 'medium' | 'large'
+export type ButtonSize = keyof Theme['sizes']
 export type ButtonShape = 'square' | 'rounded' | 'pill'
 export type ButtonLoadingPosition = 'start' | 'end' | 'center'
 /** Valid values for the gap prop — resolves against theme.space. */
 export type GapToken = keyof Theme['space']
 
 export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>,
+  extends
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     BorderProps<Theme>,
@@ -34,7 +36,7 @@ export interface ButtonProps
   variant?: ButtonVariant
   /** Color palette — maps to `theme.palette[color]`. Default: `"primary"`. */
   color?: ButtonColor
-  /** Size token — controls padding and font size. Default: `"medium"`. */
+  /** Size token — controls padding and font size. Default: `"md"`. */
   size?: ButtonSize
   /** Gap between icon and label — resolves against theme.space. Default: `1` (8px). */
   gap?: GapToken
@@ -128,21 +130,18 @@ const buttonBaseSystem = system({
   gap: { property: 'gap', scale: 'space' },
 })
 
-// Padding resolves against theme.space; fontSize against theme.fontSizes
-const sizeVariants = variant({
-  prop: 'size',
-  variants: {
-    small: {
-      paddingTop: 0.5,
-      paddingBottom: 0.5,
-      paddingLeft: 1.5,
-      paddingRight: 1.5,
-      fontSize: 0,
-    },
-    medium: { paddingTop: 1, paddingBottom: 1, paddingLeft: 2, paddingRight: 2, fontSize: 1 },
-    large: { paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 3, paddingRight: 3, fontSize: 1 },
-  },
-})
+const sizeVariants = ({ theme, size }: { theme?: Theme; size?: AppBarSize }) => {
+  if (!size) return {}
+  const s = theme?.sizes[size]
+  if (!s) return {}
+  return {
+    paddingTop: theme?.space?.[s.paddingTop],
+    paddingBottom: theme?.space?.[s.paddingBottom],
+    paddingLeft: theme?.space?.[s.paddingLeft],
+    paddingRight: theme?.space?.[s.paddingRight],
+    fontSize: theme?.fontSizes[s.fontSize],
+  }
+}
 
 const variantStyles = ({
   variant = 'contained',
@@ -187,7 +186,7 @@ const shapeVariants = variant({
 const fullWidthStyles = ({ fullWidth }: ButtonProps) => (fullWidth ? { width: '100%' } : {})
 
 // layout's built-in `size` shorthand maps to width+height — strip it so Button's
-// own `size` prop (small/medium/large) doesn't bleed into layout CSS.
+// own `size` prop (sm/md/lg) doesn't bleed into layout CSS.
 const safeLayout = (props: ButtonProps & { theme?: Theme }) => layout({ ...props, size: undefined })
 
 // ─── Styled root ──────────────────────────────────────────────────────────────
@@ -210,7 +209,7 @@ const ButtonRoot = styled('button', { shouldForwardProp })<ButtonProps>(
 export function Button({
   variant = 'contained',
   color = 'primary',
-  size = 'medium',
+  size = 'md',
   shape = 'rounded',
   gap = 1,
   fontWeight = 'bold',

@@ -50,7 +50,7 @@ export const borderWidthTokens = objectKeys(borderWidths)
 export const avatarSizeTokens = objectKeys(avatar)
 export const buttonColorTokens = objectKeys(dark.palette) satisfies ButtonColor[]
 export const buttonVariantTokens = ['contained', 'outlined', 'text'] satisfies ButtonVariant[]
-export const buttonSizeTokens = ['small', 'medium', 'large'] satisfies ButtonSize[]
+export const buttonSizeTokens = ['sm', 'md', 'lg'] satisfies ButtonSize[]
 export const buttonShapeTokens = ['square', 'rounded', 'pill'] satisfies ButtonShape[]
 export const buttonLoadingPositionTokens = [
   'start',
