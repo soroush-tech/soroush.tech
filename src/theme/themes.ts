@@ -1,5 +1,5 @@
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
-import { greenSteel, midnight, neutral, scarletRed, solarEmber, tealGreen } from 'src/theme/colors'
+import { midnight, kineticGreen, kineticSurface, scarletRed, tealGreen } from 'src/theme/colors'
 // interface FaceFont {
 //   regular: string
 //   light: string
@@ -146,20 +146,20 @@ export const light: Theme = {
   text: {
     inherit: 'rgba(0, 0, 0, .5)',
     initial: '#333',
-    primary: neutral[100],
+    primary: kineticGreen[800],
     secondary: '#666',
     error: scarletRed[500],
     success: tealGreen[500],
   },
   border: {
-    light: neutral[300],
-    primary: neutral[500],
-    dark: neutral[700],
+    light: kineticSurface[200],
+    primary: kineticSurface[400],
+    dark: kineticSurface[600],
   },
   colors: {
     default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
+    primary: kineticGreen[500],
+    secondary: kineticGreen[300],
   },
 }
 
@@ -168,26 +168,26 @@ export const dark: Theme = {
   name: 'dark',
   background: {
     backdrop: midnight[900],
-    modal: '#0D1315',
-    primary: '#1C1C1C',
-    secondary: '#1A262C',
-    paper: '#000000',
+    modal: kineticSurface[600],
+    primary: kineticSurface[900],
+    secondary: kineticSurface[700],
+    paper: kineticSurface[800],
   },
   text: {
     inherit: 'rgba(255, 255, 255, 0.87)',
-    initial: '#fff',
+    initial: kineticSurface[100],
     primary: midnight[900],
-    secondary: '#888',
+    secondary: kineticSurface[400],
     error: scarletRed[500],
     success: tealGreen[500],
   },
   border: {
-    primary: '#4c565b',
+    primary: kineticSurface[500],
   },
   colors: {
     default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
+    primary: kineticGreen[500],
+    secondary: kineticGreen[300],
   },
 }
 
