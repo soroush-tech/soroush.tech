@@ -1,4 +1,11 @@
 import type { TypographyAlign } from 'src/theme/Typography'
+import type {
+  ButtonVariant,
+  ButtonColor,
+  ButtonSize,
+  ButtonShape,
+  ButtonLoadingPosition,
+} from 'src/theme/Button'
 import type { AvatarVariant } from 'src/theme/Avatar'
 import type {
   CircularProgressColor,
@@ -39,6 +46,15 @@ export const letterSpacingTokens = objectKeys(letterSpacings)
 export const borderRadiiTokens = objectKeys(radii)
 export const borderWidthTokens = objectKeys(borderWidths)
 export const avatarSizeTokens = objectKeys(avatar)
+export const buttonColorTokens = objectKeys(dark.palette) satisfies ButtonColor[]
+export const buttonVariantTokens = ['contained', 'outlined', 'text'] satisfies ButtonVariant[]
+export const buttonSizeTokens = ['small', 'medium', 'large'] satisfies ButtonSize[]
+export const buttonShapeTokens = ['square', 'rounded', 'pill'] satisfies ButtonShape[]
+export const buttonLoadingPositionTokens = [
+  'start',
+  'end',
+  'center',
+] satisfies ButtonLoadingPosition[]
 export const circularProgressColorTokens = [
   ...buttonColorTokens,
   'inherit',
