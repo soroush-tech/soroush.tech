@@ -2,7 +2,7 @@
 
 The base layout primitive. Renders as `<div>`. All styled-system prop groups are supported: space, layout, color, typography, flexbox, border, and position.
 
-`Box`, `Flex`, and `Grid` all extend `View` with a semantic `display` default.
+`Flex`, `Grid`, and `Paper` all extend `View`.
 
 ---
 
@@ -29,6 +29,20 @@ Resolves against `theme.background`.
 ### `opacity`
 
 Raw CSS opacity value (0–1).
+
+---
+
+### `cursor`
+
+CSS cursor — controls the mouse pointer style. Accepts any valid CSS cursor value.
+
+Common values: `"pointer"` · `"default"` · `"move"` · `"not-allowed"` · `"wait"` · `"grab"` · `"text"`
+
+```tsx
+<View cursor="pointer" onClick={handleClick}>
+  clickable
+</View>
+```
 
 ---
 

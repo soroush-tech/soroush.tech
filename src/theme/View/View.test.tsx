@@ -80,6 +80,18 @@ describe('View', () => {
     })
   })
 
+  describe('cursor prop', () => {
+    it('applies cursor CSS property', () => {
+      renderWithTheme(<View cursor="pointer">clickable</View>)
+      expect(screen.getByText('clickable')).toHaveStyle({ cursor: 'pointer' })
+    })
+
+    it('does not forward cursor as a DOM attribute', () => {
+      renderWithTheme(<View cursor="pointer">clickable</View>)
+      expect(screen.getByText('clickable')).not.toHaveAttribute('cursor')
+    })
+  })
+
   describe('HTML attribute passthrough', () => {
     it('forwards className', () => {
       renderWithTheme(<View className="my-view">classed</View>)
