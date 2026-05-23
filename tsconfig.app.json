@@ -25,6 +25,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["@types", "src"],
+  "include": ["@types", "src", ".storybook"],
   "exclude": ["src/test/e2e"]
 }
