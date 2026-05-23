@@ -6,13 +6,18 @@
   "prHourlyLimit": 2,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
+  "enabledManagers": ["npm"],
   "lockFileMaintenance": {
     "enabled": false
   },
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "groupName": "devDependencies"
+      "matchDepTypes": ["packageManager"],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": ["pin"],
+      "enabled": false
     },
     {
       "matchUpdateTypes": ["minor"],
@@ -20,12 +25,7 @@
       "automerge": false
     },
     {
-      "matchUpdateTypes": ["pin"],
-      "groupName": "pin updates",
-      "automerge": false
-    },
-    {
-      "matchPackageNames": ["/^react/", "/^@types\\/react/"],
+      "matchPackageNames": ["/^react/", "/^@types\\/react/", "/^vike/"],
       "groupName": "React packages"
     },
     {
@@ -40,12 +40,14 @@
         "/^@types\\/jest/",
         "/^jest/",
         "/^playwright/",
-        "/^jsdom/"
+        "/^@playwright\\//",
+        "/^jsdom/",
+        "/^msw/"
       ],
       "groupName": "Testing stack"
     },
     {
-      "matchPackageNames": ["/^storybook/", "/^@storybook\\//"],
+      "matchPackageNames": ["/^storybook/", "/^@storybook\\//", "/^@chromatic-com\\//"],
       "groupName": "Storybook stack"
     },
     {
@@ -53,8 +55,8 @@
       "groupName": "Linting and formatting"
     },
     {
-      "matchUpdateTypes": ["digest", "patch"],
-      "groupName": "Safe digest/patch updates",
+      "matchUpdateTypes": ["patch"],
+      "groupName": "Patch updates",
       "automerge": true,
       "automergeType": "pr"
     }
