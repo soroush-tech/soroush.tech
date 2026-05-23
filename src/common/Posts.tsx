@@ -1,7 +1,6 @@
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { View } from 'src/theme/View'
-import { Box } from 'src/theme/Box'
 import { NavLink } from 'src/common/NavLink'
 import { useGists } from 'src/hooks/useGists'
 
@@ -23,11 +22,11 @@ export function Posts() {
         </Flex>
         <View as="section" mb={2}>
           {data.map((gist) => (
-            <Box>
+            <View>
               <NavLink fontSize={4} href={`/blog/${gist.id}`}>
                 {gist.description}
               </NavLink>
-            </Box>
+            </View>
           ))}
         </View>
       </Flex>
