@@ -70,7 +70,7 @@ export interface Theme {
   radii: Record<'sm' | 'md' | 'lg', string>
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
-
+  shadows: string[]
   fontWeights: Record<
     | 'thin'
     | 'extraLight'
@@ -88,10 +88,9 @@ export interface Theme {
 export type Light = typeof light
 export type Dark = typeof dark
 
-const shadows = Array.from({ length: 25 }, (_, elevation) => ({
-  boxShadow: generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)'),
-}))
-
+const shadows = Array.from({ length: 25 }, (_, elevation) =>
+  generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)')
+)
 export const radii = {
   sm: '4px',
   md: '8px',
