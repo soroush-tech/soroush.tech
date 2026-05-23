@@ -20,7 +20,7 @@ lerna-debug.log*
 *.sln
 *.sw?
 .eslintcache
-
+.claude
 
 # Covrage
 coverage
