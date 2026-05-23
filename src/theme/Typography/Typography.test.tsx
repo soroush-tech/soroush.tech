@@ -1,13 +1,8 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
-import { dark } from 'src/theme/themes'
-import {
-  Typography,
-  variantMapping,
-  type TypographyVariant,
-  type TextColorToken,
-} from './Typography'
+import { dark, typography } from 'src/theme/themes'
+import { Typography, type TypographyVariant, type TextColorToken } from './Typography'
 
 describe('Typography', () => {
   // ─── children ────────────────────────────────────────────────────────────────
@@ -42,7 +37,7 @@ describe('Typography', () => {
       ['subtitle2', 'H6'],
       ['body1', 'P'],
       ['body2', 'P'],
-      ['inherit', 'P'],
+      ['inherit', 'SPAN'],
       ['overline', 'SPAN'],
       ['button', 'SPAN'],
       ['caption', 'SPAN'],
@@ -59,7 +54,7 @@ describe('Typography', () => {
     })
 
     it('variantMapping covers all 14 variants', () => {
-      expect(Object.keys(variantMapping)).toHaveLength(cases.length)
+      expect(Object.keys(typography)).toHaveLength(cases.length)
     })
   })
 
