@@ -13,6 +13,7 @@ import type {
   CircularProgressVariant,
 } from 'src/theme/CircularProgress'
 import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
+import type { RadioColor, RadioSize } from 'src/theme/Radio'
 import {
   dark,
   radii,
@@ -73,6 +74,8 @@ export const circularProgressEasingTokens = [
 ] satisfies CircularProgressEasing[]
 export const checkboxColorTokens = ['default', ...buttonColorTokens] satisfies CheckboxColor[]
 export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
+export const radioColorTokens = ['default', ...buttonColorTokens] satisfies RadioColor[]
+export const radioSizeTokens = ['small', 'medium'] satisfies RadioSize[]
 
 // --- Hardcoded: no theme/component backing ---
 
