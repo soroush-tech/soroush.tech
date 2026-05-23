@@ -1,0 +1,175 @@
+import { type ChangeEvent, type InputHTMLAttributes, type ReactNode } from 'react'
+import styled from '@emotion/styled'
+import { type Theme } from '@emotion/react'
+import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
+import { space, type SpaceProps } from 'styled-system'
+
+export type RadioColor = 'default' | keyof Theme['palette']
+export type RadioSize = 'small' | 'medium'
+
+export interface RadioProps extends SpaceProps<Theme> {
+  /** Controlled checked state. Must be paired with `onChange`. */
+  checked?: boolean
+  /** Disables the radio. */
+  disabled?: boolean
+  /** Stroke/fill color. `'default'` resolves to `theme.text.secondary`. Default: `'default'`. */
+  color?: RadioColor
+  /** Icon size. Default: `'medium'`. */
+  size?: RadioSize
+  /** Custom icon for the unchecked state. */
+  icon?: ReactNode
+  /** Custom icon for the checked state. */
+  checkedIcon?: ReactNode
+  /** Called when the user selects the radio. */
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  /** Forwarded to the underlying `<input>` for label association. */
+  id?: string
+  /** Marks the field as required in a form. */
+  required?: boolean
+  /** Radio group name — required for native group exclusivity. */
+  name?: string
+  /** Value submitted with the form when this radio is selected. */
+  value?: string | number | readonly string[]
+  /** Extra props spread onto the underlying `<input>` (e.g. `aria-label`, `tabIndex`). Explicit top-level props take priority. */
+  inputProps?: InputHTMLAttributes<HTMLInputElement>
+  children?: ReactNode
+  className?: string
+  'data-testid'?: string
+}
+
+// ─── Icon size map ────────────────────────────────────────────────────────────
+
+const ICON_SIZE: Record<RadioSize, string> = {
+  small: '16px',
+  medium: '20px',
+}
+
+// ─── Default icons ────────────────────────────────────────────────────────────
+
+const UncheckedIcon = () => (
+  <svg viewBox="0 0 18 18" width="1em" height="1em" fill="none" aria-hidden="true">
+    <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+)
+
+const CheckedIcon = () => (
+  <svg viewBox="0 0 18 18" width="1em" height="1em" aria-hidden="true">
+    <circle cx="9" cy="9" r="9" fill="currentColor" />
+    <circle cx="9" cy="9" r="4" fill="white" />
+  </svg>
+)
+
+// ─── Styled sub-components ────────────────────────────────────────────────────
+
+const HiddenInput = styled('input')({
+  position: 'absolute',
+  width: 0,
+  height: 0,
+  opacity: 0,
+  margin: 0,
+  padding: 0,
+  pointerEvents: 'none',
+})
+
+const RadioIconWrapper = styled('span', {
+  shouldForwardProp: (prop) => prop !== 'size',
+})<{ size?: RadioSize }>(({ size = 'medium' }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  fontSize: ICON_SIZE[size],
+  lineHeight: 1,
+  transition: 'color 0.15s ease',
+}))
+
+// ─── Root styling functions ───────────────────────────────────────────────────
+
+interface RadioRootProps extends SpaceProps<Theme> {
+  color?: RadioColor
+  size?: RadioSize
+  disabled?: boolean
+}
+
+const shouldForwardProp = createShouldForwardProp([...props, 'color', 'size', 'disabled'])
+
+const baseStyle = ({ disabled, theme }: RadioRootProps & { theme?: Theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  position: 'relative' as const,
+  cursor: disabled ? 'not-allowed' : 'pointer',
+  gap: (theme?.space as Record<number, number>)?.[1] ?? 8,
+  userSelect: 'none' as const,
+  ...(disabled && { opacity: 0.5 }),
+  // Both icon spans are always in the DOM. CSS toggles visibility via the
+  // native :checked state so uncontrolled mode works without JS re-renders.
+  '& input:not(:checked) ~ span > .rb-checked': { display: 'none' },
+  '& input:checked ~ span > .rb-unchecked': { display: 'none' },
+  '&:has(input:focus-visible) > span:first-of-type': {
+    outline: '2px solid currentColor',
+    outlineOffset: '2px',
+    borderRadius: '50%',
+  },
+})
+
+const colorStyle = ({ color = 'default', theme }: RadioRootProps & { theme?: Theme }) => {
+  if (!theme) return {}
+  return {
+    color: color === 'default' ? theme.text.secondary : theme.palette[color].main,
+  }
+}
+
+const RadioRoot = styled('label', { shouldForwardProp })<RadioRootProps>(
+  baseStyle,
+  colorStyle,
+  space
+)
+
+// ─── Public component ─────────────────────────────────────────────────────────
+
+export function Radio({
+  checked,
+  disabled = false,
+  color = 'default',
+  size = 'medium',
+  icon,
+  checkedIcon,
+  onChange,
+  id,
+  required,
+  name,
+  value,
+  inputProps,
+  children,
+  className,
+  'data-testid': dataTestid,
+  ...spaceProps
+}: RadioProps) {
+  return (
+    <RadioRoot
+      color={color}
+      size={size}
+      disabled={disabled}
+      className={className}
+      data-testid={dataTestid}
+      {...spaceProps}
+    >
+      <HiddenInput
+        {...inputProps}
+        type="radio"
+        checked={checked}
+        disabled={disabled}
+        id={id}
+        required={required}
+        name={name}
+        value={value}
+        onChange={onChange}
+      />
+      <RadioIconWrapper size={size}>
+        <span className="rb-unchecked">{icon ?? <UncheckedIcon />}</span>
+        <span className="rb-checked">{checkedIcon ?? <CheckedIcon />}</span>
+      </RadioIconWrapper>
+      {children != null && <span>{children}</span>}
+    </RadioRoot>
+  )
+}
