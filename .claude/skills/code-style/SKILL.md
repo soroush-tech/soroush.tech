@@ -24,4 +24,24 @@ Applies everywhere: template literals, object spreads, JSX props — anywhere th
 
 ---
 
+### Destructure instead of repeated property access
+
+When a variable's properties are used more than once, destructure at the top instead of accessing them repeatedly.
+
+```ts
+// ✗
+const theme = _props.theme
+if (_props.error) {
+  return { borderColor: get(_props.theme, 'palette.error.main') }
+}
+
+// ✓
+const { theme, error } = props
+if (error) {
+  return { borderColor: get(theme, 'palette.error.main') }
+}
+```
+
+---
+
 If `$ARGUMENTS` names a file, read it and report violations with corrected code. Otherwise apply to the code being discussed.
