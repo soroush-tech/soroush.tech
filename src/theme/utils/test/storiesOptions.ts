@@ -14,6 +14,7 @@ import type {
 } from 'src/theme/CircularProgress'
 import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
 import type { RadioColor, RadioSize } from 'src/theme/Radio'
+import type { TextInputColor, TextInputVariant, TextInputSize } from 'src/theme/TextInput'
 import {
   dark,
   radii,
@@ -76,6 +77,14 @@ export const checkboxColorTokens = ['default', ...buttonColorTokens] satisfies C
 export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
 export const radioColorTokens = ['default', ...buttonColorTokens] satisfies RadioColor[]
 export const radioSizeTokens = ['small', 'medium'] satisfies RadioSize[]
+export const textInputColorTokens = [...buttonColorTokens] satisfies TextInputColor[]
+export const textInputVariantTokens = [
+  'default',
+  'outlined',
+  'text',
+  'underline',
+] satisfies TextInputVariant[]
+export const textInputSizeTokens = ['sm', 'md', 'lg'] satisfies TextInputSize[]
 
 // --- Hardcoded: no theme/component backing ---
 
