@@ -91,7 +91,7 @@ describe.skip('App', () => {
   it.skip('displays error message when API request fails', async () => {
     // Re-import App to use the mocked hook
     const { default: AppWithMockedHook } = await import('./App')
-    render(<AppWithMockedHook />, { wrapper })
+    renderWithApp(<AppWithMockedHook />)
     expect(screen.getByText('Error: Test error message')).toBeInTheDocument()
   })
 })

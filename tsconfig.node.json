@@ -21,11 +21,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "types": [
-      "@vitest/browser/providers/playwright"
-      // Rule: his global vitest variable is prohibited.
-      // "vitest/globals", "@playwright/test"
-    ]
+    "types": []
   },
   "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"]
 }
