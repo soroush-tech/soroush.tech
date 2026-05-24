@@ -15,9 +15,11 @@ import type {
 import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
 import type { RadioColor, RadioSize } from 'src/theme/Radio'
 import type { TextInputColor, TextInputVariant, TextInputSize } from 'src/theme/TextInput'
+import type { AppBarSize } from 'src/theme/AppBar'
 import {
   dark,
   radii,
+  sizes,
   borderWidths,
   fontSizes,
   lineHeights,
@@ -85,6 +87,7 @@ export const textInputVariantTokens = [
   'underline',
 ] satisfies TextInputVariant[]
 export const textInputSizeTokens = ['sm', 'md', 'lg'] satisfies TextInputSize[]
+export const appBarSizeTokens = objectKeys(sizes) satisfies AppBarSize[]
 
 // --- Hardcoded: no theme/component backing ---
 
