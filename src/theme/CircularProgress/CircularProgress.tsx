@@ -13,7 +13,8 @@ export type CircularProgressEasing = 'linear' | 'ease' | 'ease-in' | 'ease-out' 
 // HTMLAttributes<HTMLSpanElement> avoids the SVG height/display type conflicts
 // that arise when LayoutProps is combined with SVGAttributes.
 export interface CircularProgressProps
-  extends HTMLAttributes<HTMLSpanElement>,
+  extends
+    HTMLAttributes<HTMLSpanElement>,
     Omit<SpaceProps<Theme>, keyof PaddingProps>,
     LayoutProps<Theme> {
   /** Visual variant — looping animation or value-driven arc. Default: `'indeterminate'`. */

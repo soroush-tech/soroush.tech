@@ -14,6 +14,7 @@ import type {
 } from 'src/theme/CircularProgress'
 import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
 import type { RadioColor, RadioSize } from 'src/theme/Radio'
+import type { SwitchColor, SwitchEdge, SwitchSize, SwitchVariant } from 'src/theme/Switch'
 import type { TextInputColor, TextInputVariant, TextInputSize } from 'src/theme/TextInput'
 import type { AppBarSize } from 'src/theme/AppBar'
 import type { LinkUnderline } from 'src/theme/Link'
@@ -76,10 +77,14 @@ export const circularProgressEasingTokens = [
   'ease-out',
   'ease-in-out',
 ] satisfies CircularProgressEasing[]
-export const checkboxColorTokens = ['default', ...buttonColorTokens] satisfies CheckboxColor[]
+export const checkboxColorTokens = buttonColorTokens satisfies CheckboxColor[]
 export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
-export const radioColorTokens = ['default', ...buttonColorTokens] satisfies RadioColor[]
+export const radioColorTokens = buttonColorTokens satisfies RadioColor[]
 export const radioSizeTokens = ['small', 'medium'] satisfies RadioSize[]
+export const switchColorTokens = buttonColorTokens satisfies SwitchColor[]
+export const switchSizeTokens = ['sm', 'md', 'lg'] satisfies SwitchSize[]
+export const switchVariantTokens = ['outside', 'inside'] satisfies SwitchVariant[]
+export const switchEdgeTokens = ['start', 'end', false] satisfies SwitchEdge[]
 export const textInputColorTokens = [...buttonColorTokens] satisfies TextInputColor[]
 export const textInputVariantTokens = [
   'default',
