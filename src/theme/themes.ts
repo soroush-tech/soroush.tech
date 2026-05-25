@@ -79,7 +79,7 @@ export interface Theme {
     number
   >
   palette: Record<
-    'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    'default' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
     { main: string; light: string; dark: string; contrastText: string }
   >
 }
@@ -226,6 +226,12 @@ export const light: Theme = {
   ...baseTheme,
   name: 'light',
   palette: {
+    default: {
+      main: kineticSurface[200],
+      light: kineticSurface[100],
+      dark: kineticSurface[300],
+      contrastText: kineticSurface[400],
+    },
     primary: {
       main: kineticGreen[600],
       light: kineticGreen[400],
@@ -294,10 +300,16 @@ export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
   palette: {
+    default: {
+      main: kineticSurface[400],
+      light: kineticSurface[300],
+      dark: kineticSurface[500],
+      contrastText: carbonBlack[100],
+    },
     primary: {
-      main: kineticGreen[500],
+      main: kineticGreen[600],
       light: kineticGreen[300],
-      dark: kineticGreen[600],
+      dark: kineticGreen[800],
       contrastText: kineticGreen[800],
     },
     secondary: {
