@@ -16,6 +16,7 @@ import type { CheckboxColor, CheckboxSize } from 'src/theme/Checkbox'
 import type { RadioColor, RadioSize } from 'src/theme/Radio'
 import type { TextInputColor, TextInputVariant, TextInputSize } from 'src/theme/TextInput'
 import type { AppBarSize } from 'src/theme/AppBar'
+import type { LinkUnderline } from 'src/theme/Link'
 import {
   dark,
   radii,
@@ -88,6 +89,28 @@ export const textInputVariantTokens = [
 ] satisfies TextInputVariant[]
 export const textInputSizeTokens = ['sm', 'md', 'lg'] satisfies TextInputSize[]
 export const appBarSizeTokens = objectKeys(sizes) satisfies AppBarSize[]
+export const linkUnderlineTokens = ['always', 'hover', 'none'] satisfies LinkUnderline[]
+export const linkTargetTokens = ['_self', '_blank', '_parent', '_top', '_unfencedTop'] as const
+export const linkRelTokens = [
+  'noopener noreferrer',
+  'alternate',
+  'author',
+  'bookmark',
+  'external',
+  'help',
+  'license',
+  'me',
+  'next',
+  'nofollow',
+  'noopener',
+  'noreferrer',
+  'opener',
+  'prev',
+  'privacy-policy',
+  'search',
+  'tag',
+  'terms-of-service',
+] as const
 
 // --- Hardcoded: no theme/component backing ---
 
