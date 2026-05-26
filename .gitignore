@@ -20,7 +20,8 @@ lerna-debug.log*
 *.sln
 *.sw?
 .eslintcache
-
+.claude/settings.local.json
+.claude/worktrees
 
 # Covrage
 coverage

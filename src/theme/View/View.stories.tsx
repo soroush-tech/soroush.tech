@@ -1,0 +1,98 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { View } from './View'
+import {
+  bg,
+  border,
+  borderColor,
+  borderRadius,
+  borderStyle,
+  borderWidth,
+  cursor,
+  display,
+  height,
+  m,
+  opacity,
+  p,
+  position,
+  width,
+} from 'src/theme/utils/test/storiesArgs'
+
+const meta: Meta<typeof View> = {
+  title: 'Theme/View',
+  component: View,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component:
+          'The base layout primitive. Renders as `<div>`. All styled-system prop groups are supported: space, layout, color, typography, flexbox, border, and position.',
+      },
+    },
+    controls: {
+      include: [
+        'bg',
+        'opacity',
+        'p',
+        'm',
+        'width',
+        'height',
+        'display',
+        'border',
+        'borderWidth',
+        'borderStyle',
+        'borderColor',
+        'borderRadius',
+        'position',
+        'cursor',
+      ],
+    },
+  },
+  argTypes: {
+    bg,
+    opacity,
+    p,
+    m,
+    width,
+    height,
+    display,
+    border,
+    borderWidth,
+    borderStyle,
+    borderColor,
+    borderRadius,
+    position,
+    cursor,
+  },
+  args: {
+    children: 'View content',
+  },
+}
+
+export default meta
+type Story = StoryObj<typeof View>
+
+export const Default: Story = {}
+
+export const WithSpacingAndBackground: Story = {
+  args: {
+    p: 3,
+    bg: 'secondary',
+    borderRadius: 'md',
+    children: 'Padded container with background',
+  },
+}
+
+export const Positioned: Story = {
+  args: {
+    position: 'relative',
+    height: '150px',
+    bg: 'secondary',
+    borderRadius: 'sm',
+    children: (
+      <View position="absolute" top="20px" left="20px" p={2} bg="primary" borderRadius="sm">
+        Absolute child
+      </View>
+    ),
+  },
+}

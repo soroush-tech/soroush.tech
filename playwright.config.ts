@@ -1,6 +1,5 @@
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 import * as process from 'node:process'
-import { devices } from 'playwright'
 
 export default defineConfig({
   testDir: './src/test/e2e',
@@ -10,7 +9,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     headless: true,
   },
@@ -30,7 +29,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'pnpm dev',
-    port: 5173,
+    port: 3000,
     reuseExistingServer: !process.env.CI,
   },
 })

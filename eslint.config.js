@@ -9,7 +9,7 @@ import prettierConfig from 'eslint-config-prettier'
 import react from 'eslint-plugin-react'
 
 export default tseslint.config(
-  { ignores: ['dist', 'build', 'coverage', 'public'] },
+  { ignores: ['dist', 'build', 'coverage', 'public', '.claude'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -24,13 +24,24 @@ export default tseslint.config(
       react: react,
     },
     rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
+      ],
       ...reactHooks.configs.recommended.rules,
       ...prettierConfig.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ImportDeclaration[source.value=/\\.tsx?$/]',
+          message: 'Do not include .ts, .js, jsx, .tsx extensions in import paths.',
+        },
+      ],
       'prettier/prettier': [
         'error',
         {
-          endOfLine: 'auto',
+          endOfLine: 'lf',
         },
       ],
     },

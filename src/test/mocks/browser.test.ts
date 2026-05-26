@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { handlers } from './handlers.ts'
+import { handlers } from './handlers'
 
 const setupWorkerMock = vi.fn().mockReturnValue('mockWorker')
 vi.mock('msw/browser', () => ({

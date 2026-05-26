@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { queryWrapper as wrapper } from 'src/test/utils/queryWrapper.tsx'
+import { renderWithApp } from 'src/test/utils/wrapper'
 import App from './App'
 
 beforeEach(() => {
@@ -14,7 +14,7 @@ afterEach(() => {
 
 describe.skip('App', () => {
   it('shows loading state initially', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // The loading state might be brief, so we need to check if it's there
     const loadingElement = screen.queryByText('Loading...')
@@ -29,7 +29,7 @@ describe.skip('App', () => {
   })
 
   it('renders without crashing after loading', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // Wait for the main content to appear
     await waitFor(() => {
@@ -38,7 +38,7 @@ describe.skip('App', () => {
   })
 
   it('displays the initial count as 0 after loading', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // Wait for the main content to appear
     await waitFor(() => {
@@ -47,7 +47,7 @@ describe.skip('App', () => {
   })
 
   it('increments count when button is clicked', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // Wait for the button to appear
     let button
@@ -65,7 +65,7 @@ describe.skip('App', () => {
   })
 
   it('renders Vite and React logos', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // Wait for the logos to appear
     await waitFor(() => {
@@ -77,7 +77,7 @@ describe.skip('App', () => {
   })
 
   it('renders the help text', async () => {
-    render(<App />, { wrapper })
+    renderWithApp(<App />)
 
     // Wait for the help text to appear
     await waitFor(() => {
@@ -91,7 +91,7 @@ describe.skip('App', () => {
   it.skip('displays error message when API request fails', async () => {
     // Re-import App to use the mocked hook
     const { default: AppWithMockedHook } = await import('./App')
-    render(<AppWithMockedHook />, { wrapper })
+    renderWithApp(<AppWithMockedHook />)
     expect(screen.getByText('Error: Test error message')).toBeInTheDocument()
   })
 })

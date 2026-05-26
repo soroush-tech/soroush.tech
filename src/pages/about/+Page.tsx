@@ -1,5 +1,5 @@
-import { Layout } from 'src/common/Layout.tsx'
-import { Typography } from 'src/theme/Typography.tsx'
+import { Layout } from 'src/common/Layout'
+import { Typography } from 'src/theme/Typography'
 import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 
@@ -14,7 +14,7 @@ function Page() {
         px={2}
         py={3}
       >
-        <Flex as="article" p={2} maxWidth={1200} textAlign="justify">
+        <Flex as="article" p={2} maxWidth={1200}>
           <Flex as="header" flexDirection="row" alignItems="center">
             <Typography as="h1">Masoud Soroush</Typography>
             <Typography as="h2" mx={1} mb={0.5}>

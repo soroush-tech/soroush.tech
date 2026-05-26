@@ -1,6 +1,6 @@
-import { prefetchQuery, useCustomQuery } from 'src/hooks/useCustomQuery.ts'
-import type { Gists } from 'src/types/github.ts'
-import client from 'src/utils/api/client.ts'
+import { prefetchQuery, useCustomQuery } from 'src/hooks/useCustomQuery'
+import type { Gists } from 'src/types/github'
+import client from 'src/utils/api/client'
 
 const getGistsQuery = () => {
   return {
