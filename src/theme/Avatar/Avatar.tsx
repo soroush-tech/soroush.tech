@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styled from '@emotion/styled'
 import { type Theme } from '@emotion/react'
 import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
@@ -95,16 +95,22 @@ export function Avatar({
   ringWidth = 'thin',
   ...rest
 }: AvatarProps) {
+  const [prevSrc, setPrevSrc] = useState(src)
+  const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
+  const [prevFallback, setPrevFallback] = useState(fallback)
   const [failed, setFailed] = useState(false)
   const [useFallback, setUseFallback] = useState(false)
 
-  const hasPrimary = !!(src || srcSet)
-  const hasAnyImage = hasPrimary || !!fallback
-
-  useEffect(() => {
+  if (prevSrc !== src || prevSrcSet !== srcSet || prevFallback !== fallback) {
+    setPrevSrc(src)
+    setPrevSrcSet(srcSet)
+    setPrevFallback(fallback)
     setFailed(false)
     setUseFallback(false)
-  }, [src, srcSet, fallback])
+  }
+
+  const hasPrimary = !!(src || srcSet)
+  const hasAnyImage = hasPrimary || !!fallback
 
   const handleError = () => {
     // Switch to fallback only when a primary source existed and fallback hasn't been tried yet.
