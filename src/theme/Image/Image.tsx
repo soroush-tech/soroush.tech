@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  type ComponentType,
-  type ImgHTMLAttributes,
-  type CSSProperties,
-} from 'react'
+import { useState, type ComponentType, type ImgHTMLAttributes, type CSSProperties } from 'react'
 import styled from '@emotion/styled'
 import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
@@ -57,11 +51,17 @@ const StyledImg = styled('img', { label: 'image', shouldForwardProp })(
 ) as ComponentType<Omit<ImageProps, 'onError'> & { onError?: () => void }>
 
 export function Image({ src, srcSet, fallback, alt, onError, ...rest }: ImageProps) {
+  const [prevSrc, setPrevSrc] = useState(src)
+  const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
+  const [prevFallback, setPrevFallback] = useState(fallback)
   const [phase, setPhase] = useState<Phase>('initial')
 
-  useEffect(() => {
+  if (prevSrc !== src || prevSrcSet !== srcSet || prevFallback !== fallback) {
+    setPrevSrc(src)
+    setPrevSrcSet(srcSet)
+    setPrevFallback(fallback)
     setPhase('initial')
-  }, [src, srcSet, fallback])
+  }
 
   const handleError = () => {
     if (phase === 'initial') {
