@@ -24,7 +24,8 @@ export type ViewBackgroundToken = keyof Theme['background']
 export type ViewBorderColorToken = keyof Theme['border']
 
 export interface ViewProps
-  extends Omit<HTMLAttributes<HTMLElement>, 'color'>,
+  extends
+    Omit<HTMLAttributes<HTMLElement>, 'color'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     Omit<BorderProps<Theme>, 'borderColor'>,

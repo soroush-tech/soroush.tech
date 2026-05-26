@@ -18,7 +18,6 @@ import {
   type SpaceProps,
   type LayoutProps,
 } from 'styled-system'
-import type { AppBarSize } from 'src/theme/AppBar'
 
 export type TextInputColor = keyof Theme['palette']
 export type TextInputVariant = 'default' | 'outlined' | 'text' | 'underline'
@@ -220,16 +219,16 @@ function InputBase({ inputSize, inputComponent, ...props }: InputBaseProps) {
 
 const widthStyles = system({ width: true, minWidth: true, maxWidth: true })
 
-const sizeVariants = ({ theme, size }: { theme?: Theme; size?: AppBarSize }) => {
-  if (!size) return {}
-  const s = theme?.sizes[size]
-  if (!s) return {}
+type StyledInputProps = { size: TextInputSize }
+
+const sizeVariants = ({ theme, size }: StyledInputProps & { theme: Theme }) => {
+  const s = theme.sizes[size]
   return {
-    paddingTop: theme?.space?.[s.paddingTop],
-    paddingBottom: theme?.space?.[s.paddingBottom],
-    paddingLeft: theme?.space?.[s.paddingLeft],
-    paddingRight: theme?.space?.[s.paddingRight],
-    fontSize: theme?.fontSizes[s.fontSize],
+    paddingTop: theme.space[s.paddingTop],
+    paddingBottom: theme.space[s.paddingBottom],
+    paddingLeft: theme.space[s.paddingLeft],
+    paddingRight: theme.space[s.paddingRight],
+    fontSize: theme.fontSizes[s.fontSize],
   }
 }
 
@@ -242,19 +241,19 @@ const TextInputRoot = styled('div', { label: 'TextInput', shouldForwardProp })<T
   widthStyles
 )
 
-const StyledInput = styled(InputBase)(nativeBaseStyles, sizeVariants)
+const StyledInput = styled(InputBase)<StyledInputProps>(nativeBaseStyles, sizeVariants)
 
 const shouldForwardInputProps = (prop: string) => prop !== 'size'
 
 // Fixed-rows only — scrolls when content overflows.
 const StyledTextarea = styled('textarea', {
   shouldForwardProp: shouldForwardInputProps,
-})<{ size?: TextInputSize }>(nativeBaseStyles, textAreaBaseStyles, sizeVariants)
+})<StyledInputProps>(nativeBaseStyles, textAreaBaseStyles, sizeVariants)
 
 // Auto-grow — TextAreaAutoResize owns the resize behavior; style applied here.
 const StyledAutoResizeTextarea = styled(TextAreaAutoResize, {
   shouldForwardProp: shouldForwardInputProps,
-})<{ size?: TextInputSize }>(nativeBaseStyles, textAreaBaseStyles, sizeVariants)
+})<StyledInputProps>(nativeBaseStyles, textAreaBaseStyles, sizeVariants)
 
 // ─── Public component ─────────────────────────────────────────────────────────
 
@@ -330,7 +329,7 @@ export function TextInput({
       {isTextarea && isAutoResize ? (
         <StyledAutoResizeTextarea
           {...inputElProps}
-          minRows={minRows ?? (rows !== undefined ? Number(rows) : undefined)}
+          minRows={minRows ?? (rows !== undefined ? rows : undefined)}
           maxRows={maxRows}
         />
       ) : isTextarea ? (

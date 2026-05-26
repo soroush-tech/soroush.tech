@@ -14,7 +14,7 @@ function Page() {
         px={2}
         py={3}
       >
-        <Flex as="article" p={2} maxWidth={1200} textAlign="justify">
+        <Flex as="article" p={2} maxWidth={1200}>
           <Flex as="header" flexDirection="row" alignItems="center">
             <Typography as="h1">Masoud Soroush</Typography>
             <Typography as="h2" mx={1} mb={0.5}>

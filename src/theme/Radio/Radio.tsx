@@ -93,12 +93,12 @@ interface RadioRootProps extends SpaceProps<Theme> {
 
 const shouldForwardProp = createShouldForwardProp([...props, 'color', 'size', 'disabled'])
 
-const baseStyle = ({ disabled, theme }: RadioRootProps & { theme?: Theme }) => ({
+const baseStyle = ({ disabled, theme }: RadioRootProps & { theme: Theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   position: 'relative' as const,
   cursor: disabled ? 'not-allowed' : 'pointer',
-  gap: (theme?.space as Record<number, number>)?.[1] ?? 8,
+  gap: (theme?.space as Record<number, number>)?.[1],
   userSelect: 'none' as const,
   ...(disabled && { opacity: 0.5 }),
   // Both icon spans are always in the DOM. CSS toggles visibility via the
@@ -112,8 +112,7 @@ const baseStyle = ({ disabled, theme }: RadioRootProps & { theme?: Theme }) => (
   },
 })
 
-const colorStyle = ({ color = 'default', theme }: RadioRootProps & { theme?: Theme }) => {
-  if (!theme) return {}
+const colorStyle = ({ color = 'default', theme }: RadioRootProps & { theme: Theme }) => {
   return {
     color: color === 'default' ? theme.text.secondary : theme.palette[color].main,
   }

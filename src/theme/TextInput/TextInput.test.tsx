@@ -1,9 +1,9 @@
 import type { HTMLAttributes, InputHTMLAttributes } from 'react'
 import { fireEvent, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
-import { TextInput } from './TextInput'
+import { TextInput } from '../TextInput'
 
 describe('TextInput', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -89,6 +89,47 @@ describe('TextInput', () => {
     it('renders textarea when type is empty string', () => {
       const { container } = renderWithTheme(<TextInput multiline type="" />)
       expect(container.querySelector('textarea')).toBeInTheDocument()
+    })
+
+    // ─── minRows fallback: rows !== undefined ? rows : undefined ─────────────────
+
+    describe('minRows fallback', () => {
+      beforeEach(() => {
+        vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+          lineHeight: '20px',
+          fontSize: '16px',
+          paddingTop: '4px',
+          paddingBottom: '4px',
+        } as CSSStyleDeclaration)
+        Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', {
+          configurable: true,
+          get: () => 0,
+        })
+      })
+
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
+
+      it('uses rows as minRows when minRows is not provided', () => {
+        const { container } = renderWithTheme(<TextInput resize rows={3} />)
+        const el = container.querySelector('textarea') as HTMLTextAreaElement
+        // minRows=3, lineHeight=20, paddingY=8 → min = 3×20+8 = 68px
+        expect(parseFloat(el.style.height)).toBeGreaterThanOrEqual(68)
+      })
+
+      it('prefers explicit minRows over rows', () => {
+        const { container } = renderWithTheme(<TextInput resize rows={3} minRows={5} />)
+        const el = container.querySelector('textarea') as HTMLTextAreaElement
+        // minRows=5 → min = 5×20+8 = 108px
+        expect(parseFloat(el.style.height)).toBeGreaterThanOrEqual(108)
+      })
+
+      it('passes undefined as minRows when neither minRows nor rows is provided', () => {
+        const { container } = renderWithTheme(<TextInput resize />)
+        // rows === undefined branch: minRows receives undefined, TextAreaAutoResize defaults to 1
+        expect(container.querySelector('textarea')).toBeInTheDocument()
+      })
     })
   })
 

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
-import { Paper } from '.'
+import { Paper } from '../Paper'
 
 describe('Paper', () => {
   describe('children', () => {

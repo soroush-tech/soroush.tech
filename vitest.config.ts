@@ -9,10 +9,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 export default defineConfig({
   resolve: {
-    alias: {
-      msw: resolve(__dirname, 'node_modules/msw'),
-      src: resolve(__dirname, './src'),
-    },
+    alias: [
+      { find: /^msw$/, replacement: resolve(__dirname, 'node_modules/msw') },
+      { find: 'src', replacement: resolve(__dirname, './src') },
+    ],
   },
   test: {
     globals: true,
@@ -35,10 +35,10 @@ export default defineConfig({
     projects: [
       {
         resolve: {
-          alias: {
-            msw: resolve(__dirname, 'node_modules/msw'),
-            src: resolve(__dirname, './src'),
-          },
+          alias: [
+            { find: /^msw$/, replacement: resolve(__dirname, 'node_modules/msw') },
+            { find: 'src', replacement: resolve(__dirname, './src') },
+          ],
         },
         test: {
           globals: true,

@@ -2,8 +2,8 @@ import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
-import { Button, type ButtonColor, type ButtonVariant, type ButtonSize } from './Button'
-import type { ButtonShape } from './Button'
+import { Button, type ButtonColor, type ButtonVariant, type ButtonSize } from '../Button'
+import type { ButtonShape } from '../Button'
 
 describe('Button', () => {
   // ─── children ────────────────────────────────────────────────────────────────

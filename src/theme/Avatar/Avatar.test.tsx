@@ -1,7 +1,7 @@
 import { screen, fireEvent, act } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
-import { Avatar } from './Avatar'
+import { Avatar } from '../Avatar'
 
 describe('Avatar', () => {
   describe('image rendering', () => {

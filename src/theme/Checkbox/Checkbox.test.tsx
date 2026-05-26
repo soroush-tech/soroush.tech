@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
-import { Checkbox } from './Checkbox'
+import { Checkbox } from '../Checkbox'
 
 describe('Checkbox', () => {
   // ─── element ─────────────────────────────────────────────────────────────────

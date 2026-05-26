@@ -22,7 +22,8 @@ import {
 type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
 
 export interface ImageProps
-  extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'height' | 'width' | 'color'>,
+  extends
+    Omit<ImgHTMLAttributes<HTMLImageElement>, 'height' | 'width' | 'color'>,
     LayoutProps,
     SpaceProps,
     BackgroundProps,
