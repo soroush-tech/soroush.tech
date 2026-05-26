@@ -3,6 +3,7 @@
   "extends": ["config:recommended"],
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
+  "prConcurrentLimit": 3,
   "prHourlyLimit": 2,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
@@ -20,45 +21,12 @@
       "enabled": false
     },
     {
-      "matchUpdateTypes": ["minor"],
-      "groupName": "minor updates",
-      "automerge": false
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "dev dependencies"
     },
     {
-      "matchPackageNames": ["/^react/", "/^@types\\/react/", "/^vike/"],
-      "groupName": "React packages"
-    },
-    {
-      "matchPackageNames": ["/^@emotion/", "/^styled-system/"],
-      "groupName": "Style packages"
-    },
-    {
-      "matchPackageNames": [
-        "/^vitest/",
-        "/^@vitest\\//",
-        "/^@testing-library/",
-        "/^@types\\/jest/",
-        "/^jest/",
-        "/^playwright/",
-        "/^@playwright\\//",
-        "/^jsdom/",
-        "/^msw/"
-      ],
-      "groupName": "Testing stack"
-    },
-    {
-      "matchPackageNames": ["/^storybook/", "/^@storybook\\//", "/^@chromatic-com\\//"],
-      "groupName": "Storybook stack"
-    },
-    {
-      "matchPackageNames": ["/^eslint/", "/^@typescript-eslint/", "/^prettier/", "/^pretty-quick/"],
-      "groupName": "Linting and formatting"
-    },
-    {
-      "matchUpdateTypes": ["patch"],
-      "groupName": "Patch updates",
-      "automerge": true,
-      "automergeType": "pr"
+      "matchDepTypes": ["dependencies"],
+      "groupName": "dependencies"
     }
   ],
   "platformAutomerge": true
