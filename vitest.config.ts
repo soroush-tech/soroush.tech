@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import storybookTest from '@storybook/addon-vitest/vitest-plugin'
+import { playwright } from '@vitest/browser-playwright'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -40,6 +41,18 @@ export default defineConfig({
             { find: 'src', replacement: resolve(__dirname, './src') },
           ],
         },
+        plugins: [
+          {
+            name: 'svg-mock',
+            enforce: 'pre' as const,
+            resolveId(id) {
+              if (/\.svg(\?|$)/.test(id)) return '\0virtual:svg-mock'
+            },
+            load(id) {
+              if (id === '\0virtual:svg-mock') return 'export default "/mock.svg"'
+            },
+          },
+        ],
         test: {
           globals: true,
           name: 'unit',
@@ -71,7 +84,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: 'playwright',
+            provider: playwright(),
             instances: [
               {
                 browser: 'chromium',
