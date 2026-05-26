@@ -6,8 +6,22 @@ vi.mock('vike-react-query/config', () => ({ default: {} }))
 import { config } from './+config'
 
 describe('config', () => {
-  it('has prerender enabled', () => {
-    expect(config.prerender).toBe(true)
+  it('has prerender enabled outside CI', async () => {
+    vi.stubEnv('CI', '')
+    vi.resetModules()
+    const { config: freshConfig } = await import('./+config')
+    expect(freshConfig.prerender).toBe(true)
+    vi.unstubAllEnvs()
+    vi.resetModules()
+  })
+
+  it('has prerender disabled in CI', async () => {
+    vi.stubEnv('CI', 'true')
+    vi.resetModules()
+    const { config: freshConfig } = await import('./+config')
+    expect(freshConfig.prerender).toBe(false)
+    vi.unstubAllEnvs()
+    vi.resetModules()
   })
 
   it('has clientRouting enabled', () => {
