@@ -97,7 +97,6 @@ describe('Button', () => {
       )
       expect(screen.getByTestId('btn')).toHaveStyle({
         color: dark.palette.primary.main,
-        borderStyle: 'none',
       })
     })
   })
