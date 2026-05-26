@@ -173,7 +173,7 @@ const variantStyles = ({
 const shapeVariants = variant({
   prop: 'shape',
   variants: {
-    square: { borderRadius: 0 },
+    square: { borderRadius: 'sq' },
     rounded: { borderRadius: 'md' },
     pill: { borderRadius: '9999px' },
   },
@@ -208,7 +208,7 @@ export function Button({
   variant = 'contained',
   color = 'primary',
   size = 'md',
-  shape = 'rounded',
+  shape = 'square',
   gap = 1,
   fontWeight = 'bold',
   letterSpacing = 'tight',

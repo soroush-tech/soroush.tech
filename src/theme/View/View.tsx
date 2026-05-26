@@ -5,11 +5,13 @@ import { createShouldForwardProp, props } from '@styled-system/should-forward-pr
 import {
   space,
   layout,
+  typography,
   border,
   position,
   system,
   type SpaceProps,
   type LayoutProps,
+  type TypographyProps as SystemTypographyProps,
   type BorderProps,
   type PositionProps,
 } from 'styled-system'
@@ -23,16 +25,22 @@ export type ViewBackgroundToken = keyof Theme['background']
 /** Valid values for the borderColor prop — derived from theme.border keys. */
 export type ViewBorderColorToken = keyof Theme['border']
 
+/** Valid values for the borderWidth prop — derived from theme.borderWidths keys. */
+export type ViewBorderWidthToken = keyof Theme['borderWidths']
+
 export interface ViewProps
   extends
     Omit<HTMLAttributes<HTMLElement>, 'color'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
-    Omit<BorderProps<Theme>, 'borderColor'>,
+    SystemTypographyProps<Theme>,
+    Omit<BorderProps<Theme>, 'borderColor' | 'borderWidth'>,
     PositionProps<Theme> {
   bg?: ViewBackgroundToken
   /** Resolves against theme.border — light · primary · dark */
   borderColor?: ViewBorderColorToken
+  /** Resolves against theme.borderWidths — none · thin · base · thick */
+  borderWidth?: ViewBorderWidthToken
   opacity?: number
   cursor?: CSSProperties['cursor']
 }
@@ -51,6 +59,7 @@ export const View = styled('div', { label: 'View', shouldForwardProp })<ViewProp
   space,
   layout,
   colorSystem,
+  typography,
   border,
   position
 )
