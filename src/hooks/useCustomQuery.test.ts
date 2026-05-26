@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { queryWrapperWithSuspense as wrapper } from 'src/test/utils/wrapper'
 import queryClient from 'src/utils/api/queryClient'
 import { useCustomQuery, prefetchQuery } from './useCustomQuery'
+import type { Client } from 'src/utils/api/client'
 
 vi.mock('src/utils/api/queryClient', () => ({
   default: {
@@ -55,14 +56,16 @@ describe('prefetchQuery', () => {
 
   it('queryFn calls client.call with the given config', async () => {
     const config = { url: '/test', method: 'get' }
-    const mockClient = { call: vi.fn().mockResolvedValue([]) } as never
+    const mockCall = vi.fn().mockResolvedValue([])
+    const mockClient = { call: mockCall } as unknown as Client
     await prefetchQuery({ queryKey: ['test'], config, client: mockClient })
-    expect(vi.mocked(mockClient.call)).toHaveBeenCalledWith(config)
+    expect(mockCall).toHaveBeenCalledWith(config)
   })
 
   it('defaults config to an empty object', async () => {
-    const mockClient = { call: vi.fn().mockResolvedValue(undefined) } as never
+    const mockCall = vi.fn().mockResolvedValue(undefined)
+    const mockClient = { call: mockCall } as unknown as Client
     await prefetchQuery({ queryKey: ['test'], config: undefined as never, client: mockClient })
-    expect(vi.mocked(mockClient.call)).toHaveBeenCalledWith({})
+    expect(mockCall).toHaveBeenCalledWith({})
   })
 })

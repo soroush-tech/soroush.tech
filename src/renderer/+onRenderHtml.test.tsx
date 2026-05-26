@@ -8,7 +8,7 @@ vi.mock('@emotion/server/create-instance', () => ({
 }))
 vi.mock('react-dom/server', () => ({ renderToString: vi.fn(() => '<div id="app" />') }))
 vi.mock('vike/server', () => ({
-  escapeInject: (strings: TemplateStringsArray, ...values: unknown[]) => ({
+  escapeInject: (_strings: TemplateStringsArray, ...values: unknown[]) => ({
     __html: String(values[0]),
   }),
   dangerouslySkipEscape: (s: string) => s,
@@ -26,7 +26,7 @@ describe('+onRenderHtml', () => {
     vi.mocked(createEmotionServer).mockReturnValue({
       extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
       constructStyleTagsFromChunks: vi.fn(() => '<style data-emotion="soroush"></style>'),
-    })
+    } as unknown as ReturnType<typeof createEmotionServer>)
   })
 
   it('calls renderToString with Bootstrap', async () => {
@@ -40,7 +40,6 @@ describe('+onRenderHtml', () => {
   })
 
   it('extracts critical chunks from the rendered HTML', async () => {
-    const { extractCriticalToChunks } = vi.mocked(createEmotionServer).mock.results[0]?.value ?? {}
     await onRenderHtml({} as never)
     expect(
       vi.mocked(createEmotionServer).mock.results[0].value.extractCriticalToChunks
