@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { NavLink } from 'src/common/NavLink'
 import { View } from 'src/theme/View'
 import Logo from '/soroush.svg'
-import { Flex } from 'src/theme/Flex.tsx'
+import { Flex } from 'src/theme/Flex'
 
 export const Header: FC = () => {
   return (
@@ -13,16 +13,16 @@ export const Header: FC = () => {
         </a>
 
         <View as="nav">
-          <NavLink href="/" mx={1} p={1} color="default">
+          <NavLink href="/" mx={1} p={1} color="initial">
             Home
           </NavLink>
-          <NavLink href="/about" mx={1} p={1} color="default">
+          <NavLink href="/about" mx={1} p={1} color="initial">
             About
           </NavLink>
-          <NavLink href="/projects" mx={1} p={1} color="default">
+          <NavLink href="/projects" mx={1} p={1} color="initial">
             Projects
           </NavLink>
-          <NavLink href="/blog" mx={1} p={1} color="default">
+          <NavLink href="/blog" mx={1} p={1} color="initial">
             Blog
           </NavLink>
         </View>

@@ -12,6 +12,7 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
@@ -19,12 +20,8 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "types": []
   },
-  "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"],
-  "types": [
-    "@vitest/browser/providers/playwright"
-    // Rule: his global vitest variable is prohibited.
-    // "vitest/globals", "@playwright/test"
-  ]
+  "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"]
 }

@@ -7,17 +7,22 @@ const globalStyles = (theme: Theme) => css`
     box-sizing: border-box;
   }
 
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   html {
     font-family: ${theme.fonts.body};
-    background: ${theme.background.primary};
-    color: ${theme.text.initial};
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
   }
 
   body {
-    margin: 0;
+    background: ${theme.background.primary};
+    color: ${theme.text.initial};
   }
 
   p,
@@ -63,8 +68,8 @@ const globalStyles = (theme: Theme) => css`
   }
 
   #root {
-    min-height: 100vh;
-    width: 100vw;
+    min-height: 100dvh;
+    width: 100dvw;
   }
 `
 

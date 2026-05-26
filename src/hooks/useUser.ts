@@ -1,4 +1,4 @@
-import { useCustomQuery } from 'src/hooks/useCustomQuery.ts'
+import { useCustomQuery } from 'src/hooks/useCustomQuery'
 
 export function useUser() {
   const config = {

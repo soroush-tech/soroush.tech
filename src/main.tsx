@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { initMSW } from 'src/utils'
-import { Providers } from './common/Providers.tsx'
-import App from './App.tsx'
+import { Providers } from './common/Providers'
+import App from './App'
 import './index.css'
 ;(async () => {
   await initMSW()

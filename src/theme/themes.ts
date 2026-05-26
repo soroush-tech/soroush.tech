@@ -1,23 +1,15 @@
+import type { ElementType } from 'react'
+import type { CSSObject } from 'storybook/theming'
+import type { TypographyVariant } from 'src/theme/Typography'
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
-import { greenSteel, midnight, neutral, scarletRed, solarEmber, tealGreen } from 'src/theme/colors'
-// interface FaceFont {
-//   regular: string
-//   light: string
-//   medium: string
-//   bold: string
-//   black: string
-// }
-// export type FontWeights = {
-//   thin?: number
-//   extraLight?: number
-//   light?: number
-//   normal?: number
-//   medium?: number
-//   semiBold?: number
-//   bold?: number
-//   extraBold?: number
-//   black?: number
-// }
+import {
+  carbonBlack,
+  cyberCyan,
+  kineticGreen,
+  kineticSurface,
+  neonRed,
+  solarAmber,
+} from 'src/theme/colors'
 
 export interface Theme {
   name: string
@@ -36,8 +28,11 @@ export interface Theme {
     initial: string
     primary: string
     secondary: string
+    disabled: string
     error: string
     success: string
+    info: string
+    warning: string
   }
   background: {
     backdrop: string
@@ -45,19 +40,32 @@ export interface Theme {
     primary: string
     secondary?: string
     paper: string
+    terminal: string
+    grid: string
   }
-  colors: {
-    default: string
-    primary: string
-    secondary: string
-    [key: string]: string
-  }
+  typography: Record<
+    TypographyVariant,
+    {
+      element: ElementType
+      fontSize?: number
+      fontWeight?: string
+      letterSpacing?: string
+      textTransform?: CSSObject['textTransform']
+    }
+  >
   fonts: {
     body: string
+    heading: string
+    mono: string
   }
-  lineHeights: string[]
+  lineHeights: Record<'none' | 'tight' | 'snug' | 'base' | 'relaxed' | 'loose', number>
+  letterSpacings: Record<'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest', string>
   fontSizes: number[]
   radii: Record<'sm' | 'md' | 'lg', string>
+  borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
+  avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
+  sizes: typeof sizes
+  shadows: string[]
   fontWeights: Record<
     | 'thin'
     | 'extraLight'
@@ -70,25 +78,58 @@ export interface Theme {
     | 'black',
     number
   >
+  palette: Record<
+    'default' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    { main: string; light: string; dark: string; contrastText: string }
+  >
 }
+
 export type Light = typeof light
 export type Dark = typeof dark
 
-const shadows = Array.from({ length: 25 }, (_, elevation) => ({
-  boxShadow: generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)'),
-}))
+const shadows = Array.from({ length: 25 }, (_, elevation) =>
+  generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)')
+)
 export const radii = {
   sm: '4px',
   md: '8px',
   lg: '16px',
 }
-export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
-export const lineHeights = ['0px', '2px', '4px', '8px', '40px']
-export const fonts = {
-  body: `system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif, 'BlinkMacSystemFont', 'Helvetica Neue', Arial, sans-serif;`,
+
+export const borderWidths = {
+  none: '0',
+  thin: '1px',
+  base: '2px',
+  thick: '4px',
 }
 
-const fontWeights = {
+export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
+
+export const lineHeights = {
+  none: 1,
+  tight: 1.2,
+  snug: 1.35,
+  base: 1.5,
+  relaxed: 1.625,
+  loose: 2,
+}
+
+export const letterSpacings = {
+  tighter: '-0.05em',
+  tight: '-0.025em',
+  normal: '0em',
+  wide: '0.05em',
+  wider: '0.1em',
+  widest: '0.2em',
+}
+
+export const fonts = {
+  body: "'Space Grotesk', sans-serif",
+  heading: "'Space Grotesk', sans-serif",
+  mono: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
+}
+
+export const fontWeights = {
   thin: 100,
   extraLight: 200,
   light: 300,
@@ -99,30 +140,78 @@ const fontWeights = {
   extraBold: 800,
   black: 900,
 }
+export const avatar = {
+  sm: spacing(4),
+  md: spacing(5),
+  lg: spacing(6),
+  xl: spacing(7),
+}
+export const sizes = {
+  sm: { paddingTop: 0.5, paddingBottom: 0.5, paddingLeft: 1.5, paddingRight: 1.5, fontSize: 0 },
+  md: { paddingTop: 1, paddingBottom: 1, paddingLeft: 2, paddingRight: 2, fontSize: 1 },
+  lg: { paddingTop: 1.5, paddingBottom: 1.5, paddingLeft: 3, paddingRight: 3, fontSize: 1 },
+} as const
+export const space = {
+  0: 0,
+  0.5: spacing(0.5),
+  1: spacing(1),
+  1.5: spacing(1.5),
+  2: spacing(2),
+  3: spacing(3),
+  4: spacing(4),
+  5: spacing(5),
+  6: spacing(6),
+  7: spacing(7),
+  8: spacing(8),
+  auto: 'auto',
+}
+
+export const typography: Theme['typography'] = {
+  h1: { element: 'h1', fontSize: 6, fontWeight: 'bold' },
+  h2: { element: 'h2', fontSize: 5, fontWeight: 'bold' },
+  h3: { element: 'h3', fontSize: 4, fontWeight: 'bold' },
+  h4: { element: 'h4', fontSize: 3, fontWeight: 'bold' },
+  h5: { element: 'h5', fontSize: 2, fontWeight: 'bold' },
+  h6: { element: 'h6', fontSize: 1, fontWeight: 'semiBold' },
+  subtitle1: { element: 'h6', fontSize: 2, fontWeight: 'medium' },
+  subtitle2: { element: 'h6', fontSize: 1, fontWeight: 'medium' },
+  body1: { element: 'p', fontSize: 2, fontWeight: 'normal' },
+  body2: { element: 'p', fontSize: 1, fontWeight: 'normal' },
+  caption: { element: 'span', fontSize: 0, fontWeight: 'normal' },
+  overline: {
+    element: 'span',
+    fontSize: 0,
+    fontWeight: 'medium',
+    textTransform: 'uppercase',
+    letterSpacing: 'wider',
+  },
+  button: {
+    element: 'span',
+    fontSize: 1,
+    fontWeight: 'medium',
+    textTransform: 'uppercase',
+    letterSpacing: 'wide',
+  },
+  inherit: {
+    element: 'span',
+  },
+}
 
 const baseTheme = {
   name: 'base',
   shadows,
   spacing,
   radii,
+  borderWidths,
   fontSizes,
   lineHeights,
+  typography,
+  letterSpacings,
   fontWeights,
   fonts,
-  space: {
-    0: 0,
-    0.5: spacing(0.5),
-    1: spacing(1),
-    1.5: spacing(1.5),
-    2: spacing(2),
-    3: spacing(3),
-    4: spacing(4),
-    5: spacing(5),
-    6: spacing(6),
-    7: spacing(7),
-    8: spacing(8),
-    auto: 'auto',
-  },
+  avatar,
+  sizes,
+  space,
   // get space() {
   //   return new Proxy(
   //     {},
@@ -136,58 +225,148 @@ const baseTheme = {
 export const light: Theme = {
   ...baseTheme,
   name: 'light',
+  palette: {
+    default: {
+      main: kineticSurface[200],
+      light: kineticSurface[100],
+      dark: kineticSurface[300],
+      contrastText: kineticSurface[400],
+    },
+    primary: {
+      main: kineticGreen[600],
+      light: kineticGreen[400],
+      dark: kineticGreen[700],
+      contrastText: kineticGreen[800],
+    },
+    secondary: {
+      main: cyberCyan[700],
+      light: cyberCyan[500],
+      dark: cyberCyan[800],
+      contrastText: kineticSurface[100],
+    },
+    success: {
+      main: kineticGreen[700],
+      light: kineticGreen[500],
+      dark: kineticGreen[800],
+      contrastText: kineticSurface[100],
+    },
+    error: {
+      main: neonRed[700],
+      light: neonRed[500],
+      dark: neonRed[800],
+      contrastText: kineticSurface[100],
+    },
+    info: {
+      main: cyberCyan[800],
+      light: cyberCyan[600],
+      dark: cyberCyan[900],
+      contrastText: kineticSurface[100],
+    },
+    warning: {
+      main: solarAmber[500],
+      light: solarAmber[300],
+      dark: solarAmber[600],
+      contrastText: carbonBlack[900],
+    },
+  },
   background: {
-    backdrop: '#ffffff',
-    modal: '#f4f4f4',
-    primary: '#f4f4f4',
-    secondary: '#e9e9e9',
-    paper: '#ffffff',
+    backdrop: `${kineticSurface[100]}CC`,
+    modal: kineticSurface[100],
+    primary: kineticSurface[200],
+    secondary: carbonBlack[100],
+    paper: kineticSurface[100],
+    terminal: carbonBlack[100],
+    grid: `${kineticGreen[600]}1A`,
   },
   text: {
-    inherit: 'rgba(0, 0, 0, .5)',
-    initial: '#333',
-    primary: neutral[100],
-    secondary: '#666',
-    error: scarletRed[500],
-    success: tealGreen[500],
+    inherit: 'inherit',
+    initial: kineticSurface[900],
+    primary: kineticSurface[900],
+    secondary: kineticGreen[800],
+    disabled: `${kineticSurface[900]}4D`,
+    error: neonRed[700],
+    success: kineticGreen[700],
+    info: cyberCyan[800],
+    warning: solarAmber[800],
   },
   border: {
-    light: neutral[300],
-    primary: neutral[500],
-    dark: neutral[700],
-  },
-  colors: {
-    default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
+    light: `${carbonBlack[900]}0D`,
+    primary: kineticGreen[600],
+    dark: kineticSurface[200],
   },
 }
 
 export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
+  palette: {
+    default: {
+      main: kineticSurface[400],
+      light: kineticSurface[300],
+      dark: kineticSurface[500],
+      contrastText: carbonBlack[100],
+    },
+    primary: {
+      main: kineticGreen[600],
+      light: kineticGreen[300],
+      dark: kineticGreen[800],
+      contrastText: kineticGreen[800],
+    },
+    secondary: {
+      main: cyberCyan[500],
+      light: cyberCyan[300],
+      dark: cyberCyan[600],
+      contrastText: carbonBlack[900],
+    },
+    success: {
+      main: kineticGreen[700],
+      light: kineticGreen[500],
+      dark: kineticGreen[800],
+      contrastText: kineticSurface[100],
+    },
+    error: {
+      main: neonRed[500],
+      light: neonRed[300],
+      dark: neonRed[600],
+      contrastText: kineticSurface[100],
+    },
+    info: {
+      main: cyberCyan[500],
+      light: cyberCyan[300],
+      dark: cyberCyan[600],
+      contrastText: carbonBlack[900],
+    },
+    warning: {
+      main: solarAmber[400],
+      light: solarAmber[200],
+      dark: solarAmber[500],
+      contrastText: carbonBlack[900],
+    },
+  },
   background: {
-    backdrop: midnight[900],
-    modal: '#0D1315',
-    primary: '#1C1C1C',
-    secondary: '#1A262C',
-    paper: '#000000',
+    backdrop: `${carbonBlack[900]}CC`,
+    modal: kineticSurface[800],
+    primary: kineticSurface[900],
+    secondary: kineticSurface[700],
+    paper: kineticSurface[800],
+    terminal: carbonBlack[900],
+    grid: `${kineticGreen[500]}0D`,
   },
   text: {
-    inherit: 'rgba(255, 255, 255, 0.87)',
-    initial: '#fff',
-    primary: midnight[900],
-    secondary: '#888',
-    error: scarletRed[500],
-    success: tealGreen[500],
+    inherit: 'inherit',
+    initial: kineticSurface[100],
+    primary: kineticGreen[500],
+    secondary: kineticSurface[400],
+    disabled: kineticSurface[500],
+    error: neonRed[700],
+    success: kineticGreen[700],
+    info: cyberCyan[500],
+    warning: solarAmber[800],
   },
   border: {
-    primary: '#4c565b',
-  },
-  colors: {
-    default: '#e0e0e0',
-    primary: greenSteel[900],
-    secondary: solarEmber[600],
+    light: `${kineticSurface[100]}1A`,
+    primary: kineticGreen[500],
+    dark: kineticSurface[800],
   },
 }
 
