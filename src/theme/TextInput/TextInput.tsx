@@ -9,15 +9,7 @@ import { TextAreaAutoResize } from './TextAreaAutoResize'
 import styled from '@emotion/styled'
 import { type Theme } from '@emotion/react'
 import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import {
-  space,
-  variant,
-  system,
-  compose,
-  get,
-  type SpaceProps,
-  type LayoutProps,
-} from 'styled-system'
+import { space, variant, system, get, type SpaceProps, type LayoutProps } from 'styled-system'
 
 export type TextInputColor = keyof Theme['palette']
 export type TextInputVariant = 'default' | 'outlined' | 'text' | 'underline'
@@ -123,15 +115,15 @@ const baseStyle = {
 const variantStyles = variant({
   prop: 'variant',
   variants: {
-    outlined: { borderRadius: 'sm', borderWidth: 'thin', borderStyle: 'solid' },
-    default: { borderRadius: 'sm', borderStyle: 'none' },
+    outlined: { borderRadius: 'sq', borderWidth: 'thin', borderStyle: 'solid' },
+    default: { borderRadius: 'sq', borderStyle: 'none' },
     underline: {
-      borderRadius: '0px',
+      borderRadius: 'sq',
       borderStyle: 'none',
       borderBottomWidth: 'thin',
       borderBottomStyle: 'solid',
     },
-    text: { borderRadius: '0px', borderStyle: 'none' },
+    text: { borderRadius: 'sq', borderStyle: 'none' },
   },
 })
 
@@ -152,21 +144,23 @@ const backgroundStyle = ({
   }
 }
 
-// system() raw function: one prop ('color') sets borderColor + focus ring.
-// _props.error is read to override the color — no separate errorStyle needed.
-// get() does dot-notation traversal: get(theme, 'palette.primary.light').
-// compose() works: variantStyles uses 'variant', colorBorder uses 'color' — no collision.
-const colorBorder = system({
-  color: (value: string, _scale: unknown, _props: TextInputRootProps & { theme?: Theme }) => {
-    const { theme, error } = _props
-    if (error) {
-      const errorColor = get(theme, 'palette.error.main')
-      return { borderColor: errorColor, '&:focus-within': { borderColor: errorColor } }
-    }
-    return {
-      borderColor: get(theme, `palette.${value}.light`),
-      '&:focus-within': { borderColor: get(theme, `palette.${value}.main`) },
-    }
+// Plain functions avoid the SSR crash: system() transformers returning nested CSS objects
+// (e.g. '&:focus-within') cause stylis to throw in the server renderer.
+const colorBorder = ({
+  color = 'primary',
+  error,
+  theme,
+}: TextInputRootProps & { theme?: Theme }) => ({
+  borderColor: error ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.light`),
+})
+
+const focusWithinColor = ({
+  color = 'primary',
+  error,
+  theme,
+}: TextInputRootProps & { theme?: Theme }) => ({
+  '&:focus-within': {
+    borderColor: error ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.main`),
   },
 })
 
@@ -234,7 +228,9 @@ const sizeVariants = ({ theme, size }: StyledInputProps & { theme: Theme }) => {
 
 const TextInputRoot = styled('div', { label: 'TextInput', shouldForwardProp })<TextInputRootProps>(
   baseStyle,
-  compose(variantStyles, colorBorder),
+  variantStyles,
+  colorBorder,
+  focusWithinColor,
   backgroundStyle,
   layoutStyles,
   space,
