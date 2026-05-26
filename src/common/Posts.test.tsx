@@ -32,7 +32,7 @@ describe('Posts', () => {
   })
 
   it('renders nothing when there are no gists', () => {
-    vi.mocked(useGists).mockReturnValueOnce({ data: [] } as ReturnType<typeof useGists>)
+    vi.mocked(useGists).mockReturnValueOnce({ data: [] } as unknown as ReturnType<typeof useGists>)
     renderWithTheme(<Posts />)
     expect(screen.queryByRole('link')).toBeNull()
   })
