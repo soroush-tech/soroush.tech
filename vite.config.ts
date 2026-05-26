@@ -5,24 +5,7 @@ import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react({
-      babel: {
-        plugins: [
-          [
-            '@emotion',
-            {
-              key: 'soroush',
-              autoLabel: 'dev-only',
-              labelFormat: '[local]--[filename]',
-              cssPropOptimization: true,
-            },
-          ],
-        ],
-      },
-    }),
-    process.env.NODE_ENV !== 'storybook' && vike(),
-  ],
+  plugins: [react(), process.env.NODE_ENV !== 'storybook' && vike()],
   resolve: {
     alias: {
       src: resolve(__dirname, './src'),

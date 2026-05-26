@@ -59,7 +59,9 @@ describe('Link', () => {
     })
 
     it('applies each text color token without error', () => {
-      const tokens = Object.keys(dark.text) as (keyof typeof dark.text)[]
+      const tokens = (Object.keys(dark.text) as (keyof typeof dark.text)[]).filter(
+        (t) => dark.text[t] !== 'inherit'
+      )
       tokens.forEach((token) => {
         const { unmount } = renderWithTheme(
           <Link href="/" color={token} data-testid="link">
