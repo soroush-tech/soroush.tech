@@ -43,7 +43,8 @@ export type TextColorToken = keyof Theme['text']
 export type BackgroundToken = keyof Theme['background']
 
 export interface TypographyProps
-  extends Omit<HTMLAttributes<HTMLElement>, 'color'>,
+  extends
+    Omit<HTMLAttributes<HTMLElement>, 'color'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     SystemTypographyProps<Theme>,
@@ -71,8 +72,7 @@ const colorSystem = system({
   opacity: { property: 'opacity' },
 })
 
-const typographyVariants = ({ variant = 'body1', theme }: TypographyProps & { theme?: Theme }) => {
-  if (!theme) return {}
+const typographyVariants = ({ variant = 'body1', theme }: TypographyProps & { theme: Theme }) => {
   const { fontSize, fontWeight, letterSpacing, textTransform } = theme.typography[variant]
   return {
     ...(fontSize !== undefined && { fontSize: theme.fontSizes[fontSize] }),

@@ -15,8 +15,6 @@ import {
   type BorderProps,
   type TypographyProps,
 } from 'styled-system'
-import type { AppBarSize } from 'src/theme/AppBar'
-
 export type ButtonVariant = 'contained' | 'outlined' | 'text'
 export type ButtonColor = keyof Theme['palette']
 export type ButtonSize = keyof Theme['sizes']
@@ -130,16 +128,14 @@ const buttonBaseSystem = system({
   gap: { property: 'gap', scale: 'space' },
 })
 
-const sizeVariants = ({ theme, size }: { theme?: Theme; size?: AppBarSize }) => {
-  if (!size) return {}
-  const s = theme?.sizes[size]
-  if (!s) return {}
+const sizeVariants = ({ theme, size }: ButtonRootProps & { theme: Theme }) => {
+  const s = theme.sizes[size]
   return {
-    paddingTop: theme?.space?.[s.paddingTop],
-    paddingBottom: theme?.space?.[s.paddingBottom],
-    paddingLeft: theme?.space?.[s.paddingLeft],
-    paddingRight: theme?.space?.[s.paddingRight],
-    fontSize: theme?.fontSizes[s.fontSize],
+    paddingTop: theme.space[s.paddingTop],
+    paddingBottom: theme.space[s.paddingBottom],
+    paddingLeft: theme.space[s.paddingLeft],
+    paddingRight: theme.space[s.paddingRight],
+    fontSize: theme.fontSizes[s.fontSize],
   }
 }
 
@@ -191,7 +187,9 @@ const safeLayout = (props: ButtonProps & { theme?: Theme }) => layout({ ...props
 
 // ─── Styled root ──────────────────────────────────────────────────────────────
 
-const ButtonRoot = styled('button', { shouldForwardProp })<ButtonProps>(
+type ButtonRootProps = Omit<ButtonProps, 'size'> & { size: ButtonSize }
+
+const ButtonRoot = styled('button', { shouldForwardProp })<ButtonRootProps>(
   baseStyles,
   sizeVariants,
   variantStyles,

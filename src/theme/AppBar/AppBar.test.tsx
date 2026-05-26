@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { ThemeProvider } from 'src/theme/ThemeProvider'
 import { dark, light } from 'src/theme/themes'
-import { AppBar } from './AppBar'
+import { AppBar } from '../AppBar'
 
 describe('AppBar', () => {
   // ─── element ────────────────────────────────────────────────────────────────

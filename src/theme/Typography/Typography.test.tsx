@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark, typography } from 'src/theme/themes'
-import { Typography, type TypographyVariant, type TextColorToken } from './Typography'
+import { Typography, type TypographyVariant, type TextColorToken } from '../Typography'
 
 describe('Typography', () => {
   // ─── children ────────────────────────────────────────────────────────────────

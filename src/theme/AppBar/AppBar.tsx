@@ -26,6 +26,11 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
   size?: AppBarSize
 }
 
+type AppBarBaseProps = Omit<AppBarProps, 'size' | 'elevation'> & {
+  size: AppBarSize
+  elevation: AppBarElevation
+}
+
 const shouldForwardProp = createShouldForwardProp([...props, 'elevation', 'size'])
 
 // color → theme.background (background color of the bar)
@@ -38,20 +43,18 @@ const elevationVariant = system({
   elevation: { property: 'boxShadow', scale: 'shadows' },
 })
 
-const sizeVariants = ({ theme, size }: { theme?: Theme; size?: AppBarSize }) => {
-  if (!size) return {}
-  const s = theme?.sizes[size]
-  if (!s) return {}
+const sizeVariants = ({ theme, size }: AppBarBaseProps & { theme: Theme }) => {
+  const s = theme.sizes[size]
   return {
-    paddingTop: theme?.space?.[s.paddingTop],
-    paddingBottom: theme?.space?.[s.paddingBottom],
-    paddingLeft: theme?.space?.[s.paddingLeft],
-    paddingRight: theme?.space?.[s.paddingRight],
-    fontSize: theme?.fontSizes[s.fontSize],
+    paddingTop: theme.space[s.paddingTop],
+    paddingBottom: theme.space[s.paddingBottom],
+    paddingLeft: theme.space[s.paddingLeft],
+    paddingRight: theme.space[s.paddingRight],
+    fontSize: theme.fontSizes[s.fontSize],
   }
 }
 
-const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarProps>(
+const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarBaseProps>(
   { flexShrink: 0, width: '100%' },
   elevationVariant,
   sizeVariants,

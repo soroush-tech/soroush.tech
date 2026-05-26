@@ -1,7 +1,7 @@
 import { screen, fireEvent, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
-import { Image } from './Image'
+import { Image } from '../Image'
 
 describe('Image', () => {
   describe('source priority', () => {

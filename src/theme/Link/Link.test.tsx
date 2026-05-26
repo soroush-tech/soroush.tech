@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
-import { Link } from './Link'
+import { Link } from '../Link'
 
 describe('Link', () => {
   describe('element', () => {
