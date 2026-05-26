@@ -4,7 +4,7 @@ import vikeReactQuery from 'vike-react-query/config'
 
 // https://vike.dev/config
 export const config = {
-  prerender: true,
+  prerender: process.env.CI !== 'true',
   passToClient: [],
   clientRouting: true,
   hydrationCanBeAborted: true,
