@@ -116,6 +116,8 @@ jobs:
       - name: Build project
         if: matrix.os == 'ubuntu-latest'
         run: ${{ steps.detect-package-manager.outputs.runner }} run build
+        env:
+          SKIP_PRERENDER: 'true'
 
       - name: Run Test
         run: ${{ steps.detect-package-manager.outputs.runner }} run test

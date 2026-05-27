@@ -6,8 +6,8 @@ vi.mock('vike-react-query/config', () => ({ default: {} }))
 import { config } from './+config'
 
 describe('config', () => {
-  it('has prerender enabled outside CI', async () => {
-    vi.stubEnv('CI', '')
+  it('has prerender enabled when SKIP_PRERENDER is unset', async () => {
+    vi.stubEnv('SKIP_PRERENDER', '')
     vi.resetModules()
     const { config: freshConfig } = await import('./+config')
     expect(freshConfig.prerender).toBe(true)
@@ -15,8 +15,8 @@ describe('config', () => {
     vi.resetModules()
   })
 
-  it('has prerender disabled in CI', async () => {
-    vi.stubEnv('CI', 'true')
+  it('has prerender disabled when SKIP_PRERENDER=true', async () => {
+    vi.stubEnv('SKIP_PRERENDER', 'true')
     vi.resetModules()
     const { config: freshConfig } = await import('./+config')
     expect(freshConfig.prerender).toBe(false)
