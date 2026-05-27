@@ -51,7 +51,6 @@
     "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",
     "styled-system": "^5.1.5",
-    "stylis": "^4.4.0",
     "vike": "^0.4.236",
     "vike-react": "^0.6.5",
     "vike-react-query": "^0.1.12"
@@ -78,7 +77,6 @@
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "@types/styled-system": "^5.1.25",
-    "@types/stylis": "^4.2.7",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
     "@vitejs/plugin-react": "^6.0.0",
