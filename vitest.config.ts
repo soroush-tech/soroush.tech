@@ -76,7 +76,7 @@ export default defineConfig({
         plugins: [
           storybookTest({
             configDir: resolve(__dirname, '.storybook'),
-            //storybookScript: 'pnpm ...',
+            storybookUrl: process.env.SB_URL,
           }),
         ],
         test: {
