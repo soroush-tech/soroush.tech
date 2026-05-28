@@ -214,7 +214,7 @@ describe('TextInput', () => {
   describe('variant', () => {
     it('outlined (default) has border-radius from theme', () => {
       renderWithTheme(<TextInput data-testid="root" />)
-      expect(screen.getByTestId('root')).toHaveStyle({ borderRadius: dark.radii.sm })
+      expect(screen.getByTestId('root')).toHaveStyle({ borderRadius: dark.radii.sq })
     })
 
     it('outlined has secondary background', () => {

@@ -1,19 +1,9 @@
-import { beforeAll, afterAll, vi } from 'vitest'
 import { setProjectAnnotations } from '@storybook/react-vite'
 import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview'
 import * as projectAnnotations from './preview'
 
-// Apply story configuration
-// More info at: https://storybook.js.org/docs/api/portable-stories/portable-stories-vitest#setprojectannotations
-const annotations = setProjectAnnotations([projectAnnotations, a11yAddonAnnotations])
-
-beforeAll(() => {
-  vi.clearAllMocks()
-  vi.resetModules()
-  annotations.beforeAll()
-})
-
-afterAll(() => {
-  vi.resetModules()
-  vi.restoreAllMocks()
-})
+// Register project annotations so @storybook/addon-vitest skips injecting
+// its own setup-file-with-project-annotations.js (which uses an unresolvable
+// virtual module in standalone browser-mode vitest runs).
+// The addon's setup-file.js still runs and calls beforeAll via globalProjectAnnotations.
+setProjectAnnotations([projectAnnotations, a11yAddonAnnotations])

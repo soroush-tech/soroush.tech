@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react'
 import { usePageContext } from 'src/hooks/usePageContext'
 import { Link, type LinkProps } from 'src/theme/Link'
-import styled from '@emotion/styled'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
+import { styled, createShouldForwardProp, props } from 'src/theme'
 
 interface NavLinkProps extends LinkProps {
   children: ReactNode
