@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import { styled } from 'src/theme'
 import { Paper, type PaperProps } from 'src/theme/Paper'
 
 export type BracketBoxProps = PaperProps

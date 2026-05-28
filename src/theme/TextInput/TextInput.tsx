@@ -6,10 +6,18 @@ import {
   type TextareaHTMLAttributes,
 } from 'react'
 import { TextAreaAutoResize } from './TextAreaAutoResize'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { space, variant, system, get, type SpaceProps, type LayoutProps } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
+  space,
+  variant,
+  system,
+  get,
+  type SpaceProps,
+  type LayoutProps,
+} from 'src/theme'
 
 export type TextInputColor = keyof Theme['palette']
 export type TextInputVariant = 'default' | 'outlined' | 'text' | 'underline'

@@ -1,7 +1,12 @@
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { flexbox, system, type FlexboxProps } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
+  flexbox,
+  system,
+  type FlexboxProps,
+} from 'src/theme'
 import { View, type ViewProps } from 'src/theme/View'
 
 /** Valid values for the gap prop — derived from theme.space keys. */

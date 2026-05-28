@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { system, variant as styledVariant } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
+  system,
+  variant as styledVariant,
+} from 'src/theme'
 import { Flex, type FlexProps } from 'src/theme/Flex'
 
 export type AvatarVariant = 'circular' | 'rounded' | 'square'

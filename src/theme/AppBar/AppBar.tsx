@@ -1,7 +1,14 @@
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { flexbox, layout, position, space, system } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
+  flexbox,
+  layout,
+  position,
+  space,
+  system,
+} from 'src/theme'
 import { Flex, type FlexProps } from 'src/theme/Flex'
 
 /** Valid values for the color prop — derived from theme.background keys. */

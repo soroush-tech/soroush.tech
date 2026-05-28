@@ -1,7 +1,8 @@
 import { useState, type ComponentType, type ImgHTMLAttributes, type CSSProperties } from 'react'
-import styled from '@emotion/styled'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
+  styled,
+  createShouldForwardProp,
+  props,
   layout,
   space,
   background,
@@ -11,7 +12,7 @@ import {
   type SpaceProps,
   type BackgroundProps,
   type PositionProps,
-} from 'styled-system'
+} from 'src/theme'
 
 type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
 
