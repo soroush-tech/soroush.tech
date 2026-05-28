@@ -89,10 +89,12 @@ export const Positioned: Story = {
     height: '150px',
     bg: 'secondary',
     borderRadius: 'sm',
-    children: (
+  },
+  render: (args) => (
+    <View {...args}>
       <View position="absolute" top="20px" left="20px" p={2} bg="primary" borderRadius="sm">
         Absolute child
       </View>
-    ),
-  },
+    </View>
+  ),
 }
