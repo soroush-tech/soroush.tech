@@ -79,8 +79,12 @@ export default defineConfig({
             ...(process.env.SB_URL ? { storybookUrl: process.env.SB_URL } : {}),
           }),
         ],
+        optimizeDeps: {
+          include: ['@tanstack/react-query'],
+        },
         test: {
           name: 'storybook',
+          setupFiles: ['.storybook/vitest.setup.ts'],
           browser: {
             enabled: true,
             headless: true,
