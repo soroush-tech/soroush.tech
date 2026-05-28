@@ -3,11 +3,16 @@ import type { CSSObject } from 'storybook/theming'
 import type { TypographyVariant } from 'src/theme/Typography'
 import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
 import {
+  blackAlpha,
   carbonBlack,
   cyberCyan,
+  deepCrimson,
+  forestGreen,
   kineticGreen,
   kineticSurface,
+  lightSurface,
   neonRed,
+  softGreen,
   solarAmber,
 } from 'src/theme/colors'
 
@@ -42,6 +47,7 @@ export interface Theme {
     paper: string
     terminal: string
     grid: string
+    transparent: string
   }
   typography: Record<
     TypographyVariant,
@@ -61,7 +67,7 @@ export interface Theme {
   lineHeights: Record<'none' | 'tight' | 'snug' | 'base' | 'relaxed' | 'loose', number>
   letterSpacings: Record<'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest', string>
   fontSizes: number[]
-  radii: Record<'sm' | 'md' | 'lg', string>
+  radii: Record<'sq' | 'sm' | 'md' | 'lg', string>
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
   sizes: typeof sizes
@@ -91,6 +97,7 @@ const shadows = Array.from({ length: 25 }, (_, elevation) =>
   generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)')
 )
 export const radii = {
+  sq: '0',
   sm: '4px',
   md: '8px',
   lg: '16px',
@@ -227,72 +234,73 @@ export const light: Theme = {
   name: 'light',
   palette: {
     default: {
-      main: kineticSurface[200],
-      light: kineticSurface[100],
-      dark: kineticSurface[300],
-      contrastText: kineticSurface[400],
+      main: lightSurface[600],
+      light: lightSurface[400],
+      dark: lightSurface[800],
+      contrastText: lightSurface[950],
     },
     primary: {
-      main: kineticGreen[600],
-      light: kineticGreen[400],
-      dark: kineticGreen[700],
-      contrastText: kineticGreen[800],
+      main: forestGreen[600], // #006e17
+      light: forestGreen[400], // #37e449
+      dark: forestGreen[700], // #00530f
+      contrastText: lightSurface[100],
     },
     secondary: {
-      main: cyberCyan[700],
-      light: cyberCyan[500],
-      dark: cyberCyan[800],
-      contrastText: kineticSurface[100],
+      main: forestGreen[600], // #006e17
+      light: forestGreen[300], // #58ff60
+      dark: forestGreen[700], // #00530f
+      contrastText: lightSurface[100],
     },
     success: {
       main: kineticGreen[700],
       light: kineticGreen[500],
       dark: kineticGreen[800],
-      contrastText: kineticSurface[100],
+      contrastText: lightSurface[100],
     },
     error: {
-      main: neonRed[700],
-      light: neonRed[500],
-      dark: neonRed[800],
-      contrastText: kineticSurface[100],
+      main: deepCrimson[600], // #ba1a1a
+      light: deepCrimson[100], // #ffdad6
+      dark: deepCrimson[700], // #93000a
+      contrastText: lightSurface[100],
     },
     info: {
       main: cyberCyan[800],
       light: cyberCyan[600],
       dark: cyberCyan[900],
-      contrastText: kineticSurface[100],
+      contrastText: lightSurface[100],
     },
     warning: {
       main: solarAmber[500],
       light: solarAmber[300],
       dark: solarAmber[600],
-      contrastText: carbonBlack[900],
+      contrastText: lightSurface[950],
     },
   },
   background: {
-    backdrop: `${kineticSurface[100]}CC`,
-    modal: kineticSurface[100],
-    primary: kineticSurface[200],
-    secondary: carbonBlack[100],
-    paper: kineticSurface[100],
-    terminal: carbonBlack[100],
-    grid: `${kineticGreen[600]}1A`,
+    backdrop: `${lightSurface[100]}CC`,
+    modal: lightSurface[100],
+    primary: lightSurface[200], // #f9f9f9
+    secondary: lightSurface[400], // #eeeeee
+    paper: lightSurface[300], // #f3f3f3
+    terminal: lightSurface[600], // #e2e2e2
+    grid: `${forestGreen[600]}1A`,
+    transparent: blackAlpha[0],
   },
   text: {
     inherit: 'inherit',
-    initial: kineticSurface[900],
-    primary: kineticSurface[900],
-    secondary: kineticGreen[800],
-    disabled: `${kineticSurface[900]}4D`,
-    error: neonRed[700],
+    initial: lightSurface[950], // #1a1c1c
+    primary: lightSurface[950], // #1a1c1c
+    secondary: lightSurface[900], // #444748
+    disabled: `${lightSurface[950]}4D`,
+    error: deepCrimson[600], // #ba1a1a
     success: kineticGreen[700],
     info: cyberCyan[800],
     warning: solarAmber[800],
   },
   border: {
-    light: `${carbonBlack[900]}0D`,
-    primary: kineticGreen[600],
-    dark: kineticSurface[200],
+    light: lightSurface[800], // #c4c7c7 (outline-variant)
+    primary: lightSurface[850], // #747878 (outline)
+    dark: lightSurface[900], // #444748 (on-surface-variant)
   },
 }
 
@@ -313,9 +321,9 @@ export const dark: Theme = {
       contrastText: kineticGreen[800],
     },
     secondary: {
-      main: cyberCyan[500],
-      light: cyberCyan[300],
-      dark: cyberCyan[600],
+      main: softGreen[400],
+      light: softGreen[200],
+      dark: softGreen[600],
       contrastText: carbonBlack[900],
     },
     success: {
@@ -351,6 +359,7 @@ export const dark: Theme = {
     paper: kineticSurface[800],
     terminal: carbonBlack[900],
     grid: `${kineticGreen[500]}0D`,
+    transparent: blackAlpha[0],
   },
   text: {
     inherit: 'inherit',

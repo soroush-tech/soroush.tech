@@ -1,8 +1,6 @@
 import { type CSSProperties } from 'react'
-import styled from '@emotion/styled'
-import { createShouldForwardProp } from '@styled-system/should-forward-prop'
-import { system } from 'styled-system'
-import { View, type ViewProps } from 'src/theme/View'
+import { styled, type Theme, createShouldForwardProp, system } from 'src/theme'
+import { Flex, type FlexProps } from 'src/theme/Flex'
 
 export type PaperElevation =
   | 0
@@ -31,25 +29,47 @@ export type PaperElevation =
   | 23
   | 24
 
-export interface PaperProps extends ViewProps {
+export interface PaperProps extends FlexProps {
   /** Shadow depth — 0 (flat) to 24 (highest). Resolves to theme.shadows[n]. Default: 1. */
   elevation?: PaperElevation
   /** CSS aspect-ratio for fixed-ratio surfaces (e.g. 16/9, 1). */
   aspectRatio?: CSSProperties['aspectRatio']
   /** CSS transition for surface animations (e.g. hover elevation change). */
   transition?: CSSProperties['transition']
+  /** Resolves against theme.border — light · primary · dark */
+  borderColor?: keyof Theme['border']
+  /** Resolves against theme.borderWidths — none · thin · base · thick */
+  borderWidth?: keyof Theme['borderWidths']
+  /** CSS border-style value (e.g. 'solid', 'dashed'). */
+  borderStyle?: CSSProperties['borderStyle']
 }
 
-const shouldForwardProp = createShouldForwardProp(['elevation', 'aspectRatio', 'transition'])
+const shouldForwardProp = createShouldForwardProp([
+  'elevation',
+  'aspectRatio',
+  'transition',
+  'borderColor',
+  'borderWidth',
+  'borderStyle',
+])
 
 const paperSystem = system({
   elevation: { property: 'boxShadow', scale: 'shadows' },
   aspectRatio: { property: 'aspectRatio' },
   transition: { property: 'transition' },
+  borderColor: { property: 'borderColor', scale: 'border' },
+  borderWidth: { property: 'borderWidth', scale: 'borderWidths' },
+  borderStyle: { property: 'borderStyle' },
 })
 
-const PaperRoot = styled(View, { label: 'paper', shouldForwardProp })<PaperProps>(paperSystem)
+const PaperRoot = styled(Flex, { label: 'paper', shouldForwardProp })<PaperProps>(paperSystem)
 
-export function Paper({ elevation = 1, bg = 'paper', borderRadius = 'md', ...rest }: PaperProps) {
-  return <PaperRoot elevation={elevation} bg={bg} borderRadius={borderRadius} {...rest} />
+export function Paper({
+  elevation = 1,
+  p = 2,
+  bg = 'paper',
+  borderRadius = 'sq',
+  ...rest
+}: PaperProps) {
+  return <PaperRoot elevation={elevation} p={p} bg={bg} borderRadius={borderRadius} {...rest} />
 }

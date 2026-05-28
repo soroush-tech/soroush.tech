@@ -18,7 +18,7 @@ for (const [name, getter] of Object.entries(colors)) {
 
     test(`valid color shade for palette ${name}`, () => {
       for (const value of Object.values(getter)) {
-        expect(/^#[0-9A-Fa-f]{6}$/.test(value)).toBe(true)
+        expect(/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(value)).toBe(true)
       }
     })
 

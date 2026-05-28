@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
+import { dark } from 'src/theme/themes'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { Paper } from '../Paper'
 
@@ -26,9 +27,9 @@ describe('Paper', () => {
       expect(screen.getByTestId('paper')).toHaveStyle({ backgroundColor: '#131313' })
     })
 
-    it('defaults to borderRadius="md" (8px)', () => {
+    it('defaults to borderRadius="sq" (0)', () => {
       renderWithTheme(<Paper data-testid="paper" />)
-      expect(screen.getByTestId('paper')).toHaveStyle({ borderRadius: '8px' })
+      expect(screen.getByTestId('paper')).toHaveStyle({ borderRadius: dark.radii.sq })
     })
 
     it('defaults to elevation=1 box-shadow', () => {

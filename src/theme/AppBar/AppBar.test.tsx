@@ -161,7 +161,11 @@ describe('AppBar', () => {
     it('does not apply backgroundColor when color is omitted', () => {
       renderWithTheme(<AppBar data-testid="bar" />)
       const style = getComputedStyle(screen.getByTestId('bar'))
-      expect(Object.values(dark.background)).not.toContain(style.backgroundColor)
+      // transparent is excluded — rgba(0,0,0,0) is also the default computed value for unstyled elements
+      const opaqueTokens = Object.values(dark.background).filter(
+        (v) => v !== dark.background.transparent
+      )
+      expect(opaqueTokens).not.toContain(style.backgroundColor)
     })
   })
 

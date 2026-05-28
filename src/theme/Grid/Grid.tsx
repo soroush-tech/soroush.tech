@@ -1,13 +1,14 @@
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
   grid,
   flexbox,
   system,
   type GridProps as SystemGridProps,
   type FlexboxProps,
-} from 'styled-system'
+} from 'src/theme'
 import { View, type ViewProps } from 'src/theme/View'
 
 /** Valid values for the gap / columnGap / rowGap props — derived from theme.space keys. */

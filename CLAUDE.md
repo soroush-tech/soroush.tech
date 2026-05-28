@@ -89,6 +89,18 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
+### 6. Test coverage after implementation
+
+**After finishing any implementation, run coverage and verify 100%.**
+
+```bash
+pnpm test:coverage
+```
+
+- Every file touched by the task must reach 100% coverage.
+- If coverage is below 100%, add the missing tests before reporting the task as done.
+- Do not consider an implementation complete until coverage confirms it.
+
 ## Tech Stack
 
 - **Framework:** React 19 + Vike (`vike`, `vike-react`, `vike-react-query`) for isomorphic rendering

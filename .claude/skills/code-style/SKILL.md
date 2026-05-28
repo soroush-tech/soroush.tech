@@ -124,4 +124,42 @@ const colorSystem = system({
 
 ---
 
+### Barrel `index.ts` files use `export *`, never named re-exports
+
+Every `index.ts` that exists solely to re-export a module must use `export *`. Named re-exports in barrels require manual upkeep and silently omit new exports until someone notices.
+
+```ts
+// ✗ — named re-export: new exports must be added by hand
+export { StylesConsumer, withStyles, withTheme } from './withTheme'
+
+// ✓ — wildcard: all exports picked up automatically
+export * from './withTheme'
+```
+
+This applies to every barrel in the project (`src/<module>/<Name>/index.ts`, `src/<module>/hooks/index.ts`, etc.).
+
+---
+
+### `react-refresh/only-export-components` — extract, never disable
+
+When a file mixes React components with non-component exports (HOFs, factories, plain functions) and triggers `react-refresh/only-export-components`, extract each non-component export into its own colocated file. Never suppress with `eslint-disable`.
+
+```ts
+// ✗ — withTheme.tsx: mixes component + HOFs, requires eslint-disable
+// eslint-disable-next-line react-refresh/only-export-components
+export function withStyles(...) { ... }
+// eslint-disable-next-line react-refresh/only-export-components
+export function withTheme(...) { ... }
+export function StylesConsumer(...) { ... }  // component
+
+// ✓ — three colocated files, no suppression needed
+// StylesConsumer.tsx  → exports only the component
+// withStyles.ts       → exports only withStyles
+// withTheme.ts        → exports only withTheme
+```
+
+Name each file after what it exports. Keep all files in the same directory.
+
+---
+
 If `$ARGUMENTS` names a file, read it and report violations with corrected code. Otherwise apply to the code being discussed.

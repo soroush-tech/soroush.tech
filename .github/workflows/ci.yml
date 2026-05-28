@@ -12,6 +12,7 @@ permissions:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    environment: CI
 
     strategy:
       matrix:
@@ -21,6 +22,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v5
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Read Node version from .nvmrc (Linux/macOS)
@@ -136,9 +138,21 @@ jobs:
           flags: unit
           name: Unit
 
+      - name: Publish to Chromatic
+        id: chromatic
+        if: matrix.os == 'ubuntu-latest' && github.actor != 'renovate[bot]'
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build:storybook
+          exitZeroOnChanges: true
+          onlyChanged: true
+
       - name: Run Storybook Tests with Coverage
         if: matrix.os == 'ubuntu-latest'
         run: ${{ steps.detect-package-manager.outputs.runner }} run test:coverage:storybook
+        env:
+          SB_URL: ${{ steps.chromatic.outputs.storybookUrl }}
 
       - name: Upload Coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
