@@ -1,8 +1,5 @@
 import { type CSSProperties } from 'react'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp } from '@styled-system/should-forward-prop'
-import { system } from 'styled-system'
+import { styled, type Theme, createShouldForwardProp, system } from 'src/theme'
 import { Flex, type FlexProps } from 'src/theme/Flex'
 
 export type PaperElevation =

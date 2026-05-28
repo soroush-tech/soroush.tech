@@ -1,9 +1,10 @@
 import { type ReactNode, type ButtonHTMLAttributes } from 'react'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
 import { CircularProgress } from 'src/theme/CircularProgress'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
   space,
   layout,
   border,
@@ -14,7 +15,7 @@ import {
   type LayoutProps,
   type BorderProps,
   type TypographyProps,
-} from 'styled-system'
+} from 'src/theme'
 export type ButtonVariant = 'contained' | 'outlined' | 'text'
 export type ButtonColor = keyof Theme['palette']
 export type ButtonSize = keyof Theme['sizes']

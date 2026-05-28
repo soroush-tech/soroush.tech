@@ -1,8 +1,10 @@
 import { type ElementType, type HTMLAttributes } from 'react'
-import styled from '@emotion/styled'
-import { type Theme, useTheme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
+  styled,
+  type Theme,
+  useTheme,
+  createShouldForwardProp,
+  props,
   space,
   layout,
   typography,
@@ -16,7 +18,7 @@ import {
   type FlexboxProps,
   type BorderProps,
   type PositionProps,
-} from 'styled-system'
+} from 'src/theme'
 
 export type TypographyVariant =
   | 'h1'

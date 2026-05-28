@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { Global, ThemeProvider as DefaultThemeProvider } from '@emotion/react'
+import { Global, EmotionThemeProvider as DefaultThemeProvider } from 'src/theme'
 import { dark, light, type Theme } from 'src/theme/themes'
 import globalStyles from 'src/theme/globalStyles'
 import { ThemeContext } from './ThemeContext'

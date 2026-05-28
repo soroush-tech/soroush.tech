@@ -1,8 +1,16 @@
 import { type HTMLAttributes } from 'react'
-import styled from '@emotion/styled'
-import { type Theme, keyframes } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { space, layout, type SpaceProps, type LayoutProps, type PaddingProps } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  keyframes,
+  createShouldForwardProp,
+  props,
+  space,
+  layout,
+  type SpaceProps,
+  type LayoutProps,
+  type PaddingProps,
+} from 'src/theme'
 import type { ButtonColor } from 'src/theme/Button'
 import { clamp } from 'src/theme/utils'
 

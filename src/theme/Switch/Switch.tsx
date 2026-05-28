@@ -1,8 +1,12 @@
 import { type ChangeEvent, type ReactNode } from 'react'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
-import { space, type SpaceProps } from 'styled-system'
+import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
+  space,
+  type SpaceProps,
+} from 'src/theme'
 import { carbonBlack, kineticSurface } from 'src/theme/colors'
 
 // ─── Types ────────────────────────────────────────────────────────────────────

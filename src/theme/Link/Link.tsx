@@ -1,6 +1,5 @@
 import { type AnchorHTMLAttributes, type ComponentType, type ElementType } from 'react'
-import styled from '@emotion/styled'
-import type { CSSObject } from '@emotion/react'
+import { styled, type CSSObject } from 'src/theme'
 import { Typography, type TypographyProps } from 'src/theme/Typography'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'

@@ -1,8 +1,9 @@
 import { type CSSProperties, type HTMLAttributes } from 'react'
-import styled from '@emotion/styled'
-import { type Theme } from '@emotion/react'
-import { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
 import {
+  styled,
+  type Theme,
+  createShouldForwardProp,
+  props,
   space,
   layout,
   typography,
@@ -14,7 +15,7 @@ import {
   type TypographyProps as SystemTypographyProps,
   type BorderProps,
   type PositionProps,
-} from 'styled-system'
+} from 'src/theme'
 
 /** Valid values for the color prop — derived from theme.text keys. */
 export type ViewColorToken = keyof Theme['text']
