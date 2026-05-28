@@ -12,6 +12,27 @@ Read `src/theme/Avatar/Avatar.tsx` before writing any new component — it is th
 
 ## Rules
 
+### 0. All engine imports come from `src/theme` — never from the underlying packages
+
+Inside `src/theme/`, every styling primitive must be imported from the barrel, not from its original package:
+
+```ts
+// ✗
+import styled from '@emotion/styled'
+import { css, Global, keyframes, ThemeContext } from '@emotion/react'
+import { system, variant, compose, layout, color } from 'styled-system'
+import shouldForwardProp from '@styled-system/should-forward-prop'
+
+// ✓
+import { styled, css, Global, keyframes, ThemeContext } from 'src/theme'
+import { system, variant, compose, layout, color } from 'src/theme'
+import { createShouldForwardProp } from 'src/theme'
+```
+
+This applies to every file in `src/theme/` and `src/common/`. The barrel (`src/theme/index.ts`) is the single choke-point for the styling engine; swapping engines means editing one file.
+
+---
+
 ### 1. styled-system functions over custom theme-accessing functions
 
 | Need                            | Use                                                               |
