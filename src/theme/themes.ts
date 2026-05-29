@@ -42,6 +42,7 @@ export interface Theme {
   background: {
     backdrop: string
     modal: string
+    default: string
     primary: string
     secondary?: string
     paper: string
@@ -71,6 +72,8 @@ export interface Theme {
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
   sizes: typeof sizes
+  colorScheme: 'light' | 'dark'
+  logoFilter: string
   shadows: string[]
   fontWeights: Record<
     | 'thin'
@@ -170,6 +173,8 @@ export const space = {
   6: spacing(6),
   7: spacing(7),
   8: spacing(8),
+  9: spacing(9),
+  10: spacing(10),
   auto: 'auto',
 }
 
@@ -232,6 +237,7 @@ const baseTheme = {
 export const light: Theme = {
   ...baseTheme,
   name: 'light',
+  colorScheme: 'light',
   palette: {
     default: {
       main: lightSurface[600],
@@ -279,7 +285,8 @@ export const light: Theme = {
   background: {
     backdrop: `${lightSurface[100]}CC`,
     modal: lightSurface[100],
-    primary: lightSurface[200], // #f9f9f9
+    default: lightSurface[700],
+    primary: lightSurface[400], // #f9f9f9
     secondary: lightSurface[400], // #eeeeee
     paper: lightSurface[300], // #f3f3f3
     terminal: lightSurface[600], // #e2e2e2
@@ -289,7 +296,7 @@ export const light: Theme = {
   text: {
     inherit: 'inherit',
     initial: lightSurface[950], // #1a1c1c
-    primary: lightSurface[950], // #1a1c1c
+    primary: forestGreen[500], // #1a1c1c
     secondary: lightSurface[900], // #444748
     disabled: `${lightSurface[950]}4D`,
     error: deepCrimson[600], // #ba1a1a
@@ -302,11 +309,13 @@ export const light: Theme = {
     primary: lightSurface[850], // #747878 (outline)
     dark: lightSurface[900], // #444748 (on-surface-variant)
   },
+  logoFilter: 'brightness(0)',
 }
 
 export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
+  colorScheme: 'dark',
   palette: {
     default: {
       main: kineticSurface[400],
@@ -354,6 +363,7 @@ export const dark: Theme = {
   background: {
     backdrop: `${carbonBlack[900]}CC`,
     modal: kineticSurface[800],
+    default: kineticSurface[600],
     primary: kineticSurface[900],
     secondary: kineticSurface[700],
     paper: kineticSurface[800],
@@ -377,6 +387,7 @@ export const dark: Theme = {
     primary: kineticGreen[500],
     dark: kineticSurface[800],
   },
+  logoFilter: 'brightness(0) invert(1)',
 }
 
 const themes = {

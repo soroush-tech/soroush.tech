@@ -113,7 +113,7 @@ const SwitchTrack = styled('span', {
   size?: SwitchSize
   variant?: SwitchVariant
   bg?: keyof Theme['background']
-}>(({ size = 'md', variant = 'outside', bg = 'primary', theme }) => {
+}>(({ size = 'md', variant = 'outside', bg = 'default', theme }) => {
   if (variant === 'outside') {
     // Track element is a wrapper (height = thumbSize).
     // The visual pill lives in ::before (height = trackHeight, centered).
