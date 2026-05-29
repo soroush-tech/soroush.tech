@@ -1,5 +1,5 @@
 import { type AnchorHTMLAttributes, type ComponentType, type ElementType } from 'react'
-import { styled, type CSSObject } from 'src/theme'
+import { styled, type CSSObject, type Theme } from 'src/theme'
 import { Typography, type TypographyProps } from 'src/theme/Typography'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
@@ -38,7 +38,12 @@ const underlineStyles: Record<LinkUnderline, CSSObject> = {
 
 const LinkBase = styled(Typography as ComponentType<LinkProps & { as?: ElementType }>, {
   shouldForwardProp: (prop) => prop !== 'underline',
-})(({ underline = 'always' }: LinkProps) => underlineStyles[underline])
+})<LinkProps>(
+  ({ underline = 'always' }) => underlineStyles[underline],
+  ({ theme }: { theme: Theme }) => ({
+    '&:hover': { color: theme.palette.primary.main },
+  })
+)
 
 export function Link({
   underline = 'always',
