@@ -31,6 +31,7 @@ export default defineConfig({
         '.storybook/**/*',
         'storybook-static/**/*',
         '.claude/**/*',
+        '**/__mocks__/**',
       ],
     },
     projects: [
