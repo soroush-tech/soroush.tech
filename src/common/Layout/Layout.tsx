@@ -4,7 +4,7 @@ import { Header } from 'src/common/Header'
 import { Footer } from 'src/common/Footer'
 import { Blueprint, type BlueprintProps } from 'src/common/Blueprint'
 
-interface LayoutProps {
+export interface LayoutProps {
   children: ReactNode
   header?: ReactNode
   footer?: ReactNode
@@ -20,7 +20,7 @@ export function Layout({
   return (
     <Flex flexDirection="column" minHeight="100vh">
       {header}
-      <Blueprint as="main" pt={10} flex={1} {...blueprintProps}>
+      <Blueprint as="main" scanline pt={10} flex={1} {...blueprintProps}>
         {children}
       </Blueprint>
       {footer}
