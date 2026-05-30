@@ -37,7 +37,7 @@ export default function SystemDesignPage() {
             SYSTEM_SHOWCASE_V1.0
           </Typography>
           <Typography variant="h1" letterSpacing="tighter" color="initial" mb={3}>
-            System Design
+            Design System
           </Typography>
           <Typography variant="body1" color="secondary" lineHeight="relaxed">
             A comprehensive documentation of the Soroush Design System — scalable components, strict
