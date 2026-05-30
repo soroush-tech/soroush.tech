@@ -73,6 +73,7 @@ export interface Theme {
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
   sizes: typeof sizes
   colorScheme: 'light' | 'dark'
+  blur: string
   logoFilter: string
   shadows: string[]
   fontWeights: Record<
@@ -224,6 +225,7 @@ const baseTheme = {
   avatar,
   sizes,
   space,
+  blur: '12px',
   // get space() {
   //   return new Proxy(
   //     {},

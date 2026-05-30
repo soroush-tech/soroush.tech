@@ -1,0 +1,88 @@
+import { useTheme } from '@emotion/react'
+import SunIcon from 'src/assets/sun.svg?react'
+import MoonIcon from 'src/assets/moon.svg?react'
+import { AppBar, type AppBarPosition } from 'src/theme/AppBar'
+import { Flex } from 'src/theme/Flex'
+import { Typography } from 'src/theme/Typography'
+import { Switch } from 'src/theme/Switch'
+import { Logo } from 'src/common/Logo'
+import { Navbar } from 'src/common/Navbar'
+import { useThemeMode } from 'src/theme/hooks/useThemeMode'
+
+export interface HeaderProps {
+  position?: AppBarPosition
+}
+
+const NAV_ITEMS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+]
+
+export function Header({ position = 'fixed' }: HeaderProps) {
+  const theme = useTheme()
+  const { isDark, toggleTheme } = useThemeMode()
+
+  return (
+    <AppBar
+      elevation={0}
+      position={position}
+      top={0}
+      left={0}
+      zIndex={50}
+      height="64px"
+      px={6}
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
+      color="backdrop"
+      blur
+      borderBottom={`1px solid ${theme.border.primary}33`}
+    >
+      <Flex flexDirection="row" alignItems="center" gap={2}>
+        <a href="https://soroush.tech">
+          <Logo size={48} />
+        </a>
+        <Typography
+          as="span"
+          fontSize={2}
+          fontWeight="bold"
+          letterSpacing="tighter"
+          color="initial"
+        >
+          SOROUSH™
+        </Typography>
+      </Flex>
+
+      <Navbar
+        items={NAV_ITEMS}
+        direction="horizontal"
+        gap={4}
+        variant="button"
+        letterSpacing="tight"
+      />
+
+      <Flex flexDirection="row" alignItems="center" gap={3}>
+        <Flex flexDirection="row" alignItems="center" gap={2}>
+          <Typography variant="caption" letterSpacing="widest" color="primary">
+            MODE
+          </Typography>
+          <Switch
+            checked={isDark}
+            onChange={toggleTheme}
+            variant="inside"
+            color="primary"
+            size="sm"
+            aria-label="Toggle theme"
+          />
+          {isDark ? (
+            <MoonIcon width={14} height={14} color={theme.text.primary} />
+          ) : (
+            <SunIcon width={14} height={14} color={theme.text.primary} />
+          )}
+        </Flex>
+      </Flex>
+    </AppBar>
+  )
+}

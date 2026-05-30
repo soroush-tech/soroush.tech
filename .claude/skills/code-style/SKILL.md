@@ -162,4 +162,26 @@ Name each file after what it exports. Keep all files in the same directory.
 
 ---
 
+---
+
+### Images and SVGs belong in `src/assets/` — never inline, never from `public/`
+
+All static images (PNG, JPG, WebP) and SVG files live in `src/assets/`. Import as Vite module URLs and render with `<img>` or the theme `<Image>` component. `public/` is reserved for browser-served files that need a fixed URL (favicon, service workers, MSW worker) and must never be imported in source code.
+
+```ts
+// ✗ — importing from public/
+import logo from '/soroush.svg'
+
+// ✗ — inline SVG JSX in a component file
+const SunIcon = () => <svg viewBox="0 0 24 24" stroke="currentColor">...</svg>
+
+// ✓ — SVG file in src/assets/, imported as URL
+import sunSvg from 'src/assets/sun.svg'
+<Image src={sunSvg} aria-hidden="true" width={14} height={14} />
+```
+
+Note: `stroke="currentColor"` / `fill="currentColor"` in an SVG file does not inherit CSS `color` when rendered as `<img>`. Apply `theme.logoFilter` or a CSS filter when theme-aware coloring is needed.
+
+---
+
 If `$ARGUMENTS` names a file, read it and report violations with corrected code. Otherwise apply to the code being discussed.

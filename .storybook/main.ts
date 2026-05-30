@@ -1,4 +1,10 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
+import svgr from 'vite-plugin-svgr'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -11,9 +17,25 @@ const config: StorybookConfig = {
     '@storybook/addon-themes',
   ],
   viteFinal: async (config) => {
+    config.plugins = [svgr(), ...(config.plugins ?? [])]
     config.optimizeDeps = {
       ...(config.optimizeDeps || {}),
       include: ['react', 'react/jsx-dev-runtime'],
+    }
+    config.resolve = {
+      ...config.resolve,
+      alias: [
+        {
+          find: 'src/theme/hooks/useThemeMode',
+          replacement: resolve(__dirname, '../src/theme/hooks/__mocks__/useThemeMode'),
+        },
+        ...(Array.isArray(config.resolve?.alias)
+          ? config.resolve.alias
+          : Object.entries(config.resolve?.alias ?? {}).map(([find, replacement]) => ({
+              find,
+              replacement: String(replacement),
+            }))),
+      ],
     }
     return config
   },

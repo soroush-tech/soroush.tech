@@ -241,6 +241,29 @@ describe('AppBar', () => {
     })
   })
 
+  // ─── blur ────────────────────────────────────────────────────────────────────
+
+  describe('blur', () => {
+    it('applies backdropFilter when blur is true', () => {
+      renderWithTheme(<AppBar blur data-testid="bar" />)
+      expect(screen.getByTestId('bar')).toHaveStyle({ backdropFilter: `blur(${dark.blur})` })
+    })
+
+    it('does not apply backdropFilter when blur is omitted', () => {
+      renderWithTheme(<AppBar data-testid="bar" />)
+      expect(screen.getByTestId('bar')).not.toHaveStyle({ backdropFilter: `blur(${dark.blur})` })
+    })
+  })
+
+  // ─── borders ─────────────────────────────────────────────────────────────────
+
+  describe('borders', () => {
+    it('applies borderBottom', () => {
+      renderWithTheme(<AppBar borderBottom="1px solid red" data-testid="bar" />)
+      expect(screen.getByTestId('bar')).toHaveStyle({ borderBottom: '1px solid rgb(255, 0, 0)' })
+    })
+  })
+
   // ─── HTML passthrough ────────────────────────────────────────────────────────
 
   describe('HTML passthrough', () => {
