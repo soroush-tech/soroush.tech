@@ -1,5 +1,5 @@
 import { type AnchorHTMLAttributes, type ComponentType, type ElementType } from 'react'
-import { styled, type CSSObject, type Theme } from 'src/theme'
+import { styled, system, type CSSObject, type Theme } from 'src/theme'
 import { Typography, type TypographyProps } from 'src/theme/Typography'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
@@ -9,6 +9,7 @@ export interface LinkProps
     Omit<TypographyProps, 'as'>,
     Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Omit<TypographyProps, 'as'>> {
   underline?: LinkUnderline
+  gap?: number | string
 }
 
 const underlineStyles: Record<LinkUnderline, CSSObject> = {
@@ -36,13 +37,16 @@ const underlineStyles: Record<LinkUnderline, CSSObject> = {
   },
 }
 
+const linkGapSystem = system({ gap: { property: 'gap', scale: 'space' } })
+
 const LinkBase = styled(Typography as ComponentType<LinkProps & { as?: ElementType }>, {
   shouldForwardProp: (prop) => prop !== 'underline',
 })<LinkProps>(
   ({ underline = 'always' }) => underlineStyles[underline],
   ({ theme }: { theme: Theme }) => ({
     '&:hover': { color: theme.palette.primary.main },
-  })
+  }),
+  linkGapSystem
 )
 
 export function Link({

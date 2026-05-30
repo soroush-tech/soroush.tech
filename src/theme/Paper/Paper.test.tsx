@@ -35,7 +35,7 @@ describe('Paper', () => {
     it('defaults to elevation=1 box-shadow', () => {
       renderWithTheme(<Paper data-testid="paper" />)
       expect(screen.getByTestId('paper')).toHaveStyle({
-        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[1],
       })
     })
   })
@@ -44,21 +44,21 @@ describe('Paper', () => {
     it('elevation=0 applies flat shadow', () => {
       renderWithTheme(<Paper elevation={0} data-testid="paper" />)
       expect(screen.getByTestId('paper')).toHaveStyle({
-        boxShadow: '0 0px 0px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[0],
       })
     })
 
     it('elevation=4 applies correct box-shadow', () => {
       renderWithTheme(<Paper elevation={4} data-testid="paper" />)
       expect(screen.getByTestId('paper')).toHaveStyle({
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[4],
       })
     })
 
     it('elevation=24 applies maximum box-shadow', () => {
       renderWithTheme(<Paper elevation={24} data-testid="paper" />)
       expect(screen.getByTestId('paper')).toHaveStyle({
-        boxShadow: '0 24px 48px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[24],
       })
     })
 

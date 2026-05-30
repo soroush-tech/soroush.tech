@@ -9,7 +9,7 @@ import {
 } from 'src/theme'
 
 export type CheckboxColor = 'default' | keyof Theme['palette']
-export type CheckboxSize = 'small' | 'medium'
+export type CheckboxSize = 'sm' | 'md' | 'lg'
 
 export interface CheckboxProps extends SpaceProps<Theme> {
   /** Controlled checked state. */
@@ -47,8 +47,9 @@ export interface CheckboxProps extends SpaceProps<Theme> {
 // ─── Icon size map ────────────────────────────────────────────────────────────
 
 const ICON_SIZE: Record<CheckboxSize, string> = {
-  small: '16px',
-  medium: '20px',
+  sm: '16px',
+  md: '20px',
+  lg: '24px',
 }
 
 // ─── Default icons ────────────────────────────────────────────────────────────
@@ -94,7 +95,7 @@ const HiddenInput = styled('input')({
 
 const CheckboxIconWrapper = styled('span', {
   shouldForwardProp: (prop) => prop !== 'size',
-})<{ size?: CheckboxSize }>(({ size = 'medium' }) => ({
+})<{ size?: CheckboxSize }>(({ size = 'md' }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -157,7 +158,7 @@ export function Checkbox({
   defaultChecked,
   disabled = false,
   color = 'default',
-  size = 'medium',
+  size = 'md',
   indeterminate = false,
   icon,
   checkedIcon,

@@ -38,7 +38,7 @@ const meta: Meta<typeof Radio> = {
       control: { type: 'inline-radio' },
       options: radioSizeTokens,
       description: 'Icon size.',
-      table: { category: 'Visual', defaultValue: { summary: 'medium' } },
+      table: { category: 'Visual', defaultValue: { summary: 'md' } },
     },
     children: {
       control: 'text',
@@ -53,7 +53,7 @@ export default meta
 type Story = StoryObj<typeof Radio>
 
 export const Default: Story = {
-  args: { color: 'default', size: 'medium' },
+  args: { color: 'default', size: 'md' },
 }
 
 export const Checked: Story = {
@@ -111,7 +111,7 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <Flex flexDirection="row" gap={4} alignItems="center">
-      {(['small', 'medium'] as const).map((size) => (
+      {(['sm', 'md', 'lg'] as const).map((size) => (
         <Flex key={size} flexDirection="column" alignItems="center" gap={1}>
           <Radio size={size} color="primary" checked onChange={() => {}} />
           <Typography variant="caption" color="secondary" m={0}>

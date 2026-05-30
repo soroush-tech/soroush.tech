@@ -141,18 +141,23 @@ describe('Checkbox', () => {
   // ─── size ─────────────────────────────────────────────────────────────────────
 
   describe('size', () => {
-    it('small — sets 16px font-size on icon wrapper', () => {
-      const { container } = renderWithTheme(<Checkbox size="small" />)
+    it('sm — sets 16px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Checkbox size="sm" />)
       expect(container.querySelector('span')).toHaveStyle({ fontSize: '16px' })
     })
 
-    it('medium — sets 20px font-size on icon wrapper', () => {
-      const { container } = renderWithTheme(<Checkbox size="medium" />)
+    it('md — sets 20px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Checkbox size="md" />)
       expect(container.querySelector('span')).toHaveStyle({ fontSize: '20px' })
     })
 
+    it('lg — sets 24px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Checkbox size="lg" />)
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: '24px' })
+    })
+
     it('does not forward size to DOM', () => {
-      renderWithTheme(<Checkbox size="medium" data-testid="cb" />)
+      renderWithTheme(<Checkbox size="md" data-testid="cb" />)
       expect(screen.getByTestId('cb')).not.toHaveAttribute('size')
     })
   })

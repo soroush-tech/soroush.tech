@@ -233,6 +233,30 @@ describe('TextInput', () => {
     })
   })
 
+  // ─── borderRadius ────────────────────────────────────────────────────────────
+
+  describe('borderRadius', () => {
+    it('applies borderRadius to default variant', () => {
+      renderWithTheme(<TextInput borderRadius="md" data-testid="root" />)
+      expect(screen.getByTestId('root')).toHaveStyle({ borderRadius: dark.radii.md })
+    })
+
+    it('applies borderRadius to outlined variant', () => {
+      renderWithTheme(<TextInput variant="outlined" borderRadius="md" data-testid="root" />)
+      expect(screen.getByTestId('root')).toHaveStyle({ borderRadius: dark.radii.md })
+    })
+
+    it('ignores borderRadius on underline variant', () => {
+      renderWithTheme(<TextInput variant="underline" borderRadius="md" data-testid="root" />)
+      expect(screen.getByTestId('root')).not.toHaveStyle({ borderRadius: dark.radii.md })
+    })
+
+    it('ignores borderRadius on text variant', () => {
+      renderWithTheme(<TextInput variant="text" borderRadius="md" data-testid="root" />)
+      expect(screen.getByTestId('root')).not.toHaveStyle({ borderRadius: dark.radii.md })
+    })
+  })
+
   // ─── fullWidth ────────────────────────────────────────────────────────────────
 
   describe('fullWidth', () => {
