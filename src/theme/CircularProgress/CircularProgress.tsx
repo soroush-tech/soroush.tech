@@ -177,6 +177,7 @@ export function CircularProgress({
   return (
     <CircularProgressRoot
       role="progressbar"
+      aria-label="Loading"
       color={color}
       size={size}
       variant={variant}

@@ -59,8 +59,8 @@ export function InteractiveColorSizeCard() {
             <Button variant="contained" color={color} size="md">
               Button
             </Button>
-            <Checkbox defaultChecked color={color} size="md" />
-            <Switch defaultChecked color={color} size="md" />
+            <Checkbox defaultChecked color={color} size="md" aria-label={`${color} checkbox`} />
+            <Switch defaultChecked color={color} size="md" aria-label={`${color} toggle`} />
             <TextInput placeholder="INPUT..." color={color} variant="underline" size="md" />
           </Flex>
         ))}
@@ -95,9 +95,9 @@ export function InteractiveColorSizeCard() {
             <Button borderRadius="sm" variant="contained" color="primary" size={size}>
               {size.toUpperCase()}
             </Button>
-            <Checkbox color="primary" size={size} />
+            <Checkbox color="primary" size={size} aria-label={`${size} size checkbox`} />
             <Radio color="primary" size={size} />
-            <Switch color="primary" size={size} />
+            <Switch color="primary" size={size} aria-label={`${size} size toggle`} />
             <TextInput
               placeholder="INPUT..."
               borderRadius="sm"

@@ -37,8 +37,13 @@ describe('Navbar', () => {
 
   describe('landmark', () => {
     it('renders a nav element', () => {
-      renderWithTheme(<Navbar items={ITEMS} />)
-      expect(screen.getByRole('navigation')).toBeInTheDocument()
+      renderWithTheme(<Navbar items={ITEMS} aria-label="Main" />)
+      expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument()
+    })
+
+    it('forwards aria-label to the nav element', () => {
+      renderWithTheme(<Navbar items={ITEMS} aria-label="Directories" />)
+      expect(screen.getByRole('navigation', { name: 'Directories' })).toBeInTheDocument()
     })
   })
 
@@ -54,6 +59,13 @@ describe('Navbar', () => {
     it('renders exactly one link per item', () => {
       renderWithTheme(<Navbar items={ITEMS} />)
       expect(screen.getAllByRole('link')).toHaveLength(ITEMS.length)
+    })
+
+    it('sets aria-label on each link matching the item label', () => {
+      renderWithTheme(<Navbar items={ITEMS} />)
+      ITEMS.forEach(({ label }, i) => {
+        expect(capturedProps[i]['aria-label']).toBe(label)
+      })
     })
   })
 

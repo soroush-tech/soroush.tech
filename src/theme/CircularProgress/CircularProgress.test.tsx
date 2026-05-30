@@ -243,9 +243,14 @@ describe('CircularProgress', () => {
       expect(screen.getByTestId('my-spinner')).toBeInTheDocument()
     })
 
+    it('has a default aria-label of "Loading"', () => {
+      renderWithTheme(<CircularProgress />)
+      expect(screen.getByRole('progressbar', { name: 'Loading' })).toBeInTheDocument()
+    })
+
     it('forwards aria-label', () => {
-      renderWithTheme(<CircularProgress aria-label="loading" />)
-      expect(screen.getByRole('progressbar', { name: 'loading' })).toBeInTheDocument()
+      renderWithTheme(<CircularProgress aria-label="uploading" />)
+      expect(screen.getByRole('progressbar', { name: 'uploading' })).toBeInTheDocument()
     })
   })
 })

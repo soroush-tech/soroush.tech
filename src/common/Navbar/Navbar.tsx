@@ -8,6 +8,7 @@ export interface NavbarProps extends Pick<NavLinkProps, 'variant' | 'letterSpaci
   items: NavItem[]
   direction?: NavbarDirection
   gap?: GapToken
+  'aria-label'?: string
 }
 
 export function Navbar({
@@ -17,10 +18,12 @@ export function Navbar({
   variant,
   letterSpacing,
   underline = 'hover',
+  'aria-label': ariaLabel,
 }: NavbarProps) {
   return (
     <Flex
       as="nav"
+      aria-label={ariaLabel}
       flexDirection={direction === 'horizontal' ? 'row' : 'column'}
       alignItems={direction === 'horizontal' ? 'center' : undefined}
       gap={gap}
@@ -29,6 +32,7 @@ export function Navbar({
         <NavLink
           key={href}
           href={href}
+          aria-label={label}
           target={target}
           variant={variant}
           letterSpacing={letterSpacing}
