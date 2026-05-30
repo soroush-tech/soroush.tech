@@ -1,4 +1,4 @@
-import { type ElementType, type HTMLAttributes } from 'react'
+import { type CSSProperties, type ElementType, type HTMLAttributes } from 'react'
 import {
   styled,
   type Theme,
@@ -58,6 +58,7 @@ export interface TypographyProps
   /** Resolves against theme.background */
   bg?: BackgroundToken
   opacity?: number
+  textTransform?: CSSProperties['textTransform']
   variant?: TypographyVariant
   align?: TypographyAlign
   gutterBottom?: boolean
@@ -65,13 +66,20 @@ export interface TypographyProps
   as?: ElementType
 }
 
-const shouldForwardProp = createShouldForwardProp([...props, 'noWrap', 'gutterBottom', 'align'])
+const shouldForwardProp = createShouldForwardProp([
+  ...props,
+  'noWrap',
+  'gutterBottom',
+  'align',
+  'textTransform',
+])
 
-// color → theme.text  /  bg → theme.background  /  opacity → raw
+// color → theme.text  /  bg → theme.background  /  opacity → raw  /  textTransform → raw
 const colorSystem = system({
   color: { property: 'color', scale: 'text' },
   bg: { property: 'backgroundColor', scale: 'background' },
   opacity: { property: 'opacity' },
+  textTransform: { property: 'textTransform' },
 })
 
 const typographyVariants = ({ variant = 'body1', theme }: TypographyProps & { theme: Theme }) => {

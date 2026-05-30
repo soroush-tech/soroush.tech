@@ -250,15 +250,23 @@ Copy `default.env` to `.env` locally and fill in values; never commit secrets.
 - **Vike is disabled in Storybook builds:** `vite.config.ts` only registers the Vike plugin when `NODE_ENV !== 'storybook'`.
 - **Emotion Babel plugin** rewrites class names with key `soroush` and a `[local]--[filename]` label in dev — expect generated class names to look that way during debugging.
 - **styled-system + should-forward-prop:** Pages use the design-system components (`Flex`, `View`, `Typography`) from `src/theme/`. Prefer those over raw `div`/`p` for layout to keep theme tokens (`bg="primary"`, `px={2}`, `fontSize={5}`) consistent.
+- **Hook co-location:** API/data-fetching hooks always live in `src/hooks/useHookName/`. Domain-logic hooks (UI state, derived state, component-specific behaviour) live in `src/common/ComponentName/hooks/useHookName/` and are only moved to `src/hooks/` when a second component needs them. Each hook folder has `index.ts` + `useHookName.ts` + `useHookName.test.ts`; there is no barrel `index.ts` at the `src/hooks/` root.
 - **MSW** runs in browser (worker in `public/`) and in tests. Toggle in dev via `VITE_APP_MSW_ACTIVE=true`.
 - **Pre-commit:** Husky + `pretty-quick` runs Prettier on staged files. Lint and tests are not auto-run pre-commit — run them manually before pushing.
 - **`pnpm lint` runs with `--max-warnings 0`** — any warning fails the lint step.
 - **Build output goes to `./build`** (not the default `dist`); `gh-pages` deploys from there.
 - **Node version:** use the version in `.nvmrc` (currently Node 22). Mismatches cause pnpm/vite issues.
 
-## Design System Conventions
+## Layer Conventions
 
-Full architecture is documented in `src/theme/design-system.md`. Key rules for working in `src/theme/`:
+Each layer of the codebase has its own convention doc. Read the relevant one before working in that area:
+
+| Layer             | Convention doc               | What it covers                                                                               |
+| ----------------- | ---------------------------- | -------------------------------------------------------------------------------------------- |
+| Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules          |
+| Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`              |
+| Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                                     |
+| Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests, co-location rule |
 
 ## Quick Checklist Before Pushing
 

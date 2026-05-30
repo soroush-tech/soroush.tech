@@ -18,6 +18,11 @@ const globalStyles = (theme: Theme) => css`
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
+    color-scheme: ${theme.colorScheme};
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -37,22 +42,6 @@ const globalStyles = (theme: Theme) => css`
     margin-block-end: 0.5em;
   }
 
-  article,
-  aside,
-  details,
-  figcaption,
-  figure,
-  footer,
-  header,
-  hgroup,
-  main,
-  menu,
-  nav,
-  section,
-  summary {
-    display: block;
-  }
-
   textarea {
     overflow: auto;
   }
@@ -69,7 +58,6 @@ const globalStyles = (theme: Theme) => css`
 
   #root {
     min-height: 100dvh;
-    width: 100dvw;
   }
 `
 

@@ -29,19 +29,24 @@ export type ViewBorderColorToken = keyof Theme['border']
 /** Valid values for the borderWidth prop — derived from theme.borderWidths keys. */
 export type ViewBorderWidthToken = keyof Theme['borderWidths']
 
+/** Valid theme tokens for border-radius. Raw CSS pixel values (e.g. '6px', '9999px') are also accepted. */
+export type ViewBorderRadiusToken = 'sq' | 'sm' | 'md' | 'lg' | `${number}px`
+
 export interface ViewProps
   extends
     Omit<HTMLAttributes<HTMLElement>, 'color'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     SystemTypographyProps<Theme>,
-    Omit<BorderProps<Theme>, 'borderColor' | 'borderWidth'>,
+    Omit<BorderProps<Theme>, 'borderColor' | 'borderWidth' | 'borderRadius'>,
     PositionProps<Theme> {
   bg?: ViewBackgroundToken
   /** Resolves against theme.border — light · primary · dark */
   borderColor?: ViewBorderColorToken
   /** Resolves against theme.borderWidths — none · thin · base · thick */
   borderWidth?: ViewBorderWidthToken
+  /** Theme tokens: sq · sm · md · lg. Also accepts raw CSS pixel values e.g. '6px', '9999px'. */
+  borderRadius?: ViewBorderRadiusToken
   opacity?: number
   cursor?: CSSProperties['cursor']
 }

@@ -226,10 +226,10 @@ describe('Switch', () => {
       })
     })
 
-    it('inside variant: defaults to theme.background.primary when bg is not set', () => {
+    it('inside variant: defaults to theme.background.default when bg is not set', () => {
       const { container } = renderWithTheme(<Switch variant="inside" />)
       expect(container.querySelector('.sw-track')).toHaveStyle({
-        backgroundColor: dark.background.primary,
+        backgroundColor: dark.background.default,
       })
     })
 

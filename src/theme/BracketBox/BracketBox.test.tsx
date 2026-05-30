@@ -25,14 +25,14 @@ describe('BracketBox', () => {
     it('elevation={0} applies flat shadow', () => {
       renderWithTheme(<BracketBox elevation={0} data-testid="box" />)
       expect(screen.getByTestId('box')).toHaveStyle({
-        boxShadow: '0 0px 0px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[0],
       })
     })
 
     it('elevation={4} applies correct box-shadow', () => {
       renderWithTheme(<BracketBox elevation={4} data-testid="box" />)
       expect(screen.getByTestId('box')).toHaveStyle({
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: dark.shadows[4],
       })
     })
 

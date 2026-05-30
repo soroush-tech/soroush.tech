@@ -130,7 +130,7 @@ export default meta
 type Story = StoryObj<typeof Switch>
 
 export const Default: Story = {
-  args: { color: 'default', size: 'md', variant: 'outside' },
+  args: { color: 'default', size: 'md', variant: 'outside', 'aria-label': 'Toggle' },
 }
 
 export const Colors: Story = {
@@ -141,8 +141,8 @@ export const Colors: Story = {
           <Typography variant="caption" color="secondary" width="6rem" flexShrink={0} m={0}>
             {color}
           </Typography>
-          <Switch color={color} />
-          <Switch color={color} checked onChange={() => {}} />
+          <Switch color={color} aria-label={`${color} off`} />
+          <Switch color={color} checked onChange={() => {}} aria-label={`${color} on`} />
         </Flex>
       ))}
     </Flex>
@@ -159,7 +159,14 @@ export const Sizes: Story = {
           </Typography>
           {(['sm', 'md', 'lg'] as const).map((size) => (
             <Flex key={size} flexDirection="column" alignItems="center" gap={1}>
-              <Switch variant={variant} size={size} color="primary" checked onChange={() => {}} />
+              <Switch
+                variant={variant}
+                size={size}
+                color="primary"
+                checked
+                onChange={() => {}}
+                aria-label={`${variant} ${size}`}
+              />
               <Typography variant="caption" color="secondary" m={0}>
                 {size}
               </Typography>
@@ -184,7 +191,7 @@ export const Disabled: Story = {
           <Typography variant="caption" color="secondary" width="8rem" flexShrink={0} m={0}>
             {label}
           </Typography>
-          <Switch color="primary" {...props} />
+          <Switch color="primary" {...props} aria-label={label} />
         </Flex>
       ))}
     </Flex>
@@ -219,8 +226,14 @@ export const Variants: Story = {
           <Typography variant="caption" color="secondary" width="5rem" flexShrink={0} m={0}>
             {variant}
           </Typography>
-          <Switch variant={variant} color="primary" />
-          <Switch variant={variant} color="primary" checked onChange={() => {}} />
+          <Switch variant={variant} color="primary" aria-label={`${variant} off`} />
+          <Switch
+            variant={variant}
+            color="primary"
+            checked
+            onChange={() => {}}
+            aria-label={`${variant} on`}
+          />
         </Flex>
       ))}
     </Flex>
@@ -235,8 +248,15 @@ export const Marked: Story = {
           <Typography variant="caption" color="secondary" width="5rem" flexShrink={0} m={0}>
             {variant}
           </Typography>
-          <Switch variant={variant} marked color="primary" />
-          <Switch variant={variant} marked color="primary" checked onChange={() => {}} />
+          <Switch variant={variant} marked color="primary" aria-label={`${variant} marked off`} />
+          <Switch
+            variant={variant}
+            marked
+            color="primary"
+            checked
+            onChange={() => {}}
+            aria-label={`${variant} marked on`}
+          />
         </Flex>
       ))}
     </Flex>
@@ -263,6 +283,7 @@ export const WithIcons: Story = {
                 onChange={(e) => setChecked(e.target.checked)}
                 icon={<MoonIcon />}
                 checkedIcon={<SunIcon />}
+                aria-label={`outside ${size} theme toggle`}
               />
               <Switch
                 variant="inside"
@@ -273,6 +294,7 @@ export const WithIcons: Story = {
                 onChange={(e) => setChecked(e.target.checked)}
                 icon={<MoonIcon />}
                 checkedIcon={<SunIcon />}
+                aria-label={`inside ${size} theme toggle`}
               />
             </Flex>
           ))}

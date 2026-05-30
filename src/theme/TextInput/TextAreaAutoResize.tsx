@@ -44,7 +44,7 @@ export const TextAreaAutoResize = forwardRef<HTMLTextAreaElement, TextAreaAutoRe
 
     // Adjust height on controlled value changes or row constraint changes.
     useLayoutEffect(() => {
-      if (innerRef.current) adjust(innerRef.current, minRows, maxRows)
+      adjust(innerRef.current!, minRows, maxRows)
     }, [value, minRows, maxRows])
 
     // Adjust height on uncontrolled user input.

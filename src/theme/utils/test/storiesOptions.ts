@@ -18,6 +18,7 @@ import type { SwitchColor, SwitchEdge, SwitchSize, SwitchVariant } from 'src/the
 import type { TextInputColor, TextInputVariant, TextInputSize } from 'src/theme/TextInput'
 import type { AppBarSize } from 'src/theme/AppBar'
 import type { LinkUnderline } from 'src/theme/Link'
+import type { CardVariant } from 'src/theme/Card'
 import {
   dark,
   radii,
@@ -78,9 +79,9 @@ export const circularProgressEasingTokens = [
   'ease-in-out',
 ] satisfies CircularProgressEasing[]
 export const checkboxColorTokens = buttonColorTokens satisfies CheckboxColor[]
-export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
+export const checkboxSizeTokens = ['sm', 'md', 'lg'] satisfies CheckboxSize[]
 export const radioColorTokens = buttonColorTokens satisfies RadioColor[]
-export const radioSizeTokens = ['small', 'medium'] satisfies RadioSize[]
+export const radioSizeTokens = ['sm', 'md', 'lg'] satisfies RadioSize[]
 export const switchColorTokens = buttonColorTokens satisfies SwitchColor[]
 export const switchSizeTokens = ['sm', 'md', 'lg'] satisfies SwitchSize[]
 export const switchVariantTokens = ['outside', 'inside'] satisfies SwitchVariant[]
@@ -95,6 +96,7 @@ export const textInputVariantTokens = [
 export const textInputSizeTokens = ['sm', 'md', 'lg'] satisfies TextInputSize[]
 export const appBarSizeTokens = objectKeys(sizes) satisfies AppBarSize[]
 export const linkUnderlineTokens = ['always', 'hover', 'none'] satisfies LinkUnderline[]
+export const cardVariantTokens = ['paper', 'bracketBox'] satisfies CardVariant[]
 export const linkTargetTokens = ['_self', '_blank', '_parent', '_top', '_unfencedTop'] as const
 export const linkRelTokens = [
   'noopener noreferrer',

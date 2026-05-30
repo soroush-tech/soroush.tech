@@ -42,6 +42,7 @@ export interface Theme {
   background: {
     backdrop: string
     modal: string
+    default: string
     primary: string
     secondary?: string
     paper: string
@@ -71,6 +72,9 @@ export interface Theme {
   borderWidths: Record<'none' | 'thin' | 'base' | 'thick', string>
   avatar: Record<'sm' | 'md' | 'lg' | 'xl', string>
   sizes: typeof sizes
+  colorScheme: 'light' | 'dark'
+  blur: string
+  logoFilter: string
   shadows: string[]
   fontWeights: Record<
     | 'thin'
@@ -93,8 +97,12 @@ export interface Theme {
 export type Light = typeof light
 export type Dark = typeof dark
 
-const shadows = Array.from({ length: 25 }, (_, elevation) =>
-  generateBoxShadow(elevation, 'rgba(0, 0, 0, 0.1)')
+const lightShadows = Array.from({ length: 25 }, (_, elevation) =>
+  generateBoxShadow(elevation, blackAlpha[100])
+)
+
+const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
+  generateBoxShadow(elevation, blackAlpha[400])
 )
 export const radii = {
   sq: '0',
@@ -170,6 +178,8 @@ export const space = {
   6: spacing(6),
   7: spacing(7),
   8: spacing(8),
+  9: spacing(9),
+  10: spacing(10),
   auto: 'auto',
 }
 
@@ -206,7 +216,6 @@ export const typography: Theme['typography'] = {
 
 const baseTheme = {
   name: 'base',
-  shadows,
   spacing,
   radii,
   borderWidths,
@@ -219,6 +228,7 @@ const baseTheme = {
   avatar,
   sizes,
   space,
+  blur: '12px',
   // get space() {
   //   return new Proxy(
   //     {},
@@ -232,11 +242,12 @@ const baseTheme = {
 export const light: Theme = {
   ...baseTheme,
   name: 'light',
+  colorScheme: 'light',
   palette: {
     default: {
-      main: lightSurface[600],
-      light: lightSurface[400],
-      dark: lightSurface[800],
+      main: carbonBlack[500],
+      light: carbonBlack[400],
+      dark: carbonBlack[800],
       contrastText: lightSurface[950],
     },
     primary: {
@@ -246,16 +257,16 @@ export const light: Theme = {
       contrastText: lightSurface[100],
     },
     secondary: {
-      main: forestGreen[600], // #006e17
-      light: forestGreen[300], // #58ff60
-      dark: forestGreen[700], // #00530f
+      main: softGreen[600], // #006e17
+      light: softGreen[400], // #58ff60
+      dark: softGreen[700], // #00530f
       contrastText: lightSurface[100],
     },
     success: {
       main: kineticGreen[700],
       light: kineticGreen[500],
       dark: kineticGreen[800],
-      contrastText: lightSurface[100],
+      contrastText: kineticSurface[100],
     },
     error: {
       main: deepCrimson[600], // #ba1a1a
@@ -271,7 +282,7 @@ export const light: Theme = {
     },
     warning: {
       main: solarAmber[500],
-      light: solarAmber[300],
+      light: solarAmber[400],
       dark: solarAmber[600],
       contrastText: lightSurface[950],
     },
@@ -279,7 +290,8 @@ export const light: Theme = {
   background: {
     backdrop: `${lightSurface[100]}CC`,
     modal: lightSurface[100],
-    primary: lightSurface[200], // #f9f9f9
+    default: lightSurface[700],
+    primary: lightSurface[400], // #f9f9f9
     secondary: lightSurface[400], // #eeeeee
     paper: lightSurface[300], // #f3f3f3
     terminal: lightSurface[600], // #e2e2e2
@@ -289,24 +301,27 @@ export const light: Theme = {
   text: {
     inherit: 'inherit',
     initial: lightSurface[950], // #1a1c1c
-    primary: lightSurface[950], // #1a1c1c
+    primary: forestGreen[500], // #1a1c1c
     secondary: lightSurface[900], // #444748
-    disabled: `${lightSurface[950]}4D`,
+    disabled: `${lightSurface[950]}A0`,
     error: deepCrimson[600], // #ba1a1a
     success: kineticGreen[700],
-    info: cyberCyan[800],
+    info: cyberCyan[700],
     warning: solarAmber[800],
   },
   border: {
-    light: lightSurface[800], // #c4c7c7 (outline-variant)
-    primary: lightSurface[850], // #747878 (outline)
-    dark: lightSurface[900], // #444748 (on-surface-variant)
+    light: `${forestGreen[300]}1A`,
+    primary: forestGreen[500],
+    dark: forestGreen[800],
   },
+  logoFilter: 'brightness(0)',
+  shadows: lightShadows,
 }
 
 export const dark: Theme = {
   ...baseTheme,
   name: 'dark',
+  colorScheme: 'dark',
   palette: {
     default: {
       main: kineticSurface[400],
@@ -339,21 +354,22 @@ export const dark: Theme = {
       contrastText: kineticSurface[100],
     },
     info: {
-      main: cyberCyan[500],
-      light: cyberCyan[300],
-      dark: cyberCyan[600],
+      main: cyberCyan[600],
+      light: cyberCyan[400],
+      dark: cyberCyan[700],
       contrastText: carbonBlack[900],
     },
     warning: {
       main: solarAmber[400],
       light: solarAmber[200],
-      dark: solarAmber[500],
+      dark: solarAmber[600],
       contrastText: carbonBlack[900],
     },
   },
   background: {
     backdrop: `${carbonBlack[900]}CC`,
     modal: kineticSurface[800],
+    default: kineticSurface[600],
     primary: kineticSurface[900],
     secondary: kineticSurface[700],
     paper: kineticSurface[800],
@@ -365,11 +381,11 @@ export const dark: Theme = {
     inherit: 'inherit',
     initial: kineticSurface[100],
     primary: kineticGreen[500],
-    secondary: kineticSurface[400],
+    secondary: kineticSurface[300],
     disabled: kineticSurface[500],
     error: neonRed[700],
     success: kineticGreen[700],
-    info: cyberCyan[500],
+    info: cyberCyan[600],
     warning: solarAmber[800],
   },
   border: {
@@ -377,6 +393,8 @@ export const dark: Theme = {
     primary: kineticGreen[500],
     dark: kineticSurface[800],
   },
+  logoFilter: 'brightness(0) invert(1)',
+  shadows: darkShadows,
 }
 
 const themes = {

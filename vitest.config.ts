@@ -31,6 +31,7 @@ export default defineConfig({
         '.storybook/**/*',
         'storybook-static/**/*',
         '.claude/**/*',
+        '**/__mocks__/**',
       ],
     },
     projects: [
@@ -46,9 +47,12 @@ export default defineConfig({
             name: 'svg-mock',
             enforce: 'pre' as const,
             resolveId(id) {
+              if (/\.svg\?react/.test(id)) return '\0virtual:svg-react-mock'
               if (/\.svg(\?|$)/.test(id)) return '\0virtual:svg-mock'
             },
             load(id) {
+              if (id === '\0virtual:svg-react-mock')
+                return 'import React from "react"; export default (props) => React.createElement("svg", props)'
               if (id === '\0virtual:svg-mock') return 'export default "/mock.svg"'
             },
           },

@@ -82,7 +82,9 @@ const ButtonLabel = styled('span', {
   display: 'inherit',
   alignItems: 'inherit',
   justifyContent: 'inherit',
-  ...(invisible && { visibility: 'hidden' }),
+  // opacity: 0 keeps text in the accessibility tree (unlike visibility: hidden),
+  // so the button retains its accessible name while loading.
+  ...(invisible && { opacity: 0 }),
 }))
 
 const LoadingCenter = styled('span')({
@@ -239,6 +241,7 @@ export function Button({
       letterSpacing={letterSpacing}
       fullWidth={fullWidth}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
       {...rest}
     >
       {start != null && <ButtonIcon>{start}</ButtonIcon>}
