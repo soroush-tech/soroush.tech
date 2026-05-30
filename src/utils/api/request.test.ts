@@ -114,7 +114,7 @@ describe('interceptors', () => {
   describe('request interceptor', () => {
     it('logs the request in non-production environment', () => {
       const request = createRequest()
-      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]
+      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]!
       const mockReq = { url: '/test', method: 'GET' }
       const result = callback(mockReq as never)
       expect(result).toBe(mockReq)
@@ -125,7 +125,7 @@ describe('interceptors', () => {
       const original = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
       const request = createRequest()
-      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]
+      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]!
       callback({ url: '/test', method: 'GET' } as never)
       expect(consoleSpy).not.toHaveBeenCalled()
       process.env.NODE_ENV = original
@@ -137,7 +137,7 @@ describe('interceptors', () => {
       const request = createRequest()
       const [successCallback] = vi.mocked(request.interceptors.response.use).mock.calls[0]
       const mockRes = { status: 200, data: { id: 1 } }
-      const result = successCallback(mockRes as never)
+      const result = successCallback!(mockRes as never)
       expect(result).toBe(mockRes)
       expect(consoleSpy).toHaveBeenCalledWith('API response', 200, { id: 1 })
     })
@@ -147,7 +147,7 @@ describe('interceptors', () => {
       process.env.NODE_ENV = 'production'
       const request = createRequest()
       const [successCallback] = vi.mocked(request.interceptors.response.use).mock.calls[0]
-      successCallback({ status: 200, data: {} } as never)
+      successCallback!({ status: 200, data: {} } as never)
       expect(consoleSpy).not.toHaveBeenCalled()
       process.env.NODE_ENV = original
     })
