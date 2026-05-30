@@ -9,7 +9,7 @@ import {
 } from 'src/theme'
 
 export type RadioColor = 'default' | keyof Theme['palette']
-export type RadioSize = 'small' | 'medium'
+export type RadioSize = 'sm' | 'md' | 'lg'
 
 export interface RadioProps extends SpaceProps<Theme> {
   /** Controlled checked state. Must be paired with `onChange`. */
@@ -44,8 +44,9 @@ export interface RadioProps extends SpaceProps<Theme> {
 // ─── Icon size map ────────────────────────────────────────────────────────────
 
 const ICON_SIZE: Record<RadioSize, string> = {
-  small: '16px',
-  medium: '20px',
+  sm: '16px',
+  md: '20px',
+  lg: '24px',
 }
 
 // ─── Default icons ────────────────────────────────────────────────────────────
@@ -77,7 +78,7 @@ const HiddenInput = styled('input')({
 
 const RadioIconWrapper = styled('span', {
   shouldForwardProp: (prop) => prop !== 'size',
-})<{ size?: RadioSize }>(({ size = 'medium' }) => ({
+})<{ size?: RadioSize }>(({ size = 'md' }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -134,7 +135,7 @@ export function Radio({
   checked,
   disabled = false,
   color = 'default',
-  size = 'medium',
+  size = 'md',
   icon,
   checkedIcon,
   onChange,

@@ -165,6 +165,7 @@ export function CircularProgress({
       ? {
           strokeDasharray: `${circumference}px`,
           strokeDashoffset: `${circumference * (1 - normalizedValue / max)}px`,
+          transition: `stroke-dashoffset 0.3s ${easing}`,
         }
       : undefined
 

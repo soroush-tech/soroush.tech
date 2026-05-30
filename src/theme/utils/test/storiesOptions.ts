@@ -79,9 +79,9 @@ export const circularProgressEasingTokens = [
   'ease-in-out',
 ] satisfies CircularProgressEasing[]
 export const checkboxColorTokens = buttonColorTokens satisfies CheckboxColor[]
-export const checkboxSizeTokens = ['small', 'medium'] satisfies CheckboxSize[]
+export const checkboxSizeTokens = ['sm', 'md', 'lg'] satisfies CheckboxSize[]
 export const radioColorTokens = buttonColorTokens satisfies RadioColor[]
-export const radioSizeTokens = ['small', 'medium'] satisfies RadioSize[]
+export const radioSizeTokens = ['sm', 'md', 'lg'] satisfies RadioSize[]
 export const switchColorTokens = buttonColorTokens satisfies SwitchColor[]
 export const switchSizeTokens = ['sm', 'md', 'lg'] satisfies SwitchSize[]
 export const switchVariantTokens = ['outside', 'inside'] satisfies SwitchVariant[]

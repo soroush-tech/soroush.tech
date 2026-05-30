@@ -100,18 +100,23 @@ describe('Radio', () => {
   // ─── size ─────────────────────────────────────────────────────────────────────
 
   describe('size', () => {
-    it('small — sets 16px font-size on icon wrapper', () => {
-      const { container } = renderWithTheme(<Radio size="small" />)
+    it('sm — sets 16px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Radio size="sm" />)
       expect(container.querySelector('span')).toHaveStyle({ fontSize: '16px' })
     })
 
-    it('medium — sets 20px font-size on icon wrapper', () => {
-      const { container } = renderWithTheme(<Radio size="medium" />)
+    it('md — sets 20px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Radio size="md" />)
       expect(container.querySelector('span')).toHaveStyle({ fontSize: '20px' })
     })
 
+    it('lg — sets 24px font-size on icon wrapper', () => {
+      const { container } = renderWithTheme(<Radio size="lg" />)
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: '24px' })
+    })
+
     it('does not forward size to DOM', () => {
-      renderWithTheme(<Radio size="medium" data-testid="rb" />)
+      renderWithTheme(<Radio size="md" data-testid="rb" />)
       expect(screen.getByTestId('rb')).not.toHaveAttribute('size')
     })
   })
