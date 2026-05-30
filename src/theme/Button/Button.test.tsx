@@ -307,13 +307,22 @@ describe('Button', () => {
 
   describe('loading', () => {
     it('disables the button when loading=true', () => {
-      // With loadingPosition="center" the label has visibility:hidden, so use testid
+      renderWithTheme(<Button loading>Click</Button>)
+      expect(screen.getByRole('button', { name: /click/i })).toBeDisabled()
+    })
+
+    it('sets aria-busy when loading=true', () => {
       renderWithTheme(
         <Button loading data-testid="btn">
           Click
         </Button>
       )
-      expect(screen.getByTestId('btn')).toBeDisabled()
+      expect(screen.getByTestId('btn')).toHaveAttribute('aria-busy', 'true')
+    })
+
+    it('does not set aria-busy when not loading', () => {
+      renderWithTheme(<Button data-testid="btn">Click</Button>)
+      expect(screen.getByTestId('btn')).not.toHaveAttribute('aria-busy')
     })
 
     it('does not forward loading to DOM', () => {
@@ -352,14 +361,15 @@ describe('Button', () => {
       expect(screen.queryByText('icon')).not.toBeInTheDocument()
     })
 
-    it('loadingPosition=center hides children label', () => {
+    it('loadingPosition=center visually hides children label but keeps it accessible', () => {
       renderWithTheme(
         <Button loading loadingPosition="center" loadingIndicator={<span>spinner</span>}>
           Click
         </Button>
       )
       const label = screen.getByText('Click').closest('span')
-      expect(label).toHaveStyle({ visibility: 'hidden' })
+      expect(label).toHaveStyle({ opacity: '0' })
+      expect(screen.getByRole('button', { name: /click/i })).toBeInTheDocument()
     })
 
     it('loadingPosition=center renders indicator', () => {

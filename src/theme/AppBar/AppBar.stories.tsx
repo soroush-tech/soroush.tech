@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { m, p, position } from 'src/theme/utils/test/storiesArgs'
+import { border, m, p, position } from 'src/theme/utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from 'src/theme/utils/test/storiesOptions'
 import { ThemeProvider } from 'src/theme/ThemeProvider'
 import { dark, light } from 'src/theme/themes'
@@ -10,40 +10,10 @@ import { Link } from 'src/theme/Link'
 import { Typography } from 'src/theme/Typography'
 import { Switch } from 'src/theme/Switch'
 import { View } from 'src/theme/View'
+import SunIcon from 'src/assets/sun.svg?react'
+import MoonIcon from 'src/assets/moon.svg?react'
 import { AppBar } from './AppBar'
 import Logo from '/soroush.svg'
-
-const SunIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="0.6em"
-    height="0.6em"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-  </svg>
-)
-
-const MoonIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="0.6em"
-    height="0.6em"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-)
 
 const meta: Meta<typeof AppBar> = {
   title: 'Theme/AppBar',
@@ -52,7 +22,7 @@ const meta: Meta<typeof AppBar> = {
   parameters: {
     layout: 'fullscreen',
     controls: {
-      include: ['children', 'color', 'size', 'elevation', 'position', 'm', 'p'],
+      include: ['children', 'color', 'size', 'elevation', 'position', 'blur', 'border', 'm', 'p'],
     },
   },
   argTypes: {
@@ -79,6 +49,13 @@ const meta: Meta<typeof AppBar> = {
       table: { category: 'Visual' },
     },
     position,
+    blur: {
+      control: 'boolean',
+      description:
+        'Applies `backdrop-filter: blur(theme.blur)` + `-webkit-` prefix. Use with `color="backdrop"` for a frosted-glass effect.',
+      table: { category: 'Visual', defaultValue: { summary: 'false' } },
+    },
+    border,
     m,
     p,
   },
@@ -239,6 +216,33 @@ export const SiteHeader: Story = {
   ),
 }
 
+export const Frosted: Story = {
+  parameters: {
+    layout: 'fullscreen',
+    controls: { disable: true },
+  },
+  render: () => (
+    <AppBar
+      color="backdrop"
+      blur
+      borderBottom="1px solid rgba(0,0,0,0.1)"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      px={3}
+      elevation={0}
+      minHeight={64}
+    >
+      <Typography variant="h6" color="secondary" m={0}>
+        Frosted Glass Header
+      </Typography>
+      <Typography variant="caption" color="secondary" m={0}>
+        blur + color="backdrop"
+      </Typography>
+    </AppBar>
+  ),
+}
+
 export const DarkMode: Story = {
   parameters: {
     layout: 'fullscreen',
@@ -286,8 +290,8 @@ export const DarkMode: Story = {
             checked={isDark}
             color="default"
             onChange={(e) => setIsDark(e.target.checked)}
-            icon={<SunIcon />}
-            checkedIcon={<MoonIcon />}
+            icon={<SunIcon aria-hidden="true" width={14} height={14} />}
+            checkedIcon={<MoonIcon aria-hidden="true" width={14} height={14} />}
             aria-label="Toggle dark mode"
           />
         </AppBar>

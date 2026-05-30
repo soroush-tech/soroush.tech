@@ -3,6 +3,14 @@ import {
   type Theme,
   createShouldForwardProp,
   props,
+  border,
+  borderTop,
+  borderRight,
+  borderBottom,
+  borderLeft,
+  borderWidth,
+  borderStyle,
+  borderColor,
   flexbox,
   layout,
   position,
@@ -31,6 +39,8 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
   elevation?: AppBarElevation
   /** Padding preset from theme.sizes. Default: 'md'. */
   size?: AppBarSize
+  /** Applies backdrop-filter: blur(theme.blur) + webkit prefix for frosted-glass effect. */
+  blur?: boolean
 }
 
 type AppBarBaseProps = Omit<AppBarProps, 'size' | 'elevation'> & {
@@ -38,7 +48,7 @@ type AppBarBaseProps = Omit<AppBarProps, 'size' | 'elevation'> & {
   elevation: AppBarElevation
 }
 
-const shouldForwardProp = createShouldForwardProp([...props, 'elevation', 'size'])
+const shouldForwardProp = createShouldForwardProp([...props, 'elevation', 'size', 'blur'])
 
 // color → theme.background (background color of the bar)
 const colorSystem = system({
@@ -49,6 +59,11 @@ const colorSystem = system({
 const elevationVariant = system({
   elevation: { property: 'boxShadow', scale: 'shadows' },
 })
+
+const blurSystem = ({ blur, theme }: AppBarBaseProps & { theme: Theme }) =>
+  blur
+    ? { backdropFilter: `blur(${theme.blur})`, WebkitBackdropFilter: `blur(${theme.blur})` }
+    : undefined
 
 const sizeVariants = ({ theme, size }: AppBarBaseProps & { theme: Theme }) => {
   const s = theme.sizes[size]
@@ -66,6 +81,15 @@ const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarBa
   elevationVariant,
   sizeVariants,
   colorSystem,
+  blurSystem,
+  border,
+  borderTop,
+  borderRight,
+  borderBottom,
+  borderLeft,
+  borderWidth,
+  borderStyle,
+  borderColor,
   flexbox,
   space,
   layout,

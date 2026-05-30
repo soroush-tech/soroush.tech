@@ -133,6 +133,23 @@ describe('Image', () => {
       expect(onError).toHaveBeenCalledTimes(1)
     })
 
+    it('is a no-op when an error fires in the failed phase', async () => {
+      const onError = vi.fn()
+      renderWithTheme(<Image src="broken.jpg" alt="Test" onError={onError} />)
+      fireEvent.error(screen.getByRole('img')) // initial → failed (no fallback)
+      await act(async () => {}) // flush phase='failed' re-render
+      expect(onError).toHaveBeenCalledTimes(1)
+      fireEvent.error(screen.getByRole('img')) // failed → no-op (covers false branch of if phase==='fallback')
+      expect(onError).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not throw when fallback also fails and onError is not provided', async () => {
+      renderWithTheme(<Image src="broken.jpg" fallback="broken-fallback.jpg" alt="Test" />)
+      fireEvent.error(screen.getByRole('img'))
+      fireEvent.error(await screen.findByRole('img'))
+      // reaching here covers the onError?.() no-op branch inside phase === 'fallback'
+    })
+
     it('srcSet-only with no fallback calls onError on the first error', () => {
       const onError = vi.fn()
       renderWithTheme(<Image srcSet="broken.jpg" alt="Test" onError={onError} />)

@@ -65,6 +65,42 @@ For `"fixed"` and `"sticky"`, combine with `top`, `left`, `right`, `zIndex` from
 
 ---
 
+### `blur`
+
+Applies `backdrop-filter: blur(theme.blur)` (and the `-webkit-` prefix) for a frosted-glass effect. The blur amount is read from `theme.blur` (`12px`).
+
+Combine with `color="backdrop"`, which resolves to the theme's pre-composited frosted background (`theme.background.backdrop`):
+
+```tsx
+<AppBar color="backdrop" blur position="fixed" top={0}>
+  ...
+</AppBar>
+```
+
+| Value             | Effect                     |
+| ----------------- | -------------------------- |
+| `true`            | Frosted-glass blur applied |
+| `false` / omitted | No blur                    |
+
+---
+
+### Borders
+
+`AppBar` supports the following border styled-system props. `borderRadius` is intentionally excluded — AppBar is a full-width bar and does not use rounded corners.
+
+| Prop           | CSS property    |
+| -------------- | --------------- |
+| `border`       | `border`        |
+| `borderTop`    | `border-top`    |
+| `borderRight`  | `border-right`  |
+| `borderBottom` | `border-bottom` |
+| `borderLeft`   | `border-left`   |
+| `borderWidth`  | `border-width`  |
+| `borderStyle`  | `border-style`  |
+| `borderColor`  | `border-color`  |
+
+---
+
 ## Default styles
 
 | Property                       | Value                           |
@@ -114,6 +150,14 @@ For `"fixed"` and `"sticky"`, combine with `top`, `left`, `right`, `zIndex` from
 ### Position
 
 `position` · `zIndex` · `top` · `right` · `bottom` · `left`
+
+---
+
+### Borders
+
+`border` · `borderTop` · `borderRight` · `borderBottom` · `borderLeft` · `borderWidth` · `borderStyle` · `borderColor`
+
+> `borderRadius` is not supported on AppBar.
 
 ---
 

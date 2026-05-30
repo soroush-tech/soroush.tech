@@ -229,6 +229,15 @@ describe('Typography', () => {
     })
   })
 
+  // ─── textTransform ───────────────────────────────────────────────────────────
+
+  describe('textTransform', () => {
+    it('applies textTransform="uppercase"', () => {
+      renderWithTheme(<Typography textTransform="uppercase">upper</Typography>)
+      expect(screen.getByText('upper')).toHaveStyle({ textTransform: 'uppercase' })
+    })
+  })
+
   // ─── color (theme.text scale) ────────────────────────────────────────────────
 
   describe('color resolves from theme.text', () => {

@@ -58,6 +58,34 @@ describe('Link', () => {
       expect(screen.getByTestId('link')).toHaveStyle({ color: dark.text.primary })
     })
 
+    it('sets an explicit color on :hover to prevent global a:hover overrides', () => {
+      // &:hover rules aren't applied by jsdom — verify the generated stylesheet contains
+      // a :hover rule for the link's class that includes a color declaration.
+      renderWithTheme(
+        <Link href="/" color="secondary" data-testid="link">
+          Link
+        </Link>
+      )
+      const el = screen.getByTestId('link')
+      const allRules = Array.from(document.styleSheets).flatMap((s) => {
+        try {
+          return Array.from(s.cssRules)
+        } catch {
+          return []
+        }
+      })
+      const linkClasses = Array.from(el.classList)
+      const hasHoverColorRule = allRules.some((rule) => {
+        const text = rule.cssText
+        return (
+          linkClasses.some((cls) => text.includes(cls)) &&
+          text.includes(':hover') &&
+          text.includes('color')
+        )
+      })
+      expect(hasHoverColorRule).toBe(true)
+    })
+
     it('applies each text color token without error', () => {
       const tokens = (Object.keys(dark.text) as (keyof typeof dark.text)[]).filter(
         (t) => dark.text[t] !== 'inherit'

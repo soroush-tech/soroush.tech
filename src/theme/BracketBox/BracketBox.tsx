@@ -4,8 +4,10 @@ import { Paper, type PaperProps } from 'src/theme/Paper'
 export type BracketBoxProps = PaperProps
 
 export const BracketBox = styled(Paper, { label: 'BracketBox' })`
-  display: inline-block;
   position: relative;
+  /* bracket corners must stay square */
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
 
   &::before,
   &::after {

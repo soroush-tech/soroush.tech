@@ -30,6 +30,8 @@ export interface TextInputClasses {
 
 export interface TextInputProps
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
+  /** Corner radius — applies only to `default` and `outlined` variants. Resolves against `theme.radii`. */
+  borderRadius?: keyof Theme['radii']
   autoComplete?: string
   autoFocus?: boolean
   /** Class names applied to inner elements. `root` targets the wrapper; `input` targets the native element. */
@@ -97,6 +99,7 @@ interface TextInputRootProps
   error?: boolean
   disabled?: boolean
   fullWidth?: boolean
+  borderRadius?: keyof Theme['radii']
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -172,6 +175,15 @@ const focusWithinColor = ({
   },
 })
 
+const borderRadiusStyle = ({
+  variant: v = 'default',
+  borderRadius,
+  theme,
+}: TextInputRootProps & { theme?: Theme }) => {
+  if (v === 'underline' || v === 'text' || !borderRadius) return {}
+  return { borderRadius: get(theme, `radii.${borderRadius}`) }
+}
+
 const layoutStyles = ({ fullWidth, disabled }: TextInputRootProps) => ({
   ...(fullWidth ? ({ display: 'flex', width: '100%' } as const) : {}),
   ...(disabled ? ({ opacity: 0.5, cursor: 'not-allowed', pointerEvents: 'none' } as const) : {}),
@@ -237,6 +249,7 @@ const sizeVariants = ({ theme, size }: StyledInputProps & { theme: Theme }) => {
 const TextInputRoot = styled('div', { label: 'TextInput', shouldForwardProp })<TextInputRootProps>(
   baseStyle,
   variantStyles,
+  borderRadiusStyle,
   colorBorder,
   focusWithinColor,
   backgroundStyle,
@@ -264,6 +277,7 @@ const StyledAutoResizeTextarea = styled(TextAreaAutoResize, {
 export function TextInput({
   autoComplete,
   autoFocus,
+  borderRadius,
   classes,
   components,
   color = 'primary',
@@ -326,6 +340,7 @@ export function TextInput({
       error={error}
       disabled={disabled}
       fullWidth={fullWidth}
+      borderRadius={borderRadius}
       className={rootClassName}
       data-testid={dataTestid}
       {...spaceProps}

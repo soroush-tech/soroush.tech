@@ -1,97 +1,50 @@
-import { screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { renderWithApp } from 'src/test/utils/wrapper'
+import { screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import { renderWithTheme } from 'src/test/utils/wrapper'
 import App from './App'
 
-beforeEach(() => {
-  vi.clearAllMocks()
-  vi.resetModules()
-})
-afterEach(() => {
-  vi.resetModules()
-  vi.restoreAllMocks()
-})
-
-describe.skip('App', () => {
-  it('shows loading state initially', async () => {
-    renderWithApp(<App />)
-
-    // The loading state might be brief, so we need to check if it's there
-    const loadingElement = screen.queryByText('Loading...')
-    if (loadingElement) {
-      expect(loadingElement).toBeInTheDocument()
-    }
-
-    // Wait for the main content to appear
-    await waitFor(() => {
-      expect(screen.getByText('Vite + React')).toBeInTheDocument()
-    })
+describe('App', () => {
+  it('renders the site name heading', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByRole('heading', { name: 'SOROUSH™' })).toBeInTheDocument()
   })
 
-  it('renders without crashing after loading', async () => {
-    renderWithApp(<App />)
-
-    // Wait for the main content to appear
-    await waitFor(() => {
-      expect(screen.getByText('Vite + React')).toBeInTheDocument()
-    })
+  it('renders the coming soon text', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByText('Coming soon.')).toBeInTheDocument()
   })
 
-  it('displays the initial count as 0 after loading', async () => {
-    renderWithApp(<App />)
-
-    // Wait for the main content to appear
-    await waitFor(() => {
-      expect(screen.getByText('count is 0')).toBeInTheDocument()
-    })
+  it('renders the tagline', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByText('Under construction, but worth the wait.')).toBeInTheDocument()
   })
 
-  it('increments count when button is clicked', async () => {
-    renderWithApp(<App />)
-
-    // Wait for the button to appear
-    let button
-    await waitFor(() => {
-      button = screen.getByRole('button', { name: /count is 0/i })
-      expect(button).toBeInTheDocument()
-    })
-
-    fireEvent.click(button!)
-
-    // Wait for the updated count
-    await waitFor(() => {
-      expect(screen.getByText('count is 1')).toBeInTheDocument()
-    })
+  it('renders the logo image', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByAltText('Soroush logo')).toBeInTheDocument()
   })
 
-  it('renders Vite and React logos', async () => {
-    renderWithApp(<App />)
-
-    // Wait for the logos to appear
-    await waitFor(() => {
-      const viteLogoImg = screen.getByAltText('Vite logo')
-      const reactLogoImg = screen.getByAltText('React logo')
-      expect(viteLogoImg).toBeInTheDocument()
-      expect(reactLogoImg).toBeInTheDocument()
-    })
+  it('renders the email link', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByAltText('Soroush Email').closest('a')).toHaveAttribute(
+      'href',
+      'mailto:masoud@soroush.tech'
+    )
   })
 
-  it('renders the help text', async () => {
-    renderWithApp(<App />)
-
-    // Wait for the help text to appear
-    await waitFor(() => {
-      expect(screen.getByText(/Edit/i)).toBeInTheDocument()
-      expect(
-        screen.getByText(/Click on the Vite and React logos to learn more/i)
-      ).toBeInTheDocument()
-    })
+  it('renders the LinkedIn link', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByAltText('Soroush LinkedIn').closest('a')).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/masoud-soroush-4139b152'
+    )
   })
 
-  it.skip('displays error message when API request fails', async () => {
-    // Re-import App to use the mocked hook
-    const { default: AppWithMockedHook } = await import('./App')
-    renderWithApp(<AppWithMockedHook />)
-    expect(screen.getByText('Error: Test error message')).toBeInTheDocument()
+  it('renders the GitHub link', () => {
+    renderWithTheme(<App />)
+    expect(screen.getByAltText('Soroush GitHub').closest('a')).toHaveAttribute(
+      'href',
+      'https://github.com/soroush-tech/soroush.tech'
+    )
   })
 })

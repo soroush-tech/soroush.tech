@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { initMSW } from 'src/utils'
 import { Providers } from './common/Providers'
 import App from './App'
-import './index.css'
 ;(async () => {
   await initMSW()
   createRoot(document.getElementById('root')!).render(

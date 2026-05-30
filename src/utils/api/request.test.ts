@@ -100,6 +100,60 @@ describe('createRequest', () => {
   })
 })
 
+describe('interceptors', () => {
+  let consoleSpy: ReturnType<typeof vi.spyOn>
+
+  beforeEach(() => {
+    consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    consoleSpy.mockRestore()
+  })
+
+  describe('request interceptor', () => {
+    it('logs the request in non-production environment', () => {
+      const request = createRequest()
+      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]!
+      const mockReq = { url: '/test', method: 'GET' }
+      const result = callback(mockReq as never)
+      expect(result).toBe(mockReq)
+      expect(consoleSpy).toHaveBeenCalledWith('API request', '/test', 'GET')
+    })
+
+    it('skips the log in production environment', () => {
+      const original = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      const request = createRequest()
+      const callback = vi.mocked(request.interceptors.request.use).mock.calls[0][0]!
+      callback({ url: '/test', method: 'GET' } as never)
+      expect(consoleSpy).not.toHaveBeenCalled()
+      process.env.NODE_ENV = original
+    })
+  })
+
+  describe('response interceptor', () => {
+    it('logs the response in non-production environment', () => {
+      const request = createRequest()
+      const [successCallback] = vi.mocked(request.interceptors.response.use).mock.calls[0]
+      const mockRes = { status: 200, data: { id: 1 } }
+      const result = successCallback!(mockRes as never)
+      expect(result).toBe(mockRes)
+      expect(consoleSpy).toHaveBeenCalledWith('API response', 200, { id: 1 })
+    })
+
+    it('skips the log in production environment', () => {
+      const original = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      const request = createRequest()
+      const [successCallback] = vi.mocked(request.interceptors.response.use).mock.calls[0]
+      successCallback!({ status: 200, data: {} } as never)
+      expect(consoleSpy).not.toHaveBeenCalled()
+      process.env.NODE_ENV = original
+    })
+  })
+})
+
 describe('errorHandler', () => {
   it('handles network errors', async () => {
     // Get the error handler function from the axios interceptors

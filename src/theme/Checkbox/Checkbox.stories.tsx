@@ -43,7 +43,7 @@ const meta: Meta<typeof Checkbox> = {
       control: { type: 'inline-radio' },
       options: checkboxSizeTokens,
       description: 'Icon size.',
-      table: { category: 'Visual', defaultValue: { summary: 'medium' } },
+      table: { category: 'Visual', defaultValue: { summary: 'md' } },
     },
     children: {
       control: 'text',
@@ -58,16 +58,16 @@ export default meta
 type Story = StoryObj<typeof Checkbox>
 
 export const Default: Story = {
-  args: { color: 'default', size: 'medium' },
+  args: { color: 'default', size: 'md', 'aria-label': 'Checkbox' },
 }
 
 export const Checked: Story = {
-  args: { checked: true, color: 'primary' },
+  args: { checked: true, color: 'primary', 'aria-label': 'Checkbox' },
   render: (args) => <Checkbox {...args} onChange={() => {}} />,
 }
 
 export const Indeterminate: Story = {
-  args: { indeterminate: true, color: 'primary' },
+  args: { indeterminate: true, color: 'primary', 'aria-label': 'Checkbox' },
 }
 
 export const WithLabel: Story = {
@@ -94,7 +94,9 @@ export const States: Story = {
           <Typography variant="caption" color="secondary" width="10rem" flexShrink={0} m={0}>
             {label}
           </Typography>
-          <Checkbox color="primary" {...props} />
+          <Checkbox color="primary" {...props}>
+            {label}
+          </Checkbox>
         </Flex>
       ))}
     </Flex>
@@ -110,9 +112,9 @@ export const Colors: Story = {
             <Typography variant="caption" color="secondary" width="6rem" flexShrink={0} m={0}>
               {color}
             </Typography>
-            <Checkbox color={color} />
-            <Checkbox color={color} checked onChange={() => {}} />
-            <Checkbox color={color} indeterminate />
+            <Checkbox color={color} aria-label={`${color} unchecked`} />
+            <Checkbox color={color} checked onChange={() => {}} aria-label={`${color} checked`} />
+            <Checkbox color={color} indeterminate aria-label={`${color} indeterminate`} />
           </Flex>
         )
       )}
@@ -123,9 +125,9 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <Flex flexDirection="row" gap={4} alignItems="center">
-      {(['small', 'medium'] as const).map((size) => (
+      {(['sm', 'md', 'lg'] as const).map((size) => (
         <Flex key={size} flexDirection="column" alignItems="center" gap={1}>
-          <Checkbox size={size} color="primary" checked onChange={() => {}} />
+          <Checkbox size={size} color="primary" checked onChange={() => {}} aria-label={size} />
           <Typography variant="caption" color="secondary" m={0}>
             {size}
           </Typography>

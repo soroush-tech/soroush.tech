@@ -165,6 +165,7 @@ export function CircularProgress({
       ? {
           strokeDasharray: `${circumference}px`,
           strokeDashoffset: `${circumference * (1 - normalizedValue / max)}px`,
+          transition: `stroke-dashoffset 0.3s ${easing}`,
         }
       : undefined
 
@@ -176,6 +177,7 @@ export function CircularProgress({
   return (
     <CircularProgressRoot
       role="progressbar"
+      aria-label="Loading"
       color={color}
       size={size}
       variant={variant}

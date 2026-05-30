@@ -1,0 +1,59 @@
+import { type ElementType } from 'react'
+import { keyframes } from '@emotion/react'
+import styled from '@emotion/styled'
+import { Flex, type FlexProps } from 'src/theme/Flex'
+
+export interface BlueprintProps extends FlexProps {
+  /** Renders a fixed scanline sweep animation. Default: false. */
+  scanline?: boolean
+  /** Background pattern. 'line' = intersecting lines (default). 'dot' = radial dot grid. */
+  variant?: 'line' | 'dot'
+  as?: ElementType
+}
+
+const scanlineAnim = keyframes`
+  0%   { top: 0; }
+  100% { top: 100%; }
+`
+
+const BlueprintRoot = styled(Flex, { label: 'Blueprint' })<{ variant?: 'line' | 'dot' }>`
+  position: relative;
+  width: 100%;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.initial};
+  font-family: ${({ theme }) => theme.fonts.body};
+  background-image: ${({ theme, variant = 'line' }) =>
+    variant === 'dot'
+      ? `radial-gradient(circle at 2px 2px, ${theme.border.primary}33 1px, transparent 0)`
+      : `linear-gradient(to right, ${theme.border.primary}0D 1px, transparent 1px),
+         linear-gradient(to bottom, ${theme.border.primary}0D 1px, transparent 1px)`};
+  background-size: 40px 40px;
+`
+
+const ScanlineLine = styled('span', { label: 'ScanlineLine' })`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+  background-color: ${({ theme }) => theme.border.primary}14;
+  animation: ${scanlineAnim} 8s linear infinite;
+`
+
+export function Blueprint({
+  scanline = false,
+  variant = 'line',
+  height,
+  overflow = 'hidden',
+  children,
+  ...rest
+}: BlueprintProps) {
+  return (
+    <BlueprintRoot height={height} overflow={overflow} variant={variant} {...rest}>
+      {scanline && <ScanlineLine />}
+      {children}
+    </BlueprintRoot>
+  )
+}
