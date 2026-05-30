@@ -42,22 +42,6 @@ const globalStyles = (theme: Theme) => css`
     margin-block-end: 0.5em;
   }
 
-  article,
-  aside,
-  details,
-  figcaption,
-  figure,
-  footer,
-  header,
-  hgroup,
-  main,
-  menu,
-  nav,
-  section,
-  summary {
-    display: block;
-  }
-
   textarea {
     overflow: auto;
   }
