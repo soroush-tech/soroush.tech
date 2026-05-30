@@ -83,6 +83,7 @@ export function Footer() {
               Directories
             </Typography>
             <Navbar
+              aria-label="Directories"
               items={DIRECTORIES}
               direction="vertical"
               gap={2}
@@ -105,6 +106,7 @@ export function Footer() {
               Connectivity
             </Typography>
             <Navbar
+              aria-label="Connectivity"
               items={CONNECTIVITY}
               direction="vertical"
               gap={2}
@@ -127,7 +129,7 @@ export function Footer() {
               </Typography>
               <TerminalText>Running diagnostic sequence... OK</TerminalText>
             </TerminalBlock>
-            <Typography variant="caption" color="secondary" opacity={0.5} fontFamily="mono">
+            <Typography variant="caption" color="secondary" fontFamily="mono">
               © 2026 SOROUSH.TECH. ALL RIGHTS RESERVED.
             </Typography>
           </View>

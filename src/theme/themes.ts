@@ -303,7 +303,7 @@ export const light: Theme = {
     initial: lightSurface[950], // #1a1c1c
     primary: forestGreen[500], // #1a1c1c
     secondary: lightSurface[900], // #444748
-    disabled: `${lightSurface[950]}4D`,
+    disabled: `${lightSurface[950]}A0`,
     error: deepCrimson[600], // #ba1a1a
     success: kineticGreen[700],
     info: cyberCyan[700],

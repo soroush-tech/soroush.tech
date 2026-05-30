@@ -36,13 +36,13 @@ export function BinaryControlsCard() {
           </Typography>
           <Flex flexDirection="column" gap={3}>
             <Flex flexDirection="row" alignItems="center" gap={2}>
-              <Checkbox defaultChecked color="primary" />
+              <Checkbox defaultChecked color="primary" aria-label="PROP_ACTIVE=TRUE" />
               <Typography variant="caption" color="secondary" fontFamily="mono">
                 PROP_ACTIVE=TRUE
               </Typography>
             </Flex>
             <Flex flexDirection="row" alignItems="center" gap={2}>
-              <Checkbox color="primary" />
+              <Checkbox color="primary" aria-label="PROP_ACTIVE=FALSE" />
               <Typography variant="caption" color="secondary" fontFamily="mono">
                 PROP_ACTIVE=FALSE
               </Typography>
@@ -94,13 +94,13 @@ export function BinaryControlsCard() {
           </Typography>
           <Flex flexDirection="column" gap={3}>
             <Flex flexDirection="row" alignItems="center" gap={2}>
-              <Switch defaultChecked color="primary" size="md" />
+              <Switch defaultChecked color="primary" size="md" aria-label="ENABLED" />
               <Typography variant="caption" color="secondary" fontFamily="mono">
                 ENABLED
               </Typography>
             </Flex>
             <Flex flexDirection="row" alignItems="center" gap={2}>
-              <Switch color="primary" size="md" disabled />
+              <Switch color="primary" size="md" disabled aria-label="DISABLED" />
               <Typography variant="caption" color="secondary" fontFamily="mono">
                 DISABLED
               </Typography>

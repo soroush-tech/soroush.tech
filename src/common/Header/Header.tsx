@@ -56,6 +56,7 @@ export function Header({ position = 'fixed' }: HeaderProps) {
       </Flex>
 
       <Navbar
+        aria-label="Main"
         items={NAV_ITEMS}
         direction="horizontal"
         gap={4}
