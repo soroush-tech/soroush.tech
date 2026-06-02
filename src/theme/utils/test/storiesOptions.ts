@@ -96,7 +96,7 @@ export const textInputVariantTokens = [
 export const textInputSizeTokens = ['sm', 'md', 'lg'] satisfies TextInputSize[]
 export const appBarSizeTokens = objectKeys(sizes) satisfies AppBarSize[]
 export const linkUnderlineTokens = ['always', 'hover', 'none'] satisfies LinkUnderline[]
-export const cardVariantTokens = ['paper', 'bracketBox'] satisfies CardVariant[]
+export const cardVariantTokens = ['paper', 'bracketBox', 'interactive'] satisfies CardVariant[]
 export const linkTargetTokens = ['_self', '_blank', '_parent', '_top', '_unfencedTop'] as const
 export const linkRelTokens = [
   'noopener noreferrer',

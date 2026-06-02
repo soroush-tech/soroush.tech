@@ -162,6 +162,29 @@ Name each file after what it exports. Keep all files in the same directory.
 
 ---
 
+### Section data lives in `SectionName.data.ts`, shared by component and test
+
+A section's content data (arrays of cards, steps, tags, stats) goes in a sibling `SectionName.data.ts` file — never inline in the `.tsx`, and never `export`ed from it (that trips `react-refresh/only-export-components`). The component **and** its `*.test.tsx` both import from the data file, so the test iterates over the real data instead of a hardcoded copy that silently drifts when the data changes.
+
+```ts
+// SectionName.data.ts — single source of truth
+export const steps = [
+  { number: '01', title: 'AGILE INFRASTRUCTURE', body: '…' },
+  // …
+]
+
+// SectionName.tsx
+import { steps } from './SectionName.data'
+
+// SectionName.test.tsx — iterate, don't hardcode
+import { steps } from './SectionName.data'
+it.each(steps)('renders step $number ($title)', ({ number, title }) => {
+  /* … */
+})
+```
+
+Assert flat string lists with `getAllByText(x).length > 0` (safe against repeats); use `getByText` for unique structured fields.
+
 ---
 
 ### Images and SVGs belong in `src/assets/` — never inline, never from `public/`

@@ -6,6 +6,7 @@ import { Flex } from 'src/theme/Flex'
 import { Grid } from 'src/theme/Grid'
 import { Typography } from 'src/theme/Typography'
 import { Navbar } from 'src/common/Navbar'
+import { alpha } from 'src/theme/utils'
 
 const DIRECTORIES = [
   { href: '/design/system', label: 'Design System' },
@@ -22,7 +23,7 @@ const CONNECTIVITY = [
 
 // single-side top border — View's borderColor applies to all four sides
 const FooterRoot = styled(View, { label: 'FooterRoot' })`
-  border-top: 1px solid ${({ theme }) => theme.border.primary}1A;
+  border-top: 1px solid ${({ theme }) => alpha(theme.border.primary, 0.1)};
 `
 
 const TerminalBlock = styled(View, { label: 'TerminalBlock' })`
