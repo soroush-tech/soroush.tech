@@ -26,7 +26,7 @@ lerna-debug.log*
 # Covrage
 coverage
 playwright-report
-
+cov.txt
 
 # Build
 node_modules

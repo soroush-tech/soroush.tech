@@ -1,7 +1,7 @@
 import type { ElementType } from 'react'
 import type { CSSObject } from 'storybook/theming'
 import type { TypographyVariant } from 'src/theme/Typography'
-import { spacing, generateBoxShadow, type SpaceUnits } from 'src/theme/utils'
+import { spacing, generateBoxShadow, alpha, type SpaceUnits } from 'src/theme/utils'
 import {
   blackAlpha,
   carbonBlack,
@@ -41,6 +41,8 @@ export interface Theme {
   }
   background: {
     backdrop: string
+    /** App bar / sticky header surface. Light in light theme; `backdrop` stays dark for scrims. */
+    appBar: string
     modal: string
     default: string
     primary: string
@@ -75,6 +77,10 @@ export interface Theme {
   colorScheme: 'light' | 'dark'
   blur: string
   logoFilter: string
+  /** mix-blend-mode for the AboutHero portrait — screen on dark, multiply on light. */
+  portraitBlend: string
+  /** opacity for the AboutHero portrait. */
+  portraitOpacity: number
   shadows: string[]
   fontWeights: Record<
     | 'thin'
@@ -288,14 +294,15 @@ export const light: Theme = {
     },
   },
   background: {
-    backdrop: `${lightSurface[100]}CC`,
+    backdrop: blackAlpha[500],
+    appBar: alpha(lightSurface[100], 0.8),
     modal: lightSurface[100],
     default: lightSurface[700],
     primary: lightSurface[400], // #f9f9f9
-    secondary: lightSurface[400], // #eeeeee
+    secondary: lightSurface[600], // #eeeeee
     paper: lightSurface[300], // #f3f3f3
     terminal: lightSurface[600], // #e2e2e2
-    grid: `${forestGreen[600]}1A`,
+    grid: alpha(softGreen[600], 0.2),
     transparent: blackAlpha[0],
   },
   text: {
@@ -303,18 +310,20 @@ export const light: Theme = {
     initial: lightSurface[950], // #1a1c1c
     primary: forestGreen[500], // #1a1c1c
     secondary: lightSurface[900], // #444748
-    disabled: `${lightSurface[950]}A0`,
+    disabled: alpha(lightSurface[950], 0.627),
     error: deepCrimson[600], // #ba1a1a
     success: kineticGreen[700],
     info: cyberCyan[700],
     warning: solarAmber[800],
   },
   border: {
-    light: `${forestGreen[300]}1A`,
-    primary: forestGreen[500],
+    light: alpha(forestGreen[500], 0.1),
+    primary: forestGreen[600],
     dark: forestGreen[800],
   },
   logoFilter: 'brightness(0)',
+  portraitBlend: 'multiply',
+  portraitOpacity: 1,
   shadows: lightShadows,
 }
 
@@ -324,16 +333,16 @@ export const dark: Theme = {
   colorScheme: 'dark',
   palette: {
     default: {
-      main: kineticSurface[400],
-      light: kineticSurface[300],
-      dark: kineticSurface[500],
+      main: kineticSurface[600],
+      light: kineticSurface[500],
+      dark: kineticSurface[900],
       contrastText: carbonBlack[100],
     },
     primary: {
-      main: kineticGreen[600],
+      main: kineticGreen[500],
       light: kineticGreen[300],
       dark: kineticGreen[800],
-      contrastText: kineticGreen[800],
+      contrastText: carbonBlack[900],
     },
     secondary: {
       main: softGreen[400],
@@ -367,14 +376,15 @@ export const dark: Theme = {
     },
   },
   background: {
-    backdrop: `${carbonBlack[900]}CC`,
+    backdrop: blackAlpha[700],
+    appBar: blackAlpha[700],
     modal: kineticSurface[800],
     default: kineticSurface[600],
     primary: kineticSurface[900],
     secondary: kineticSurface[700],
     paper: kineticSurface[800],
     terminal: carbonBlack[900],
-    grid: `${kineticGreen[500]}0D`,
+    grid: alpha(kineticGreen[500], 0.06),
     transparent: blackAlpha[0],
   },
   text: {
@@ -389,11 +399,13 @@ export const dark: Theme = {
     warning: solarAmber[800],
   },
   border: {
-    light: `${kineticSurface[100]}1A`,
+    light: alpha(kineticSurface[100], 0.1),
     primary: kineticGreen[500],
     dark: kineticSurface[800],
   },
   logoFilter: 'brightness(0) invert(1)',
+  portraitBlend: 'screen',
+  portraitOpacity: 0.8,
   shadows: darkShadows,
 }
 

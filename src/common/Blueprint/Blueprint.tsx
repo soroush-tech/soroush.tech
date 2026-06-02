@@ -2,6 +2,7 @@ import { type ElementType } from 'react'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex, type FlexProps } from 'src/theme/Flex'
+import { alpha } from 'src/theme/utils'
 
 export interface BlueprintProps extends FlexProps {
   /** Renders a fixed scanline sweep animation. Default: false. */
@@ -24,9 +25,9 @@ const BlueprintRoot = styled(Flex, { label: 'Blueprint' })<{ variant?: 'line' | 
   font-family: ${({ theme }) => theme.fonts.body};
   background-image: ${({ theme, variant = 'line' }) =>
     variant === 'dot'
-      ? `radial-gradient(circle at 2px 2px, ${theme.border.primary}33 1px, transparent 0)`
-      : `linear-gradient(to right, ${theme.border.primary}0D 1px, transparent 1px),
-         linear-gradient(to bottom, ${theme.border.primary}0D 1px, transparent 1px)`};
+      ? `radial-gradient(circle at 2px 2px, ${alpha(theme.border.primary, 0.2)} 1px, transparent 0)`
+      : `linear-gradient(to right, ${alpha(theme.border.primary, 0.05)} 1px, transparent 1px),
+         linear-gradient(to bottom, ${alpha(theme.border.primary, 0.05)} 1px, transparent 1px)`};
   background-size: 40px 40px;
 `
 
@@ -38,7 +39,7 @@ const ScanlineLine = styled('span', { label: 'ScanlineLine' })`
   width: 100%;
   height: 2px;
   pointer-events: none;
-  background-color: ${({ theme }) => theme.border.primary}14;
+  background-color: ${({ theme }) => alpha(theme.border.primary, 0.08)};
   animation: ${scanlineAnim} 8s linear infinite;
 `
 
