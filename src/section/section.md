@@ -1,0 +1,83 @@
+# Section Components
+
+Conventions for everything in `src/section/`. Sections are large, page-specific UI blocks that are too complex to live inline in a `+Page.tsx` file but are **not reused** across pages.
+
+---
+
+## What belongs here
+
+`src/section/` is for **page-specific sections** — self-contained UI regions that belong to exactly one page.
+
+| Belongs in `src/section/`                         | Belongs elsewhere                                              |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| Hero, Philosophy, Bento grid, CTA on the homepage | Reusable shell components (`Header`, `Footer`) → `src/common/` |
+| "Technical Stack" block on the about page         | Design primitives (`Flex`, `View`) → `src/theme/`              |
+| "Open Source" section on the projects page        | Utility functions → `src/utils/`                               |
+
+**One page, one section.** If a section appears on more than one page, move it to `src/common/`.
+
+---
+
+## Folder structure
+
+Every section gets its own folder under `src/section/`.
+
+```
+src/section/
+  SectionName/
+    index.ts                  ← export * from './SectionName'
+    SectionName.tsx           ← component + exported prop types
+    SectionName.test.tsx      ← unit tests
+    README.md                 ← prop and behaviour documentation
+```
+
+Storybook stories are optional for sections — they are large, page-specific compositions that are better verified via e2e tests.
+
+---
+
+## Component conventions
+
+Identical to `src/common/` rules:
+
+- Compose from theme primitives (`View`, `Flex`, `Typography`, `Button`, etc.)
+- All colours via theme tokens — no hardcoded hex
+- Custom CSS (`styled`) only when theme primitives cannot cover the need, with a comment explaining why
+- Export prop interfaces so `+Page.tsx` can import types if needed
+
+---
+
+## Naming
+
+Name after the page and content role, not generic terms:
+
+```
+✓ Philosophy      ← homepage philosophy block
+✓ TechStack       ← about page tech stack
+✓ ProjectBento    ← homepage bento grid
+✗ ProjectBentoSection    ← no extra long name
+✗ Section1               ← meaningless
+✗ HomepageBlock          ← too generic
+```
+
+---
+
+## Usage in pages
+
+Import directly into the relevant `+Page.tsx`:
+
+```tsx
+// src/pages/index/+Page.tsx
+import { Hero } from 'src/common/Hero'
+import { Philosophy } from 'src/section/Philosophy'
+import { TechStack } from 'src/section/TechStack'
+
+export default function Page() {
+  return (
+    <Layout>
+      <Hero />
+      <Philosophy />
+      <TechStack />
+    </Layout>
+  )
+}
+```
