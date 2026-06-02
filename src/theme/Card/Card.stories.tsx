@@ -23,6 +23,7 @@ const meta: Meta<typeof Card> = {
       include: [
         'children',
         'variant',
+        'icon',
         'title',
         'caption',
         'elevation',
@@ -42,6 +43,12 @@ const meta: Meta<typeof Card> = {
       description: 'Additional content rendered below the caption.',
       table: { category: 'Content' },
     },
+    icon: {
+      control: { type: 'select' },
+      options: [undefined, 'account_tree', 'psychology', 'smart_toy', 'code'],
+      description: 'Icon registry name rendered as the topmost element of the card.',
+      table: { category: 'Content' },
+    },
     title: {
       control: 'text',
       description:
@@ -56,7 +63,8 @@ const meta: Meta<typeof Card> = {
     variant: {
       control: { type: 'inline-radio' },
       options: cardVariantTokens,
-      description: '`paper` uses a plain Paper surface; `bracketBox` adds corner bracket accents.',
+      description:
+        '`paper` uses a plain Paper surface; `bracketBox` adds corner bracket accents; `interactive` fills with the secondary background on hover.',
       table: { category: 'Visual', defaultValue: { summary: 'paper' } },
     },
     elevation: {
@@ -103,6 +111,32 @@ export const BracketBox: Story = {
   ),
 }
 
+export const WithIcon: Story = {
+  render: () => (
+    <Card
+      variant="interactive"
+      icon="account_tree"
+      iconProps={{ color: 'primary', size: '2.25rem' }}
+      p={4}
+      bg="paper"
+      title="System Scalability"
+      caption="Pass an icon name and the card renders it."
+    />
+  ),
+}
+
+export const Interactive: Story = {
+  render: () => (
+    <Card
+      variant="interactive"
+      p={3}
+      bg="paper"
+      title="Interactive"
+      caption="Hover to fill with the secondary background."
+    />
+  ),
+}
+
 export const Variants: Story = {
   render: () => (
     <Flex flexDirection="row" gap={3} flexWrap="wrap">
@@ -113,6 +147,13 @@ export const Variants: Story = {
         elevation={0}
         title="bracketBox"
         caption="Corner bracket variant."
+      />
+      <Card
+        variant="interactive"
+        p={3}
+        bg="paper"
+        title="interactive"
+        caption="Hover-fill variant."
       />
     </Flex>
   ),

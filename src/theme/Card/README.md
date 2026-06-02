@@ -8,14 +8,25 @@ A surface component with an optional title, caption, and variant-based visual tr
 
 ### `variant`
 
-Selects the root surface component.
+Selects the surface's visual treatment. All variants render a `Paper` surface.
 
-| Value          | Renders as     | Description                                       |
-| -------------- | -------------- | ------------------------------------------------- |
-| `"paper"`      | `<Paper>`      | Standard elevated surface. Default.               |
-| `"bracketBox"` | `<BracketBox>` | Flat surface with corner bracket pseudo-elements. |
+| Value           | Description                                                          |
+| --------------- | -------------------------------------------------------------------- |
+| `"paper"`       | Standard elevated `Paper` surface. Default.                          |
+| `"bracketBox"`  | Square top-left / bottom-right corners with bracket pseudo-elements. |
+| `"interactive"` | Hover fills the surface with the `secondary` background.             |
 
 Default: `"paper"`.
+
+---
+
+### `icon`
+
+`IconName` — Registry name of an icon rendered as the topmost element of the card. Omit to render no icon.
+
+```tsx
+<Card icon="account_tree" title="Scalability" />
+```
 
 ---
 
@@ -28,6 +39,16 @@ Default: `"paper"`.
 ### `caption`
 
 `string` — Rendered as a `caption` Typography with `color="secondary"`. Omit to suppress.
+
+---
+
+### `iconProps`
+
+`Omit<IconProps, 'name'>` — Spread onto the `Icon` to override its `color`, `size`, spacing, etc.
+
+```tsx
+<Card icon="smart_toy" iconProps={{ color: 'primary', size: '2.25rem' }} />
+```
 
 ---
 
