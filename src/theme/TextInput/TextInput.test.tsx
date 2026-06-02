@@ -219,7 +219,9 @@ describe('TextInput', () => {
 
     it('outlined has secondary background', () => {
       renderWithTheme(<TextInput variant="outlined" data-testid="root" />)
-      expect(screen.getByTestId('root')).toHaveStyle({ backgroundColor: dark.background.secondary })
+      expect(screen.getByTestId('root')).toHaveStyle({
+        backgroundColor: dark.palette.default.light,
+      })
     })
 
     it('underline has no border-radius', () => {

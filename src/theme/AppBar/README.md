@@ -12,6 +12,7 @@ Resolves against `theme.background` — sets the AppBar's background color.
 
 | Token         | Dark source                      | Light source                        |
 | ------------- | -------------------------------- | ----------------------------------- |
+| `"appBar"`    | `blackAlpha[700]`                | `lightSurface[100]` + 80% opacity   |
 | `"backdrop"`  | `carbonBlack[900]` + 80% opacity | `kineticSurface[100]` + 80% opacity |
 | `"modal"`     | `kineticSurface[800]`            | `kineticSurface[100]`               |
 | `"primary"`   | `kineticSurface[900]`            | `kineticSurface[50]`                |

@@ -8,6 +8,7 @@ import { Switch } from 'src/theme/Switch'
 import { Logo } from 'src/common/Logo'
 import { Navbar } from 'src/common/Navbar'
 import { useThemeMode } from 'src/theme/hooks/useThemeMode'
+import { alpha } from 'src/theme/utils'
 
 export interface HeaderProps {
   position?: AppBarPosition
@@ -36,9 +37,9 @@ export function Header({ position = 'fixed' }: HeaderProps) {
       flexDirection="row"
       justifyContent="space-between"
       alignItems="center"
-      color="backdrop"
+      color="appBar"
       blur
-      borderBottom={`1px solid ${theme.border.primary}33`}
+      borderBottom={`1px solid ${alpha(theme.border.primary, 0.2)}`}
     >
       <Flex flexDirection="row" alignItems="center" gap={2}>
         <a href="https://soroush.tech">

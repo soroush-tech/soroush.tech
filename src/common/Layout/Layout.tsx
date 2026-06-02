@@ -20,7 +20,7 @@ export function Layout({
   return (
     <Flex flexDirection="column" minHeight="100vh">
       {header}
-      <Blueprint as="main" scanline pt={10} flex={1} {...blueprintProps}>
+      <Blueprint as="main" scanline pt={8} flex={1} {...blueprintProps}>
         {children}
       </Blueprint>
       {footer}
