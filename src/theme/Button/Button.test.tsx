@@ -31,6 +31,16 @@ describe('Button', () => {
       renderWithTheme(<Button>Click</Button>)
       expect(screen.getByRole('button', { name: /click/i })).toBeInTheDocument()
     })
+
+    it('renders as an <a> with the href when href is set', () => {
+      renderWithTheme(<Button href="/docs">Docs</Button>)
+      expect(screen.getByRole('link', { name: /docs/i })).toHaveAttribute('href', '/docs')
+    })
+
+    it('does not underline the link when rendered as an <a>', () => {
+      renderWithTheme(<Button href="/docs">Docs</Button>)
+      expect(screen.getByRole('link', { name: /docs/i })).toHaveStyle({ textDecoration: 'none' })
+    })
   })
 
   // ─── base styles ─────────────────────────────────────────────────────────────

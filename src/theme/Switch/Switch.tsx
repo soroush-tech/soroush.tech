@@ -8,6 +8,7 @@ import {
   type SpaceProps,
 } from 'src/theme'
 import { carbonBlack, kineticSurface } from 'src/theme/colors'
+import { alpha } from 'src/theme/utils'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -169,7 +170,7 @@ const SwitchThumb = styled('span', {
     height: thumbSize,
     borderRadius: '50%',
     backgroundColor: kineticSurface[100],
-    boxShadow: `0px 2px 1px -1px ${carbonBlack[900]}33,0px 1px 1px 0px ${carbonBlack[900]}24,0px 1px 3px 0px ${carbonBlack[900]}1F`,
+    boxShadow: `0px 2px 1px -1px ${alpha(carbonBlack[900], 0.2)},0px 1px 1px 0px ${alpha(carbonBlack[900], 0.14)},0px 1px 3px 0px ${alpha(carbonBlack[900], 0.12)}`,
     transition: `transform ${transitionDuration} ease, background-color ${transitionDuration} ease`,
     display: 'flex',
     alignItems: 'center',

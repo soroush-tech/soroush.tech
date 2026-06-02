@@ -147,7 +147,7 @@ const backgroundStyle = ({
 }: TextInputRootProps & { theme?: Theme }) => {
   const isBoxed = variantValue === 'outlined' || variantValue === 'default'
   return {
-    backgroundColor: isBoxed ? get(theme, 'background.secondary') : 'transparent',
+    backgroundColor: isBoxed ? get(theme, 'palette.default.light') : 'transparent',
     color: get(theme, 'text.primary'),
     fontFamily: get(theme, 'fonts.body'),
     fontSize: get(theme, 'fontSizes.1'),

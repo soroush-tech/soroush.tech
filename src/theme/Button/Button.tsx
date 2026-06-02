@@ -16,6 +16,7 @@ import {
   type BorderProps,
   type TypographyProps,
 } from 'src/theme'
+import { alpha } from 'src/theme/utils'
 export type ButtonVariant = 'contained' | 'outlined' | 'text'
 export type ButtonColor = keyof Theme['palette']
 export type ButtonSize = keyof Theme['sizes']
@@ -57,6 +58,8 @@ export interface ButtonProps
   shape?: ButtonShape
   /** Where the loading indicator appears. Default: `"center"`. */
   loadingPosition?: ButtonLoadingPosition
+  /** The URL to link to when the button is clicked. If defined, an `a` element will be used as the root node. */
+  href?: string
 }
 
 // 'gap' is not in styled-system's default props list — must be added explicitly
@@ -117,6 +120,8 @@ const baseStyles = {
   justifyContent: 'center',
   fontFamily: 'inherit',
   textTransform: 'uppercase' as const,
+  // No-op for <button>; strips the default underline when rendered as <a> via href.
+  textDecoration: 'none',
   lineHeight: 1,
   transition:
     'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease',
@@ -160,8 +165,8 @@ const variantStyles = ({
     }
   }
 
-  const hoverBg = `${main}14`
-  const activeBg = `${main}20`
+  const hoverBg = alpha(main, 0.08)
+  const activeBg = alpha(main, 0.125)
   const borderColor = variant === 'outlined' ? main : 'transparent'
   return {
     backgroundColor: 'transparent',
@@ -223,6 +228,7 @@ export function Button({
   loadingPosition = 'center',
   children,
   disabled,
+  href,
   ...rest
 }: ButtonProps) {
   const indicator = loadingIndicator ?? <CircularProgress size={16} color="inherit" />
@@ -232,6 +238,8 @@ export function Button({
 
   return (
     <ButtonRoot
+      as={href != null ? 'a' : undefined}
+      href={href}
       variant={variant}
       color={color}
       size={size}

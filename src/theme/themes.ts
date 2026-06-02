@@ -342,7 +342,7 @@ export const dark: Theme = {
       main: kineticGreen[500],
       light: kineticGreen[300],
       dark: kineticGreen[800],
-      contrastText: kineticGreen[800],
+      contrastText: carbonBlack[900],
     },
     secondary: {
       main: softGreen[400],

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { View } from './View'
 import {
+  aspectRatio,
   bg,
   border,
   borderColor,
@@ -45,6 +46,7 @@ const meta: Meta<typeof View> = {
         'borderRadius',
         'position',
         'cursor',
+        'aspectRatio',
       ],
     },
   },
@@ -63,6 +65,7 @@ const meta: Meta<typeof View> = {
     borderRadius,
     position,
     cursor,
+    aspectRatio,
   },
   args: {
     children: 'View content',

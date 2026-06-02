@@ -36,6 +36,12 @@ export const m = {
   description: 'Margin — resolves from `theme.space`.',
   table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
 } as const
+export const mb = {
+  control: { type: 'select' },
+  options: spaceTokens,
+  description: 'Margin bottom — resolves from `theme.space`.',
+  table: { category: 'Spacing', type: { summary: 'space' }, defaultValue: { summary: '0' } },
+} as const
 export const gap = {
   control: { type: 'select' },
   options: spaceTokens,
@@ -91,6 +97,11 @@ export const cursor = {
   options: cursorTokens,
   description: 'CSS cursor — controls the mouse pointer style.',
   table: { category: 'Visual', type: { summary: 'CSSProperties["cursor"]' } },
+} as const
+export const aspectRatio = {
+  control: 'text',
+  description: 'CSS aspect-ratio for fixed-ratio surfaces (e.g. "16/9", "1").',
+  table: { category: 'Layout', type: { summary: 'CSSProperties["aspectRatio"]' } },
 } as const
 
 // ─── Border ─────────────────────────────────────────────────────────────────

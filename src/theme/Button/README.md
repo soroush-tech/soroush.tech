@@ -103,6 +103,14 @@ Default: `"center"`.
 
 ---
 
+### `href`
+
+`string` — the URL to link to when the button is clicked. If defined, an `<a>` element is used as the root node. The button keeps its full styling and prop API.
+
+> A native `<a>` cannot be disabled — when `href` is set, `disabled`/`loading` dim the link but do not block navigation.
+
+---
+
 ## Styled-system props
 
 ### Space — `theme.space`
@@ -178,6 +186,9 @@ All buttons apply these styles regardless of variant:
 
 // Disabled
 <Button disabled>Unavailable</Button>
+
+// As a link — renders an <a href>
+<Button href="/docs">Read the docs</Button>
 
 // Styled-system overrides
 <Button mt={2} px={4}>Custom spacing</Button>

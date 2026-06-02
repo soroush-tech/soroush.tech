@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react'
+import { type CSSProperties, type ElementType } from 'react'
 import { styled, type Theme, createShouldForwardProp, system } from 'src/theme'
 import { Flex, type FlexProps } from 'src/theme/Flex'
 
@@ -42,6 +42,8 @@ export interface PaperProps extends FlexProps {
   borderWidth?: keyof Theme['borderWidths']
   /** CSS border-style value (e.g. 'solid', 'dashed'). */
   borderStyle?: CSSProperties['borderStyle']
+  /** Renders the surface as a different element (e.g. 'section'). */
+  as?: ElementType
 }
 
 const shouldForwardProp = createShouldForwardProp([

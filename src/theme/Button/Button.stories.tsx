@@ -33,6 +33,7 @@ const meta: Meta<typeof Button> = {
         'disabled',
         'loading',
         'loadingPosition',
+        'href',
         'm',
         'p',
       ],
@@ -100,6 +101,11 @@ const meta: Meta<typeof Button> = {
       options: buttonLoadingPositionTokens,
       description: 'Where the loading indicator appears relative to the label.',
       table: { category: 'Visual', defaultValue: { summary: 'center' } },
+    },
+    href: {
+      control: 'text',
+      description: 'URL to link to. If defined, the root renders as an `a` element.',
+      table: { category: 'Content' },
     },
     m,
     p,
@@ -216,6 +222,21 @@ export const Disabled: Story = {
         Outlined
       </Button>
       <Button disabled variant="text">
+        Text
+      </Button>
+    </Flex>
+  ),
+}
+
+export const AsLink: Story = {
+  name: 'As Link (href)',
+  render: () => (
+    <Flex flexDirection="row" gap={2} flexWrap="wrap" alignItems="center">
+      <Button href="#contained">Contained</Button>
+      <Button href="#outlined" variant="outlined" endIcon={<span>→</span>}>
+        Outlined
+      </Button>
+      <Button href="#text" variant="text">
         Text
       </Button>
     </Flex>

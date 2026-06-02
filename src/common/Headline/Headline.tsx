@@ -2,11 +2,12 @@ import styled from '@emotion/styled'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { View } from 'src/theme/View'
+import { alpha } from 'src/theme/utils'
 
 const Divider = styled(View, { label: 'Divider' })`
   height: 1px;
   flex: 1;
-  background-color: ${({ theme }) => theme.border.primary}4D;
+  background-color: ${({ theme }) => alpha(theme.border.primary, 0.3)};
 `
 
 export interface HeadlineProps {
