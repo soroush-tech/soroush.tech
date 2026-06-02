@@ -11,12 +11,12 @@ If either word is missing or invalid, stop and say:
 
 ## Directory mapping
 
-| `<dir>`   | Root path            |
-| --------- | -------------------- |
-| `theme`   | `src/theme/<Name>/`  |
-| `common`  | `src/common/<Name>/` |
-| `page`    | `src/pages/<Name>/`  |
-| `section` | `src/common/<Name>/` |
+| `<dir>`   | Root path             |
+| --------- | --------------------- |
+| `theme`   | `src/theme/<Name>/`   |
+| `common`  | `src/common/<Name>/`  |
+| `page`    | `src/pages/<Name>/`   |
+| `section` | `src/section/<Name>/` |
 
 ---
 
@@ -27,6 +27,9 @@ Read ALL of these before doing anything else — they are the authoritative sour
 1. `src/theme/design-system.md` — architecture rules
 2. `.claude/skills/theme-usage/SKILL.md` — rules for consuming theme primitives in non-theme components
 3. `.claude/skills/css-in-js/SKILL.md` — CSS-in-JS and styled-system conventions
+4. `.claude/skills/code-style/SKILL.md` — TypeScript and JavaScript coding conventions
+5. `.claude/skills/wcag/SKILL.md` — accessibility rules (ARIA, contrast, keyboard, landmarks)
+6. `src/section/section.md` — section conventions (read only when `<dir>` is `section`)
 
 ---
 
@@ -94,6 +97,7 @@ Rules that apply to **all** `<dir>` values:
 - Never pass raw hex values, pixel literals, or hardcoded font-family strings.
 - Extract reusable pure functions to `<Name>/utils.ts`. Extract stateful logic to `<Name>/use<Name>.ts` (or a more specific name). Keep `<Name>.tsx` a thin composition layer.
 - Do **not** write custom CSS (`styled`, template literals, or `css` prop) without first presenting a proposal that explains why a theme primitive cannot cover the case. Wait for approval before implementing.
+- **Assets:** SVG icons and images used by the component must be placed in `src/assets/` (icons in `src/assets/icons/`), not inlined or co-located next to the component.
 
 **If `<dir>` is `theme`** — additionally follow all `src/theme/design-system.md` rules:
 
@@ -106,6 +110,23 @@ Rules that apply to **all** `<dir>` values:
 
 - Compose from theme primitives; reach for `styled` only when a theme primitive genuinely cannot cover the case (and only after proposal + approval)
 - Export prop types as a named interface
+
+**Multi-prop variant pattern (theme components):**
+
+For components where a prop selects a palette (not a raw CSS property), use a nested theme scale:
+
+```ts
+// themes.ts
+button: Record<'primary' | 'secondary' | ..., { main, hover, active, contrast }>
+```
+
+- Derive type via `keyof Theme['button']` — never a manual union
+- Use a `variantStyles` function, not `system()` — `system()` handles 1:1 prop→CSS; nested/conditional mappings need a function
+- Hover/active states: hex-opacity suffix `${main}14` (8%) or `${main}20` (12%)
+
+**Kinetic OS design tokens for interactive elements:**
+
+Buttons use `borderRadius: 0`, `textTransform: uppercase`, `fontWeight: bold`, `letterSpacing: tight`. Contrast text on primary contained = `kineticGreen[800]`.
 
 ### Typography and sizing
 
@@ -121,6 +142,11 @@ Wait for confirmation before committing to a specific variant or size token.
 - Cover: children render, each meaningful prop produces the correct CSS or DOM output, HTML attribute passthrough (`className`, `data-*`, `aria-*`), element mapping if a variant prop exists.
 - For `common` / `page` / `section` components: cover integration with child theme components (e.g. correct token is passed, correct text is rendered).
 
+**jsdom caveats (theme components):**
+
+- `backgroundColor` transparent value will convert to rgba
+- Elements with `visibility: hidden` are excluded from accessible name — use `data-testid` selectors
+
 ### `README.md` — prop documentation
 
 - Document every prop: type, default, description.
@@ -134,7 +160,9 @@ Wait for confirmation before committing to a specific variant or size token.
 - `controls.include` whitelist — no autodiscovery.
 - Every prop in `controls.include` must have a matching `argType` with `control`, `description`, and `table.category`.
 - Category names: Content · Typography · Layout · Visual · Spacing.
-- No top-level `name:` in any argType.
+- No top-level `name:` in any argType. `table.name` inside `table:` is safe — only affects autodocs display.
+- When adding new token arrays to the options file, constrain with `satisfies`: `export const myTokens = [...] satisfies MyToken[]`
+- Control types: `opacity` → `{ type: 'range', min: 0, max: 1, step: 0.05 }` · space props → `{ type: 'select' }, options: spaceTokens` · booleans → `'boolean'`
 
 ### `utils.ts` (create only if needed)
 
