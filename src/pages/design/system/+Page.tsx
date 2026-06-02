@@ -23,7 +23,7 @@ import { InteractiveColorSizeCard } from './components/InteractiveColorSizeCard'
 export default function SystemDesignPage() {
   return (
     <Layout blueprintProps={{ variant: 'dot', scanline: true, as: 'main', px: [3, 5, 6], pb: 6 }}>
-      <View maxWidth="1280px" mx="auto">
+      <View pt={4} maxWidth="1280px" mx="auto">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <View mb={8}>
           <Typography

@@ -37,6 +37,23 @@ describe('Card', () => {
     })
   })
 
+  describe('icon', () => {
+    it('renders an icon when icon name is provided', () => {
+      const { container } = renderWithTheme(<Card icon="code" />)
+      expect(container.querySelector('svg')).toBeInTheDocument()
+    })
+
+    it('does not render an icon when icon is not provided', () => {
+      const { container } = renderWithTheme(<Card>content</Card>)
+      expect(container.querySelector('svg')).not.toBeInTheDocument()
+    })
+
+    it('forwards iconProps to the Icon', () => {
+      const { container } = renderWithTheme(<Card icon="code" iconProps={{ size: '3rem' }} />)
+      expect(container.querySelector('svg')).toHaveStyle({ width: '3rem', height: '3rem' })
+    })
+  })
+
   describe('caption', () => {
     it('renders caption text', () => {
       renderWithTheme(<Card caption="My Subtitle" />)
@@ -62,6 +79,11 @@ describe('Card', () => {
 
     it('renders bracketBox variant without error', () => {
       renderWithTheme(<Card variant="bracketBox" data-testid="card" />)
+      expect(screen.getByTestId('card')).toBeInTheDocument()
+    })
+
+    it('renders interactive variant without error', () => {
+      renderWithTheme(<Card variant="interactive" data-testid="card" />)
       expect(screen.getByTestId('card')).toBeInTheDocument()
     })
 
