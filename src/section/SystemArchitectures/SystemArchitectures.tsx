@@ -5,9 +5,13 @@ import { Grid } from 'src/theme/Grid'
 import { Typography } from 'src/theme/Typography'
 import { Image } from 'src/theme/Image'
 import { Icon } from 'src/theme/Icon'
-import dataCenterImage from 'src/assets/datacenter-server-room.png'
+import dataCenter from 'src/assets/datacenter-server-room.png?w=256;384;512&format=avif;webp;png&as=picture'
 import { ThemeProvider } from 'src/theme/ThemeProvider'
 import { dark } from 'src/theme/themes'
+
+// Cover-fill bento tile — ~792px tall once the grid goes multi-column at the 52em (832px)
+// breakpoint (square source binds to the taller side); full viewport width below that.
+const DATA_CENTER_SIZES = '(min-width: 832px) 792px, 100vw'
 
 // palette.primary.main / contrastText are not in the background / text scales, so the
 // neon badge is applied via styled (same documented exception as Eyebrow).
@@ -49,16 +53,27 @@ export function SystemArchitectures() {
             bg="default"
             minHeight={['400px', '400px', 'auto']}
           >
-            <Image
-              src={dataCenterImage}
-              alt="Server room with glowing green neon lighting across rows of racks"
-              position="absolute"
-              top={0}
-              left={0}
-              width="100%"
-              height="100%"
-              objectFit="cover"
-            />
+            <picture>
+              {Object.entries(dataCenter.sources).map(([format, srcSet]) => (
+                <source
+                  key={format}
+                  srcSet={srcSet}
+                  type={`image/${format}`}
+                  sizes={DATA_CENTER_SIZES}
+                />
+              ))}
+              <Image
+                src={dataCenter.img.src}
+                sizes={DATA_CENTER_SIZES}
+                alt="Distributed architecture orchestrating"
+                fetchPriority="high"
+                top={0}
+                left={0}
+                width="100%"
+                height="100%"
+                objectFit="cover"
+              />
+            </picture>
             <View position="absolute" top={0} left={0} width="100%" height="100%" bg="backdrop" />
             <View position="absolute" bottom={0} left={0} p={4}>
               <GreenBadge

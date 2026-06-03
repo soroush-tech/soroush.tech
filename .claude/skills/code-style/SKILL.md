@@ -207,4 +207,45 @@ Note: `stroke="currentColor"` / `fill="currentColor"` in an SVG file does not in
 
 ---
 
+### Responsive images with `vite-imagetools`
+
+Raster images that the browser scales (any photo/mascot rendered smaller than its file, or served to varying viewports) must be imported through `vite-imagetools` query params — never as a bare URL that ships one oversized file.
+
+**Multi-format `<picture>` — the default for any meaningful image.** Import with `?w=…&format=avif;webp;png&as=picture`, listing modern formats first and the fallback format last. The import resolves to `{ sources, img }`: `sources` is keyed by the non-fallback formats, `img` is the last format's fallback descriptor. Render a `<source>` per format with the **fallback as the `<img>`** — the `<img>` _is_ the png; old browsers that ignore `<source>` fall through to it. Never give the fallback format its own `<source>`.
+
+```tsx
+// ✗ — bare import ships one fixed-size file, one format
+import portrait from 'src/assets/portrait.png'
+<Image src={portrait} />
+
+// ✓ — multi-format, multi-width
+import portrait from 'src/assets/portrait.png?w=320;480;640;960&format=avif;webp;png&as=picture'
+
+const SIZES = '(min-width: 832px) min(40vw, 520px), 100vw'
+
+<picture>
+  {Object.entries(portrait.sources).map(([format, srcSet]) => (
+    <source key={format} srcSet={srcSet} type={`image/${format}`} sizes={SIZES} />
+  ))}
+  <Image src={portrait.img.src} sizes={SIZES} alt="…" objectFit="cover" />
+</picture>
+```
+
+Single-format responsive (no `<picture>`) uses `?w=…&as=srcset&format=avif`, which resolves to a `srcSet` string. Each query shape needs a `declare module` in `src/vite-env.d.ts` — `*as=picture` returns `{ sources: Record<string, string>; img: { src: string; w: number; h: number } }`, `*format=avif` returns a `string`.
+
+**`sizes` must match the real rendered width**, computed from the layout — not guessed. Work out the slot width at each styled-system breakpoint (defaults: **40em / 52em / 64em**; a responsive prop array `['a','b','c']` maps to base / 40em / 52em). For an `objectFit: cover` box with a square source, the **taller** side binds, so size for that.
+
+```tsx
+// grid switches to two columns at 52em (832px); portrait is the ~520px 5fr column above it
+const SIZES = '(min-width: 832px) min(40vw, 520px), 100vw'
+```
+
+**Never request widths above the source's intrinsic size** — imagetools does not upscale, so larger entries just clamp to the source and waste descriptors. Check the source dimensions first; a 512px source can't serve a 2× retina slot — that's an asset problem, flag it rather than padding the width list.
+
+**LCP images get `fetchPriority="high"`.** But `theme/Image` filters props through `@styled-system/should-forward-prop`, which pins an old `@emotion/is-prop-valid` that strips `fetchPriority`. It is already allow-listed in `Image.tsx`'s `shouldForwardProp` — keep it there; if a similar valid attribute is dropped, extend that allow-list rather than working around it.
+
+**A `<picture>` is `display: inline` and static**, so an absolutely-positioned `<img>` inside it still resolves against the nearest positioned ancestor (the layout box), not the `<picture>`. Put `position`/`top`/`left` on the `<Image>` as before — the `<picture>` wrapper changes nothing about positioning.
+
+---
+
 If `$ARGUMENTS` names a file, read it and report violations with corrected code. Otherwise apply to the code being discussed.
