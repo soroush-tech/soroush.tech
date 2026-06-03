@@ -222,6 +222,9 @@ importers:
       vite-imagetools:
         specifier: ^10.0.0
         version: 10.0.0(rollup@4.60.4)(vite@8.0.14(@types/node@24.12.4)(esbuild@0.28.0))
+      vite-plugin-compression2:
+        specifier: ^2.5.3
+        version: 2.5.3(rollup@4.60.4)
       vite-plugin-svgr:
         specifier: ^5.2.0
         version: 5.2.0(rollup@4.60.4)(typescript@6.0.3)(vite@8.0.14(@types/node@24.12.4)(esbuild@0.28.0))
@@ -5530,6 +5533,12 @@ packages:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
 
+  tar-mini@0.2.0:
+    resolution:
+      {
+        integrity: sha512-+qfUHz700DWnRutdUsxRRVZ38G1Qr27OetwaMYTdg8hcPxf46U0S1Zf76dQMWRBmusOt2ZCK5kbIaiLkoGO7WQ==,
+      }
+
   test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
@@ -5841,6 +5850,12 @@ packages:
     engines: { node: '>=22.0.0' }
     peerDependencies:
       vite: '>=7.0.0'
+
+  vite-plugin-compression2@2.5.3:
+    resolution:
+      {
+        integrity: sha512-ItPgqQWkcnBbVw7is9OKwiZ8v6+ju9rYROl5Lp6QfQDEx/d55AwJQb/KLpsQqsU9HoigYBsZ8tK6I02UwJNvEw==,
+      }
 
   vite-plugin-svgr@5.2.0:
     resolution: {integrity: sha512-qj2eAKF8C6PZWemVTvQA0xgQIcP1hHU6Buh7fl6BhvayWwnuxE+z417miKxeDvRWbDrupQ1oK99hfxElopJ3sQ==}
@@ -11949,6 +11964,8 @@ snapshots:
 
   tagged-tag@1.0.0: {}
 
+  tar-mini@0.2.0: {}
+
   test-exclude@6.0.0:
     dependencies:
       '@istanbuljs/schema': 0.1.6
@@ -12319,6 +12336,13 @@ snapshots:
       imagetools-core: 9.1.0
       sharp: 0.34.5
       vite: 8.0.14(@types/node@24.12.4)(esbuild@0.28.0)
+    transitivePeerDependencies:
+      - rollup
+
+  vite-plugin-compression2@2.5.3(rollup@4.60.4):
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.60.4)
+      tar-mini: 0.2.0
     transitivePeerDependencies:
       - rollup
 
