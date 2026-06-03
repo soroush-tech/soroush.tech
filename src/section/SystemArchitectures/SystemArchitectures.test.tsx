@@ -29,7 +29,7 @@ describe('SystemArchitectures', () => {
       renderWithTheme(<SystemArchitectures />)
       expect(
         screen.getByRole('img', {
-          name: 'Server room with glowing green neon lighting across rows of racks',
+          name: 'Distributed architecture orchestrating',
         })
       ).toBeInTheDocument()
     })

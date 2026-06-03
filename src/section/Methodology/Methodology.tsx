@@ -2,9 +2,13 @@ import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { Image } from 'src/theme/Image'
-import circuitImage from 'src/assets/methodology-circuit.png'
+import circuit from 'src/assets/methodology-circuit.png?w=256;384;512&format=avif;webp;png&as=picture'
 import { Eyebrow } from 'src/common/Eyebrow'
 import { steps } from './Methodology.data'
+
+// Square slot is ~half the 1280px row (≈616px) once the flex switches column→row at
+// the 40em (640px) breakpoint; full viewport width below that.
+const CIRCUIT_SIZES = '(min-width: 640px) min(50vw, 616px), 100vw'
 
 export function Methodology() {
   return (
@@ -24,13 +28,19 @@ export function Methodology() {
           overflow="hidden"
           bg="default"
         >
-          <Image
-            src={circuitImage}
-            alt="Macro view of server circuit boards tracing neon-green data paths"
-            width="100%"
-            height="100%"
-            objectFit="cover"
-          />
+          <picture>
+            {Object.entries(circuit.sources).map(([format, srcSet]) => (
+              <source key={format} srcSet={srcSet} type={`image/${format}`} sizes={CIRCUIT_SIZES} />
+            ))}
+            <Image
+              src={circuit.img.src}
+              sizes={CIRCUIT_SIZES}
+              alt="Macro view of server circuit boards tracing neon-green data paths"
+              width="100%"
+              height="100%"
+              objectFit="cover"
+            />
+          </picture>
           <View position="absolute" top={0} left={0} width="100%" height="100%" bg="backdrop" />
           <View position="absolute" bottom={0} left={0} m={4} bg="default" p={4}>
             <Typography
