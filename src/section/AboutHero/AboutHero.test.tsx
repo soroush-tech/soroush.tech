@@ -46,7 +46,7 @@ describe('AboutHero', () => {
     it('renders the portrait with a descriptive alt', () => {
       renderWithTheme(<AboutHero />)
       expect(
-        screen.getByRole('img', { name: 'Portrait of Masoud Soroush, senior frontend architect' })
+        screen.getByRole('img', { name: 'Portrait of Masoud Soroush, Principal Software Engineer' })
       ).toBeInTheDocument()
     })
 

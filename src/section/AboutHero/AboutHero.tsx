@@ -7,9 +7,11 @@ import { Image } from 'src/theme/Image'
 import { Button } from 'src/theme/Button'
 import { Icon } from 'src/theme/Icon'
 import { alpha } from 'src/theme/utils'
-import portrait from 'src/assets/masoud_soroush.png'
-import portrait2x from 'src/assets/masoud_soroush@2x.png'
-import portrait3x from 'src/assets/masoud_soroush@3x.png'
+import portrait from 'src/assets/masoud_soroush.png?w=320;480;640;768;960;1200&format=avif;webp;png&as=picture'
+
+// Portrait slot is the ~520px-wide 5fr column once the grid switches to two columns
+// at the 52em (832px) breakpoint; full viewport width below that.
+const PORTRAIT_SIZES = '(min-width: 832px) min(40vw, 520px), 100vw'
 
 // Decorative corner glow — a 135° neon fade that no flat background token can express.
 const MatrixGradient = styled(View, { label: 'MatrixGradient' })`
@@ -134,14 +136,25 @@ export function AboutHero() {
         <View position="relative">
           <OffsetBlock bg="paper" />
           <ImageFrame bg="secondary">
-            <PortraitImage
-              src={portrait}
-              srcSet={`${portrait} ${portrait2x} 2x, ${portrait3x} 3x`}
-              alt="Portrait of Masoud Soroush, senior frontend architect"
-              width="100%"
-              height="100%"
-              objectFit="cover"
-            />
+            <picture>
+              {Object.entries(portrait.sources).map(([format, srcSet]) => (
+                <source
+                  key={format}
+                  srcSet={srcSet}
+                  type={`image/${format}`}
+                  sizes={PORTRAIT_SIZES}
+                />
+              ))}
+              <PortraitImage
+                src={portrait.img.src}
+                sizes={PORTRAIT_SIZES}
+                fetchPriority="high"
+                alt="Portrait of Masoud Soroush, Principal Software Engineer"
+                width="100%"
+                height="100%"
+                objectFit="cover"
+              />
+            </picture>
             <ImageScrim />
             <View position="absolute" top={0} right={0} p={4} textAlign="right">
               <Typography

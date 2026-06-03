@@ -31,12 +31,15 @@ export interface ImageProps
   onError?: () => void
 }
 
-const shouldForwardProp = createShouldForwardProp([
+const baseShouldForwardProp = createShouldForwardProp([
   ...props,
   'fallback',
   'objectFit',
   'objectPosition',
 ])
+
+// fetchPriority is a valid <img> attribute, but @styled-system/should-forward-prop pins an
+const shouldForwardProp = (prop: string) => prop === 'fetchPriority' || baseShouldForwardProp(prop)
 
 const objectSystem = system({
   objectFit: { property: 'objectFit' },
