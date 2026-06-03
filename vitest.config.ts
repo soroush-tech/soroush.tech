@@ -20,11 +20,13 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
       exclude: [
         '**/*.d.ts',
         '**/*.config.{ts,js}',
         '**/*.stories.*',
         '**/*.mdx',
+        'src/assets/**/*',
         'build/**/*',
         'dist/**/*',
         'public/**/*',
@@ -54,6 +56,19 @@ export default defineConfig({
               if (id === '\0virtual:svg-react-mock')
                 return 'import React from "react"; export default (props) => React.createElement("svg", props)'
               if (id === '\0virtual:svg-mock') return 'export default "/mock.svg"'
+            },
+          },
+          {
+            // vite-imagetools isn't run in unit tests, so mock its `as=picture` output
+            // ({ sources, img }) — otherwise the import resolves to a bare URL string.
+            name: 'imagetools-mock',
+            enforce: 'pre' as const,
+            resolveId(id) {
+              if (/[?&]as=picture/.test(id)) return '\0virtual:imagetools-picture-mock'
+            },
+            load(id) {
+              if (id === '\0virtual:imagetools-picture-mock')
+                return 'export default { sources: { avif: "/mock.avif", webp: "/mock.webp" }, img: { src: "/mock.png", w: 1, h: 1 } }'
             },
           },
         ],
