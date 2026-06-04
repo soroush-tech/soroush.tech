@@ -46,6 +46,17 @@ Common values: `"pointer"` · `"default"` · `"move"` · `"not-allowed"` · `"wa
 
 ---
 
+### `order`
+
+CSS `order` for placing a flex/grid item out of source order. Accepts a single value or a responsive array.
+
+```tsx
+// First on mobile, last in a 2-col layout, first again on wide screens
+<View order={[0, 1, 1, 0]}>logo</View>
+```
+
+---
+
 ## Styled-system props
 
 ### Space — `theme.space`

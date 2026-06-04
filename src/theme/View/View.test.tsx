@@ -92,6 +92,18 @@ describe('View', () => {
     })
   })
 
+  describe('order prop', () => {
+    it('applies order CSS property', () => {
+      renderWithTheme(<View order={2}>ordered</View>)
+      expect(screen.getByText('ordered')).toHaveStyle({ order: '2' })
+    })
+
+    it('does not forward order as a DOM attribute', () => {
+      renderWithTheme(<View order={2}>ordered</View>)
+      expect(screen.getByText('ordered')).not.toHaveAttribute('order')
+    })
+  })
+
   describe('HTML attribute passthrough', () => {
     it('forwards className', () => {
       renderWithTheme(<View className="my-view">classed</View>)
