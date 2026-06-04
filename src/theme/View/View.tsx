@@ -15,6 +15,7 @@ import {
   type TypographyProps as SystemTypographyProps,
   type BorderProps,
   type PositionProps,
+  type FlexboxProps,
 } from 'src/theme'
 
 /** Valid values for the color prop — derived from theme.text keys. */
@@ -51,17 +52,20 @@ export interface ViewProps
   cursor?: CSSProperties['cursor']
   /** CSS aspect-ratio for fixed-ratio surfaces (e.g. 16/9, 1). */
   aspectRatio?: CSSProperties['aspectRatio']
+  /** CSS order for flex/grid item placement. Accepts responsive arrays. */
+  order?: FlexboxProps<Theme>['order']
 }
 
-const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'aspectRatio'])
+const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'aspectRatio', 'order'])
 
-// bg → theme.background / borderColor → theme.border / opacity + cursor + aspectRatio → raw
+// bg → theme.background / borderColor → theme.border / opacity + cursor + aspectRatio + order → raw
 const colorSystem = system({
   bg: { property: 'backgroundColor', scale: 'background' },
   borderColor: { property: 'borderColor', scale: 'border' },
   opacity: { property: 'opacity' },
   cursor: { property: 'cursor' },
   aspectRatio: { property: 'aspectRatio' },
+  order: { property: 'order' },
 })
 
 export const View = styled('div', { label: 'View', shouldForwardProp })<ViewProps>(

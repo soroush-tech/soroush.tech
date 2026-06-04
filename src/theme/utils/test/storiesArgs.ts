@@ -103,6 +103,11 @@ export const aspectRatio = {
   description: 'CSS aspect-ratio for fixed-ratio surfaces (e.g. "16/9", "1").',
   table: { category: 'Layout', type: { summary: 'CSSProperties["aspectRatio"]' } },
 } as const
+export const order = {
+  control: 'number',
+  description: 'CSS order for flex/grid item placement. Accepts responsive arrays.',
+  table: { category: 'Layout', type: { summary: 'CSSProperties["order"]' } },
+} as const
 
 // ─── Border ─────────────────────────────────────────────────────────────────
 export const border = {
