@@ -20,6 +20,8 @@
     "test:unit": "vitest --project=unit",
     "test:ui": "vitest --ui",
     "test:e2e": "playwright test",
+    "test:e2e:firefox": "playwright test --project=firefox",
+    "test:e2e:webkit": "playwright test --project=webkit",
     "test:coverage:e2e": "cross-env E2E_COVERAGE=true playwright test --project=chromium",
     "test:e2e:ui": "playwright test --ui",
     "test:storybook": "vitest --project=storybook",
