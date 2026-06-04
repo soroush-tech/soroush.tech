@@ -52,9 +52,12 @@ describe('Footer', () => {
       )
     })
 
-    it('renders System Domain link to /domain', () => {
+    it('renders Delivery Domain link to /domain', () => {
       renderWithTheme(<Footer />)
-      expect(screen.getByRole('link', { name: 'System Domain' })).toHaveAttribute('href', '/domain')
+      expect(screen.getByRole('link', { name: 'Delivery Domain' })).toHaveAttribute(
+        'href',
+        '/domain'
+      )
     })
 
     it('renders AI Automation link to /about', () => {
