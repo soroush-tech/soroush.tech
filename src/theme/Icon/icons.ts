@@ -6,6 +6,7 @@ import CodeIcon from 'src/assets/icons/code.svg?react'
 import DatabaseIcon from 'src/assets/icons/database.svg?react'
 import DesktopWindowsIcon from 'src/assets/icons/desktop_windows.svg?react'
 import DnsIcon from 'src/assets/icons/dns.svg?react'
+import ExternalLinkIcon from 'src/assets/icons/external_link.svg?react'
 import GridViewIcon from 'src/assets/icons/grid_view.svg?react'
 import GroupsIcon from 'src/assets/icons/groups.svg?react'
 import HubIcon from 'src/assets/icons/hub.svg?react'
@@ -34,6 +35,7 @@ export const icons = {
   database: DatabaseIcon,
   desktop_windows: DesktopWindowsIcon,
   dns: DnsIcon,
+  external_link: ExternalLinkIcon,
   grid_view: GridViewIcon,
   groups: GroupsIcon,
   hub: HubIcon,
