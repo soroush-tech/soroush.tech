@@ -10,7 +10,7 @@ import { alpha } from 'src/theme/utils'
 
 const DIRECTORIES = [
   { href: '/design/system', label: 'Design System' },
-  { href: '/domain', label: 'System Domain' },
+  { href: '/domain', label: 'Delivery Domain' },
   { href: '/about', label: 'AI Automation' },
   { href: '/blog', label: 'Contacts' },
 ]
