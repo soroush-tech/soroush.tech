@@ -24,11 +24,11 @@ importers:
         specifier: ^5.1.5
         version: 5.1.5
       '@tanstack/react-query':
-        specifier: ^5.100.14
-        version: 5.100.14(react@19.2.7)
+        specifier: ^5.101.0
+        version: 5.101.0(react@19.2.7)
       axios:
-        specifier: ^1.16.1
-        version: 1.16.1
+        specifier: ^1.17.0
+        version: 1.17.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -58,7 +58,7 @@ importers:
         version: 0.6.23(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0)))
       vike-react-query:
         specifier: ^0.1.12
-        version: 0.1.12(@tanstack/react-query@5.100.14(react@19.2.7))(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(vike-react@0.6.23(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))))(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0)))
+        version: 0.1.12(@tanstack/react-query@5.101.0(react@19.2.7))(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(vike-react@0.6.23(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))))(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0)))
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^5.2.1
@@ -2130,11 +2130,11 @@ packages:
     peerDependencies:
       '@svgr/core': '*'
 
-  '@tanstack/query-core@5.100.14':
-    resolution: {integrity: sha512-5X41dGpxgeaHISCRW2oYwcSycZeULZzAunaudXT9ov1KOTj9xwt0CH6hbwqP1/z74ZWF7rYFnDpyYH07XFcZew==}
+  '@tanstack/query-core@5.101.0':
+    resolution: {integrity: sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow==}
 
-  '@tanstack/react-query@5.100.14':
-    resolution: {integrity: sha512-oOr6aRdSFEwWhzxEkD/9ZcItM3+LjBSkeVmadWKwUssAHTsqd/7bOjWrX4AbvEkoEhgAxzN0Xk6H/aYzXiYBAw==}
+  '@tanstack/react-query@5.101.0':
+    resolution: {integrity: sha512-rLlJXSpkqfizLWgkR5+eLeIk0MvTx/meEIR7LRjxic+qxiQP8zVjq7BqQkiCMNLQBlLfuOLqqr6KO5GtrDlmSg==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -2901,8 +2901,8 @@ packages:
     resolution: {integrity: sha512-KunSNx+TVpkAw/6ULfhnx+HWRecjqZGTOyquAoWHYLRSdK1tB5Ihce1ZW+UY3fj33bYAFWPu7W/GRSmmrCGuxA==}
     engines: {node: '>=4'}
 
-  axios@1.16.1:
-    resolution: {integrity: sha512-caYkukvroVPO8KrzuJEb50Hm07KwfBZPEC3VeFHTsqWHvKTsy54hjJz9BS/cdaypROE2rH6xvm9mHX4fgWkr3A==}
+  axios@1.17.0:
+    resolution: {integrity: sha512-J8SwNxprqqpbfenehxWYXE7CW+wM1BB4w3+N+g+/Wx40xM4rsLrfPmHHxSWIxJLYDgSY/HqlFPIYb2/S3rxafw==}
 
   babel-jest@30.0.5:
     resolution: {integrity: sha512-mRijnKimhGDMsizTvBTWotwNpzrkHr+VvZUQBof2AufXKB8NXrL1W69TG20EvOz7aevx6FTJIaBuBkYxS8zolg==}
@@ -7956,11 +7956,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/query-core@5.100.14': {}
+  '@tanstack/query-core@5.101.0': {}
 
-  '@tanstack/react-query@5.100.14(react@19.2.7)':
+  '@tanstack/react-query@5.101.0(react@19.2.7)':
     dependencies:
-      '@tanstack/query-core': 5.100.14
+      '@tanstack/query-core': 5.101.0
       react: 19.2.7
 
   '@testing-library/dom@10.4.1':
@@ -8849,7 +8849,7 @@ snapshots:
 
   axe-core@4.11.4: {}
 
-  axios@1.16.1:
+  axios@1.17.0:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.5
@@ -12671,9 +12671,9 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vike-react-query@0.1.12(@tanstack/react-query@5.100.14(react@19.2.7))(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(vike-react@0.6.23(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))))(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))):
+  vike-react-query@0.1.12(@tanstack/react-query@5.101.0(react@19.2.7))(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(vike-react@0.6.23(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))))(vike@0.4.259(react-streaming@0.4.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(srvx@0.11.16)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.28.0))):
     dependencies:
-      '@tanstack/react-query': 5.100.14(react@19.2.7)
+      '@tanstack/react-query': 5.101.0(react@19.2.7)
       devalue: 4.3.3
       react: 19.2.7
       react-error-boundary: 4.1.2(react@19.2.7)
