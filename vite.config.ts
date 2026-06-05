@@ -33,5 +33,8 @@ export default defineConfig({
   build: {
     outDir: './build',
     emptyOutDir: true,
+    // Emit sourcemaps for the e2e coverage build so monocart can map chunk coverage
+    // back to the original src/** files. Off for normal/production builds.
+    sourcemap: process.env.E2E_COVERAGE === 'true',
   },
 })

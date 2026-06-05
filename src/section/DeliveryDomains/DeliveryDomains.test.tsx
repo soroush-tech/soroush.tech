@@ -17,6 +17,11 @@ describe('DeliveryDomains', () => {
       renderWithTheme(<DeliveryDomains />)
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Delivery Domains')
     })
+
+    it('links to the full domain page', () => {
+      renderWithTheme(<DeliveryDomains />)
+      expect(screen.getByRole('link', { name: 'ALL_DOMAINS' })).toHaveAttribute('href', '/domain')
+    })
   })
 
   describe('domains', () => {
