@@ -1,4 +1,4 @@
-import { test, expect } from './fixtures'
+import { test, expect } from 'src/test/e2e/fixtures'
 
 test('domain page renders the hero and all domain cards', async ({ page }) => {
   await page.goto('/domain')

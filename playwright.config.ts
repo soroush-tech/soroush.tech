@@ -6,7 +6,9 @@ import * as process from 'node:process'
 const coverage = process.env.E2E_COVERAGE === 'true'
 
 export default defineConfig({
-  testDir: './src/test/e2e',
+  testDir: './src',
+  testMatch: '**/*.e2e.ts',
+  tsconfig: './tsconfig.app.json',
   globalSetup: './src/test/e2e/coverage.setup.ts',
   globalTeardown: './src/test/e2e/coverage.teardown.ts',
   fullyParallel: true,

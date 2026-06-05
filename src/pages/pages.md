@@ -106,11 +106,11 @@ if (typeof window !== 'undefined') { ... }
 
 ## Testing
 
-Pages are **not unit tested**. Their correctness is validated by Playwright e2e specs in `src/test/e2e/`.
+Pages are **not unit tested**. Their correctness is validated by Playwright e2e specs co-located next to the page as `*.e2e.ts`.
 
 - Unit test the components pages compose (`src/common/`, `src/hooks/`) — not the page itself
 - Write one e2e spec per route covering the happy path and critical user interactions
-- E2e specs live in `src/test/e2e/` and run against the full dev server via `pnpm test:e2e`
+- E2e specs live next to their page as `*.e2e.ts` (e.g. `src/pages/domain/domain.e2e.ts`) and run against the full dev server via `pnpm test:e2e`. Shared infra (`fixtures.ts`, coverage hooks) stays in `src/test/e2e/`
 
 Because pages have no unit tests, `src/pages/` is excluded from the unit coverage target in `vitest.config.ts`.
 
