@@ -1,5 +1,4 @@
-// tests/e2e/example.spec.ts
-import { test, expect } from '@playwright/test'
+import { test, expect } from 'src/test/e2e/fixtures'
 
 test('homepage has expected title', async ({ page }) => {
   await page.goto('/')

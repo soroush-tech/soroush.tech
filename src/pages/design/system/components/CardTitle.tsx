@@ -1,5 +1,5 @@
-import ExternalLinkIcon from 'src/assets/external-link.svg?react'
 import { Flex } from 'src/theme/Flex'
+import { Icon } from 'src/theme/Icon'
 import { Link } from 'src/theme/Link'
 import { Typography } from 'src/theme/Typography'
 import { View } from 'src/theme/View'
@@ -28,7 +28,7 @@ export function CardTitle({ title, storybookHref }: CardTitleProps) {
             gap={1}
           >
             STORYBOOK
-            <ExternalLinkIcon width={12} height={12} />
+            <Icon name="external_link" color="inherit" size={12} />
           </Link>
         )}
       </Flex>

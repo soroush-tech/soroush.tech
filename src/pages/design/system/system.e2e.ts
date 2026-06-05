@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from 'src/test/e2e/fixtures'
 
 test('design system page renders all sections', async ({ page }) => {
   await page.goto('/design/system')

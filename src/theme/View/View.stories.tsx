@@ -13,6 +13,7 @@ import {
   height,
   m,
   opacity,
+  order,
   p,
   position,
   width,
@@ -47,6 +48,7 @@ const meta: Meta<typeof View> = {
         'position',
         'cursor',
         'aspectRatio',
+        'order',
       ],
     },
   },
@@ -66,6 +68,7 @@ const meta: Meta<typeof View> = {
     position,
     cursor,
     aspectRatio,
+    order,
   },
   args: {
     children: 'View content',

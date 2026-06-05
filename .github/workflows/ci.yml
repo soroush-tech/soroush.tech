@@ -163,3 +163,27 @@ jobs:
           slug: soroush-tech/soroush.tech
           flags: storybook
           name: Storybook
+
+      - name: Run E2E Tests with Coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: ${{ steps.detect-package-manager.outputs.runner }} run test:coverage:e2e
+        env:
+          VITE_BASE_URL: ${{ vars.VITE_BASE_URL }}
+
+      - name: Run E2E Tests (Firefox)
+        if: matrix.os == 'windows-latest'
+        run: ${{ steps.detect-package-manager.outputs.runner }} run test:e2e:firefox
+
+      - name: Run E2E Tests (WebKit)
+        if: matrix.os == 'macOS-latest'
+        run: ${{ steps.detect-package-manager.outputs.runner }} run test:e2e:webkit
+
+      - name: Upload E2E Coverage to Codecov
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/e2e/lcov.info
+          slug: soroush-tech/soroush.tech
+          flags: e2e
+          name: E2E

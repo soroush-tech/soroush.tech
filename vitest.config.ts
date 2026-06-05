@@ -34,6 +34,9 @@ export default defineConfig({
         'storybook-static/**/*',
         '.claude/**/*',
         '**/__mocks__/**',
+        '**/*.e2e.{ts,tsx}',
+        'src/test/e2e/**',
+        'src/pages/**/+Page.{ts,tsx,js,jsx}',
       ],
     },
     projects: [
@@ -77,7 +80,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'jsdom',
           setupFiles: ['./src/setupTests.ts'],
-          include: ['**/*.test.@(js|jsx|ts|tsx)'],
+          include: ['**/*.{test,spec}.@(js|jsx|ts|tsx)'],
           exclude: [
             '**/*.stories.*',
             '**/*.mdx',

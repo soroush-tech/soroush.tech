@@ -10,7 +10,7 @@ import { alpha } from 'src/theme/utils'
 
 const DIRECTORIES = [
   { href: '/design/system', label: 'Design System' },
-  { href: '/domain', label: 'System Domain' },
+  { href: '/domain', label: 'Delivery Domain' },
   { href: '/about', label: 'AI Automation' },
   { href: '/blog', label: 'Contacts' },
 ]
@@ -49,9 +49,12 @@ export function Footer() {
   return (
     <FooterRoot as="footer" bg="terminal" px={6} py={6}>
       <View maxWidth="1280px" mx="auto">
-        <Grid gridTemplateColumns="repeat(4, 1fr)" gap={6}>
-          {/* Col 1 — Logo + tagline */}
-          <View>
+        <Grid
+          gridTemplateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(4, 1fr)']}
+          gap={6}
+        >
+          {/* Col 1 — Logo + tagline (drops to the bottom in the 2-col tablet view) */}
+          <View order={[0, 1, 1, 0]}>
             <Flex flexDirection="row" alignItems="center" gap={2} mb={3}>
               <Logo size={72} />
               <Typography
@@ -64,7 +67,12 @@ export function Footer() {
                 SOROUSH.TECH
               </Typography>
             </Flex>
-            <Typography variant="caption" color="secondary" lineHeight="relaxed">
+            <Typography
+              variant="caption"
+              color="secondary"
+              lineHeight="relaxed"
+              display={['none', 'block']}
+            >
               A proprietary system designed for the orchestration of high-performance digital
               environments. Built for speed, scaled for eternity.
             </Typography>
@@ -116,9 +124,9 @@ export function Footer() {
             />
           </View>
 
-          {/* Col 4 — Terminal readout + copyright */}
-          <View>
-            <TerminalBlock bg="primary" p={3} mb={4}>
+          {/* Col 4 — Terminal readout + copyright (stays after the logo in tablet) */}
+          <View order={[0, 2, 2, 0]}>
+            <TerminalBlock bg="primary" p={3} mb={4} display={['none', 'block']}>
               <Typography
                 variant="caption"
                 color="primary"
