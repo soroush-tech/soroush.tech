@@ -34,6 +34,7 @@ export default defineConfig({
         'storybook-static/**/*',
         '.claude/**/*',
         '**/__mocks__/**',
+        'src/pages/**/+Page.{ts,tsx,js,jsx}',
       ],
     },
     projects: [
