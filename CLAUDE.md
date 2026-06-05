@@ -68,7 +68,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **SSR guard:** Never import browser-only APIs at module top level — guard with `typeof window !== 'undefined'` or move into effects.
 - **Styled-system:** Use `Flex`, `View`, `Typography` from `src/theme/` over raw `div`/`p` for layout.
 - **Hook co-location:** API hooks → `src/hooks/useX/`. Component hooks → `src/common/ComponentName/hooks/useX/`. Each folder: `index.ts` + `useX.ts` + `useX.test.ts`.
-- **Test placement:** Unit tests next to source as `*.test.ts(x)`. E2E specs in `src/test/e2e/`.
+- **Test placement:** Three tiers, all co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). E2E → `*.e2e.ts` (Playwright), next to its page; shared e2e infra (fixtures, coverage hooks) in `src/test/e2e/`.
 - **Lint:** `pnpm lint` uses `--max-warnings 0` — any warning fails.
 
 ## Layer conventions
