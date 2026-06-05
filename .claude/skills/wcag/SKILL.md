@@ -1,6 +1,6 @@
 ---
 name: wcag
-description: WCAG accessibility rules for this codebase. Auto-load when fixing a11y violations, reviewing color contrast, adding ARIA attributes, or auditing interactive components (progressbar, button, checkbox, switch, nav).
+description: WCAG accessibility rules for this codebase. Auto-load when fixing a11y violations, reviewing color contrast, adding ARIA attributes, auditing interactive components (progressbar, button, checkbox, switch, nav), or writing a11y tests/stories.
 paths: src/**/*.tsx,src/**/*.ts
 argument-hint: [component or violation]
 ---
@@ -160,6 +160,63 @@ Every element with an ARIA landmark or widget role needs a label. Common violati
 | `clip` / sr-only     | ✗         | ✓     |
 
 Use `aria-hidden="true"` on decorative SVG icons so they don't pollute the AT with meaningless text.
+
+---
+
+## Testing
+
+A11y is validated automatically by `@storybook/addon-a11y`, which runs axe on
+**every story** during `test:storybook`. Enforcement lives in
+`.storybook/preview.tsx` → `parameters.a11y.test`: `'error'` fails CI, `'todo'`
+reports only, `'off'` skips. There are **no standalone a11y test files** —
+coverage comes from the breadth of stories.
+
+**Writing the test = writing stories:**
+
+- **One story per meaningful state** (default, disabled, error, each
+  variant/color). axe only checks what renders, so more states = more coverage.
+- **Give controls an accessible name in the story** — icon-only / unlabeled
+  controls fail axe under `'error'`:
+
+  ```tsx
+  export const Default: Story = { args: { color: 'primary', 'aria-label': 'Search' } }
+  ```
+
+- **Stateful violations (focus, expanded, post-submit error) → `play`**; axe
+  runs after `play`:
+
+  ```tsx
+  import { userEvent, within } from 'storybook/test'
+
+  export const Invalid: Story = {
+    args: { 'aria-label': 'Email', type: 'email' },
+    play: async ({ canvasElement }) => {
+      const input = within(canvasElement).getByRole('textbox', { name: 'Email' })
+      await userEvent.type(input, 'bad@')
+      await userEvent.tab()
+    },
+  }
+  ```
+
+- **Quarantine / tune per story** — only with a documented reason:
+
+  ```tsx
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'color-contrast', enabled: false }]
+      }
+    }
+  }
+  // or test: 'todo' to exclude a known-failing story from CI
+  ```
+
+In component unit tests (`*.test.tsx`), query with `getByRole(role, { name })`
+over `data-testid` — it asserts the accessible role + name exist, testing a11y
+implicitly.
+
+axe catches ~30%. Keyboard order, `:focus-visible`, and effective contrast
+under `opacity` still need manual verification.
 
 ---
 
