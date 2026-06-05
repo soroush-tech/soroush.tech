@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import styled from '@emotion/styled'
 import { Card } from 'src/theme/Card'
 import { Flex } from 'src/theme/Flex'
