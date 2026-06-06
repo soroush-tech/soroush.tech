@@ -54,7 +54,7 @@ Rules:
 - **Always `export default`** — Vike requires a default export; no named exports alongside it
 - **Always wrap in `<Layout>`** — never render page content outside `Layout`
 - **Function name matches the route** — `BlogPage`, `DomainPage`, `AboutPage`; not `Page`, `App`, or anonymous
-- **Compose, don't build** — assemble from `src/common/` and `src/theme/` components; keep `+Page.tsx` thin
+- **Compose, don't build** — assemble from `src/section/`, `src/common/`, and `src/theme/` components; keep `+Page.tsx` thin. Page-specific regions belong in `src/section/`, not inline in `+Page.tsx`
 
 ---
 
@@ -78,7 +78,7 @@ Static data used by only one page lives co-located with that page:
 ```
 src/pages/domain/
   +Page.tsx
-  domainData.ts     ← owned by this page only
+  domain.data.ts    ← owned by this page only
 ```
 
 If data is fetched at runtime, use a hook from `src/hooks/`. If static data is shared across multiple pages, move it to `src/utils/`.
