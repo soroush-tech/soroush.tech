@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { domains } from './domainData'
+import { domains } from './domain.data'
 
-describe('domainData', () => {
+describe('domain.data', () => {
   it('gives every domain a unique index', () => {
     const indexes = domains.map((domain) => domain.index)
     expect(new Set(indexes).size).toBe(domains.length)
