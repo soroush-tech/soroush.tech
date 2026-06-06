@@ -17,7 +17,7 @@ export interface HeaderProps {
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
   { href: '/blog', label: 'Blog' },
 ]
 
