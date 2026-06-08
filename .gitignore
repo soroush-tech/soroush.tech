@@ -38,7 +38,8 @@ dist-ssr
 prod.env
 
 # Test
-mockServiceWorker.js
 *storybook.log
 storybook-static
 test-results
+.vitest-attachments
+__screenshots__/
