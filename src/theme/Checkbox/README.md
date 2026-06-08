@@ -59,6 +59,14 @@ Default: `"medium"`.
 
 ---
 
+### `fullWidth`
+
+`boolean` — stretches the root to `width: 100%` (and switches it to `display: flex`).
+
+Default: `false`.
+
+---
+
 ### `indeterminate`
 
 `boolean` — displays the indeterminate state (horizontal dash icon). Takes visual priority over `checked`. Also sets the native `input.indeterminate` property (for form APIs) and a `data-indeterminate` attribute (for CSS targeting).

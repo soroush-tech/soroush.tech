@@ -13,7 +13,16 @@ const meta: Meta<typeof Checkbox> = {
   parameters: {
     layout: 'padded',
     controls: {
-      include: ['checked', 'disabled', 'indeterminate', 'color', 'size', 'children', 'm'],
+      include: [
+        'checked',
+        'disabled',
+        'indeterminate',
+        'color',
+        'size',
+        'fullWidth',
+        'children',
+        'm',
+      ],
     },
   },
   argTypes: {
@@ -44,6 +53,11 @@ const meta: Meta<typeof Checkbox> = {
       options: checkboxSizeTokens,
       description: 'Icon size.',
       table: { category: 'Visual', defaultValue: { summary: 'md' } },
+    },
+    fullWidth: {
+      control: 'boolean',
+      description: 'Stretches the root to `width: 100%`.',
+      table: { category: 'Visual', defaultValue: { summary: 'false' } },
     },
     children: {
       control: 'text',
