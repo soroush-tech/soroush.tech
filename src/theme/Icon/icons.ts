@@ -8,6 +8,8 @@ import CookieIcon from 'src/assets/icons/cookie.svg?react'
 import DatabaseIcon from 'src/assets/icons/database.svg?react'
 import DesktopWindowsIcon from 'src/assets/icons/desktop_windows.svg?react'
 import DnsIcon from 'src/assets/icons/dns.svg?react'
+import ExpandLessIcon from 'src/assets/icons/expand_less.svg?react'
+import ExpandMoreIcon from 'src/assets/icons/expand_more.svg?react'
 import ExternalLinkIcon from 'src/assets/icons/external_link.svg?react'
 import GridViewIcon from 'src/assets/icons/grid_view.svg?react'
 import GroupsIcon from 'src/assets/icons/groups.svg?react'
@@ -39,6 +41,8 @@ export const icons = {
   database: DatabaseIcon,
   desktop_windows: DesktopWindowsIcon,
   dns: DnsIcon,
+  expand_less: ExpandLessIcon,
+  expand_more: ExpandMoreIcon,
   external_link: ExternalLinkIcon,
   grid_view: GridViewIcon,
   groups: GroupsIcon,
