@@ -162,6 +162,20 @@ describe('Checkbox', () => {
     })
   })
 
+  // ─── fullWidth ────────────────────────────────────────────────────────────────
+
+  describe('fullWidth', () => {
+    it('sets width 100% on root', () => {
+      renderWithTheme(<Checkbox fullWidth data-testid="cb" />)
+      expect(screen.getByTestId('cb')).toHaveStyle({ width: '100%' })
+    })
+
+    it('does not forward fullWidth to DOM', () => {
+      renderWithTheme(<Checkbox fullWidth data-testid="cb" />)
+      expect(screen.getByTestId('cb')).not.toHaveAttribute('fullWidth')
+    })
+  })
+
   // ─── icons ────────────────────────────────────────────────────────────────────
 
   // All three icon spans are always in the DOM; CSS toggles visibility via :checked/:indeterminate.
