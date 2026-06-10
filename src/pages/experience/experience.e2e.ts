@@ -49,6 +49,7 @@ test('expanding an area lists its children and draws more graph nodes', async ({
 
 test('collapses and re-expands a nested branch in the legend', async ({ page }) => {
   await page.goto('/experience')
+  await expect(nodeGroups(page).first()).toBeVisible()
   await legend(page).getByText('Web', { exact: true }).click()
   const web = areaSubtree(page, 'Web')
   const reactRow = web.getByText('React', { exact: true })
@@ -71,24 +72,24 @@ test('collapses and re-expands a nested branch in the legend', async ({ page }) 
 
 test('the legacy switch reveals and hides legacy tech in the legend', async ({ page }) => {
   await page.goto('/experience')
+  await expect(nodeGroups(page).first()).toBeVisible()
   await legend(page).getByText('Web', { exact: true }).click()
-  const web = areaSubtree(page, 'Web')
 
   // jQuery is legacy Web tech — absent from the menu while the switch is off.
-  await expect(web.getByText('jQuery', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('jQuery', { exact: true })).toHaveCount(0)
 
   // Scope to the legend — the page header carries its own "Toggle theme" switch.
   const legacySwitch = legend(page).getByRole('switch')
   await legacySwitch.dispatchEvent('click') // Show legacy → on
-  await expect(web.getByText('jQuery', { exact: true })).toBeVisible()
+  await expect(page.getByText('jQuery', { exact: true })).toHaveCount(2)
 
   await legacySwitch.dispatchEvent('click') // off again
-  await expect(web.getByText('jQuery', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('jQuery', { exact: true })).toHaveCount(0)
 })
 
 test('keeps an area-gated tech under its own area only', async ({ page }) => {
   await page.goto('/experience')
-
+  await expect(nodeGroups(page).first()).toBeVisible()
   // React Native gates to Mobile. Opening Web (React auto-expands) must not list it there.
   await legend(page).getByText('Web', { exact: true }).click()
   await expect(areaSubtree(page, 'Web').getByText('React Native', { exact: true })).toHaveCount(0)
@@ -102,16 +103,19 @@ test('keeps an area-gated tech under its own area only', async ({ page }) => {
 
 test('reveals the floating ESBuild node once its area is active', async ({ page }) => {
   await page.goto('/experience')
+  await expect(nodeGroups(page).first()).toBeVisible()
   // ESBuild has no parent; it rides along its relation to Vite (a Web node), so it is
   // absent until Web is active.
   await expect(page.getByText('ESBuild', { exact: true })).toHaveCount(0)
 
   await legend(page).getByText('Web', { exact: true }).click()
+  await legend(page).getByText('Vite', { exact: true }).click()
   await expect(page.getByText('ESBuild', { exact: true })).toBeVisible()
 })
 
 test('zoom controls stay operable', async ({ page }) => {
   await page.goto('/experience')
+  await expect(nodeGroups(page).first()).toBeVisible()
   await page.getByRole('button', { name: 'Zoom in' }).click()
   await page.getByRole('button', { name: 'Zoom out' }).click()
   await page.getByRole('button', { name: 'Reset view' }).click()
