@@ -5,6 +5,7 @@ import svgr from 'vite-plugin-svgr'
 import { imagetools } from 'vite-imagetools'
 import { compression } from 'vite-plugin-compression2'
 import { resolve } from 'path'
+import { codeGen } from './vite-plugin'
 
 // Opt-in: precompressed assets are only served by a static server configured for
 // them (nginx gzip_static/brotli_static, etc.). GitHub Pages ignores them, so this
@@ -16,6 +17,10 @@ export default defineConfig({
   plugins: [
     svgr(),
     imagetools(),
+    codeGen({
+      script: 'scripts/gen-experienceGraph.ts',
+      watch: 'src/section/ExperienceGraph/ExperienceGraph.data.ts',
+    }),
     react(),
     process.env.NODE_ENV !== 'storybook' && vike(),
     compress &&
