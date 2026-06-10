@@ -30,6 +30,12 @@ export default defineConfig({
       src: resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Keep the test coverage output out of the dev server: don't watch it (no
+    // reload churn when `pnpm test:coverage` writes it) and don't serve it.
+    watch: { ignored: ['**/coverage/**'] },
+    fs: { deny: ['**/coverage/**'] },
+  },
   build: {
     outDir: './build',
     emptyOutDir: true,
