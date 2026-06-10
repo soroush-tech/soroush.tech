@@ -589,7 +589,7 @@ export const techNodes: TechNode[] = [
     kind: 'node',
     size: 12,
     area: [A.WEB, A.MOBILE, A.BACK_END],
-    parent: [N.WEBPACK, N.VITE, N.EXPRESS],
+    parent: [N.VITE, N.EXPRESS],
     relations: [N.REACT, N.WEBPACK, N.VITE, N.ANGULAR_JS, N.NODE_JS, N.JEST],
     groups: [G.BUILD_TOOLS],
     legacy: true,
