@@ -7,11 +7,21 @@ export interface GraphNode extends SimulationNodeDatum {
   size: number
 }
 
-export type GraphLink = SimulationLinkDatum<GraphNode>
+export type GraphLink = SimulationLinkDatum<GraphNode> & { kind?: LinkKind }
+
+/** Edge role.
+ *  - `containment` (default): a parent→child tree edge (area→node or node→node). It
+ *    builds the expand/collapse adjacency and drives visibility.
+ *  - `group`: a group-node → member edge. The member already lives in the tree; the
+ *    group node rides along, visible whenever a member is. Categorical, not the tree.
+ *  - `relation`: a lateral thread between two nodes — shown only when both ends are. */
+export type LinkKind = 'containment' | 'group' | 'relation'
 
 export interface RawLink {
   source: string
   target: string
+  /** Omitted ⇒ `containment`. */
+  kind?: LinkKind
 }
 
 /** The fully-derived render graph the NetworkGraph consumes. A producer (e.g. a
@@ -34,6 +44,17 @@ export interface GraphData {
   /** Ids of optional nodes (e.g. legacy items) the viewer can show/hide. Empty ⇒
    *  the graph has none and no toggle is offered. */
   optionalIds: Set<string>
+  /** Ids of featured nodes — seeded as expanded, so they auto-reveal their direct
+   *  children one level when their area opens. Optional/absent ⇒ none. */
+  featuredIds?: Set<string>
+  /** Ids of relation-anchored (floating) nodes — they have no place in the containment
+   *  tree and ride along their relations, appearing whenever a node they relate to is
+   *  visible. Empty ⇒ none. */
+  relationAnchoredIds: Set<string>
+  /** Maps a node id to the areas it belongs to (its show/hide gate). Drives
+   *  area-toggle visibility without drawing a line from the area. Empty ⇒ the graph
+   *  uses plain branch-by-branch expansion instead. */
+  areasByNode: Map<string, string[]>
 }
 
 /** Props the NetworkGraph injects into its child (e.g. a legend) at render time,
@@ -46,6 +67,11 @@ export interface GraphChildProps {
   titleById: Map<string, string>
   /** Maps each branch id to its direct child ids — used to list an open category's children. */
   childrenByParent: Map<string, string[]>
+  /** Ids of optional (e.g. legacy) nodes — the legend hides these unless `showOptional`. */
+  optionalIds: Set<string>
+  /** Maps a node id to the areas it belongs to — the legend uses it to keep a node
+   *  under the area(s) it gates to (a shared child shows only beneath its own areas). */
+  areasByNode: Map<string, string[]>
   /** Ids of the currently expanded branches. */
   expandedNodes: Set<string>
   /** Toggle a node's expanded state by id. */

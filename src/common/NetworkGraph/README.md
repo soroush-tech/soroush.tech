@@ -36,7 +36,7 @@ NetworkGraph/
   NetworkGraph.fixture.ts     ← small GraphData used by the unit tests
   const.ts                    ← ZOOM_STEP, VIEW_SIZE, force-layout tuning
   utils/                      ← pure helpers (computeVisibleIds, buildNodes, buildLinks,
-                                pinExpandedNodes, toggleSet)
+                                anchorExpandedNodes, forceAreaSeparation, toggleSet)
   hooks/
     useGraphState             ← active node, expand/collapse set, derived visibleIds
     useGraphSimulation        ← imperative D3 SVG/zoom/force simulation + dispatch

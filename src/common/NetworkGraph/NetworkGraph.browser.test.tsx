@@ -112,6 +112,28 @@ describe('NetworkGraph (browser)', () => {
     await vi.waitFor(() => expect(transformOf(node())).not.toBe(before), { timeout: 3000 })
   })
 
+  it('sizes a visible group node’s rect to its label via getBBox', async () => {
+    const { container } = renderGraph()
+    // Area A is a branch; revealing it shows child A1, whose group node 'Grp' rides
+    // along and renders. getBBox works in real Chromium (it throws in jsdom), so the
+    // group rect is sized to the label — the branch the jsdom suite can't reach.
+    const categories = () => [...container.querySelectorAll<SVGGElement>('.node-group.is-category')]
+    const areaA = () =>
+      categories().find((g) => g.querySelector('.node-label')?.textContent === 'Area A')!
+
+    await waitForSettle(areaA)
+    await userEvent.click(areaA())
+
+    await vi.waitFor(
+      () => {
+        const rect = container.querySelector('.node-rect')
+        expect(rect).not.toBeNull()
+        expect(Number(rect!.getAttribute('width'))).toBeGreaterThan(0)
+      },
+      { timeout: 3000 }
+    )
+  })
+
   it('does not re-reheat the simulation while a concurrent drag is active', async () => {
     const { container } = renderGraph()
     const nodes = container.querySelectorAll<SVGGElement>('.node-group')

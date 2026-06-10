@@ -1,4 +1,4 @@
-import { cloneElement, type ComponentType, type ReactNode } from 'react'
+import { type ComponentType, type ReactNode } from 'react'
 import { GraphContainer } from './components/GraphContainer'
 import { GraphControls } from './components/GraphControls'
 import { GraphHeader } from './components/GraphHeader'
@@ -46,6 +46,8 @@ export function NetworkGraph({ data, heading, graphChildren: GraphChildren }: Ne
           topLevelIds={data.topLevelIds}
           titleById={data.titleById}
           childrenByParent={data.childrenByParent}
+          optionalIds={data.optionalIds}
+          areasByNode={data.areasByNode}
           expandedNodes={expandedNodes}
           onToggle={toggleNode}
           hasOptional={hasOptional}
