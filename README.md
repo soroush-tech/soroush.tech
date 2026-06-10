@@ -78,7 +78,7 @@ pnpm dev
 │   │       ├── const.ts               # Internal constant
 │   │       ├── utils.ts               # Internal utils
 │   │       └── README.md              # component documentation
-│   ├── section/                       # Page-specific composed sections (Hero, Summary, TechGraph…).
+│   ├── section/                       # Page-specific composed sections (Hero, Summary, ExperienceGraph…).
 │   │   └── [CopName]/                 # Example section folder:
 │   │       ├── index.ts
 │   │       ├── [CopName].tsx

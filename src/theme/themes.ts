@@ -399,9 +399,9 @@ export const dark: Theme = {
     warning: solarAmber[800],
   },
   border: {
-    light: alpha(kineticSurface[100], 0.1),
+    light: alpha(kineticGreen[100], 0.1),
     primary: kineticGreen[500],
-    dark: kineticSurface[800],
+    dark: kineticGreen[800],
   },
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
