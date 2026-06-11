@@ -80,6 +80,19 @@ function UserProfile(user) {
 }
 ```
 
+Use descriptive, meaningful names. Don't append a redundant `Component` suffix — the JSX usage already makes it a component.
+
+```tsx
+// ✗ — camelCase start
+function markdownComponent(props) { … }
+
+// ✗ — redundant "Component" suffix
+function MarkdownComponent(props) { … }
+
+// ✓ — PascalCase, concise
+function Markdown(props) { … }
+```
+
 ## Constants — UPPER_SNAKE_CASE
 
 ```ts
