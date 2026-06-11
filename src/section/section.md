@@ -27,6 +27,10 @@ src/section/
   SectionName/
     index.ts                  ← export * from './SectionName'
     SectionName.tsx           ← component + exported prop types
+    SectionName.data.ts       ← co-located static data (optional)
+    const.ts                  ← section-specific constants (optional)
+    utils.ts                  ← helpers; or a utils/ folder of flat per-helper files (optional)
+    hooks/useX.ts             ← section-specific hooks, flat files (optional)
     SectionName.test.tsx      ← unit tests
     README.md                 ← prop and behaviour documentation
 ```
@@ -39,10 +43,19 @@ Storybook stories are optional for sections — they are large, page-specific co
 
 Identical to `src/common/` rules:
 
-- Compose from theme primitives (`View`, `Flex`, `Typography`, `Button`, etc.)
+- Compose from theme primitives (`View`, `Flex`, `Typography`, `Button`, etc.) — a section may also compose `src/common/` components
 - All colours via theme tokens — no hardcoded hex
 - Custom CSS (`styled`) only when theme primitives cannot cover the need, with a comment explaining why
 - Export prop interfaces so `+Page.tsx` can import types if needed
+- Extract logic and data the same way as `src/common/`: pure helpers → `utils.ts` (or a flat `utils/` folder, one file per helper + co-located test, when there are several), stateful logic → `hooks/useX.ts` (flat file + co-located test), static data → `SectionName.data.ts` — all co-located. Promote to `src/utils/` or `src/hooks/` only when generic.
+
+---
+
+## Testing
+
+- Unit test the React surface with `renderWithTheme` (`SectionName.test.tsx`) — heading, content, toggles, conditional rendering.
+- Import `SectionName.data.ts` into the test so it iterates the real data, not a fixture.
+- Imperative or environment-dependent code (D3 force simulation, drag, zoom) that jsdom cannot run is marked `/* v8 ignore */` and validated by the page's Playwright spec (`src/pages/<route>/<route>.e2e.ts`).
 
 ---
 

@@ -1,6 +1,6 @@
 # Blueprint
 
-A full-screen background canvas with CSS grid-line decoration rendered via two `linear-gradient` layers — one horizontal, one vertical — producing an evenly spaced line-grid pattern. Also supports a radial dot variant. Used as the outermost wrapper for `TechGraph`.
+A full-screen background canvas with CSS grid-line decoration rendered via two `linear-gradient` layers — one horizontal, one vertical — producing an evenly spaced line-grid pattern. Also supports a radial dot variant. Used as the outermost wrapper in content`.
 
 ```tsx
 <Blueprint>{/* absolutely positioned children */}</Blueprint>
