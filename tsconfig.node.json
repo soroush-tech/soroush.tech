@@ -23,5 +23,5 @@
     "noUncheckedSideEffectImports": true,
     "types": []
   },
-  "include": ["@types", ".storybook", "vite.config.ts", "vitest.config.ts"]
+  "include": ["@types", ".storybook", "vite-plugin", "vite.config.ts", "vitest.config.ts"]
 }

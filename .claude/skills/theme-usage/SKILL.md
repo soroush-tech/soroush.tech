@@ -1,7 +1,7 @@
 ---
-description: How to consume design system components in pages and features — when to use View/Flex/Typography/Button, how to pass theme tokens, and what to avoid. Auto-load when writing or reviewing code in src/pages/ or src/common/.
+description: How to consume design system components in pages and features — when to use View/Flex/Typography/Button, how to pass theme tokens, and what to avoid. Auto-load when writing or reviewing code in src/pages/, src/section/, or src/common/.
 argument-hint: [component or file name]
-paths: src/pages/**,src/common/**
+paths: src/pages/**,src/section/**,src/common/**
 ---
 
 ## Primitives hierarchy
