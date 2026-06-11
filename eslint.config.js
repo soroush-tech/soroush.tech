@@ -52,5 +52,11 @@ export default tseslint.config(
     },
     ignores: ['dist', 'build', 'coverage', 'public'],
   },
+  {
+    files: ['scripts/**/*.{ts,tsx}'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
   storybook.configs['flat/recommended']
 )

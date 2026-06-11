@@ -67,7 +67,8 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **Path alias:** Always `import { X } from 'src/theme/X'`, never relative `../../`.
 - **SSR guard:** Never import browser-only APIs at module top level — guard with `typeof window !== 'undefined'` or move into effects.
 - **Styled-system:** Use `Flex`, `View`, `Typography` from `src/theme/` over raw `div`/`p` for layout.
-- **Hook co-location:** API hooks → `src/hooks/useX/`. Component hooks → `src/common/ComponentName/hooks/useX/`. Each folder: `index.ts` + `useX.ts` + `useX.test.ts`.
+- **Hook co-location:** Shared data hooks → `src/hooks/useX.ts`. Component-specific hooks → `src/common|section|pages/ComponentName/hooks/useX.ts`. Flat files — `useX.ts` + co-located `useX.test.ts`; no per-hook subfolder, no `index.ts`.
+- **Logic & data co-location:** In `common`/`section`/`pages` components, extract pure helpers to `ComponentName/utils.ts` — or a flat `ComponentName/utils/` folder with one file per helper (`utils/helperName.ts` + `utils/helperName.test.ts`) when there are several — constants to `const.ts`, and static data to `ComponentName/ComponentName.data.ts`, co-located with the component. Promote a helper, hook, or data set to `src/utils/` or `src/hooks/` only once it is generic (used by more than one component).
 - **Test placement:** Three tiers, all co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). E2E → `*.e2e.ts` (Playwright), next to its page; shared e2e infra (fixtures, coverage hooks) in `src/test/e2e/`.
 - **Lint:** `pnpm lint` uses `--max-warnings 0` — any warning fails.
 
@@ -79,6 +80,7 @@ Read the relevant doc before working in that area:
 | ----------------- | ---------------------------- | ----------------------------------------------------------------------------------- |
 | Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules |
 | Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`     |
+| Sections          | `src/section/section.md`     | Page-specific composed sections: folder structure, co-located data/logic, testing   |
 | Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                            |
 | Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests          |
 

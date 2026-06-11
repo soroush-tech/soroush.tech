@@ -14,7 +14,7 @@ Conventions for everything in `src/common/`. These components form the app shell
 | App shell components (`Layout`, `Bootstrap`, `Routes`)      | Design primitives (`Flex`, `View`) → `src/theme/` |
 | Feature components used across pages (`Post`, `DomainCard`) | Utility functions and data → `src/utils/`         |
 
-**`src/common/` is UI only.** Data files (`techGraphData.ts`), helper functions, and non-component modules belong in `src/utils/`.
+**`src/common/` is UI — but a component's own data and logic stay with it.** Co-locate a component's static data (`ComponentName.data.ts`), pure helpers (`utils.ts` / `const.ts`, or a flat `utils/` folder), and component-specific hooks (`hooks/useX.ts`) inside its folder. Move a helper, hook, or data set to `src/utils/` or `src/hooks/` only once it is generic — used by more than one component.
 
 ---
 
@@ -28,6 +28,10 @@ src/common/
     index.ts                    ← export * from './ComponentName'
     ComponentName.tsx           ← component + exported prop types
     ComponentName.test.tsx      ← unit tests
+    ComponentName.data.ts       ← co-located static data (optional)
+    const.ts                    ← component-specific constants (optional)
+    utils.ts                    ← helpers; or a utils/ folder of flat per-helper files (optional)
+    hooks/useX.ts               ← component-specific hooks, flat files (optional)
     README.md                   ← prop and behaviour documentation
     ComponentName.stories.tsx   ← Storybook stories
 ```
@@ -99,6 +103,16 @@ Extend HTML attributes when the component wraps a native element or accepts pass
 ```tsx
 export interface NavLinkProps extends LinkProps {}
 ```
+
+### Logic & data co-location
+
+Keep `ComponentName.tsx` a thin composition layer. Extract:
+
+- Pure functions → `utils.ts`, or a flat `utils/` folder with one file per helper (`utils/helperName.ts` + co-located `utils/helperName.test.ts`) when there are several (constants → `const.ts`)
+- Stateful logic → `hooks/useX.ts` (flat file + co-located `useX.test.ts`; no per-hook subfolder)
+- Static data → `ComponentName.data.ts`, imported by both the component and its test so tests iterate the real data
+
+All of these stay **co-located in the component folder**. Promote to `src/utils/` or `src/hooks/` only when the helper, hook, or data set becomes generic (used by more than one component).
 
 ---
 

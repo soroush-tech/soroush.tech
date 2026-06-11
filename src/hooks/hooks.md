@@ -6,10 +6,10 @@ Conventions for hooks in `src/hooks/` and co-located component hooks.
 
 ## Where hooks live
 
-| Hook type                                                         | Location                                                   |
-| ----------------------------------------------------------------- | ---------------------------------------------------------- |
-| API / data-fetching hooks                                         | `src/hooks/useHookName/` — always here, always shared      |
-| Domain-logic hooks (UI state, derived state, component behaviour) | `src/common/ComponentName/hooks/useHookName/` — co-located |
+| Hook type                                                         | Location                                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| API / data-fetching hooks                                         | `src/hooks/useHookName.ts` — always here, always shared      |
+| Domain-logic hooks (UI state, derived state, component behaviour) | `src/common/ComponentName/hooks/useHookName.ts` — co-located |
 
 **API hooks are always generic** — any hook that makes an HTTP call belongs in `src/hooks/` regardless of which component uses it.
 
@@ -19,48 +19,34 @@ Conventions for hooks in `src/hooks/` and co-located component hooks.
 
 ## File structure
 
-Every hook gets its own folder with three files:
+Each hook is a **flat file with a co-located test** — no per-hook folder, no `index.ts`:
 
 ```
 src/hooks/
-  useGists/
-    index.ts            ← export * from './useGists'
-    useGists.ts
-    useGists.test.ts
-  useGistById/
-    index.ts
-    useGistById.ts
-    useGistById.test.ts
+  useGists.ts
+  useGists.test.ts
+  useGistById.ts
+  useGistById.test.ts
 ```
 
-No `index.ts` at the `src/hooks/` root — there is no barrel exporting all hooks. Import each hook directly from its folder:
+Import each hook directly by file path:
 
 ```ts
 import { useGists } from 'src/hooks/useGists'
 ```
 
-Co-located domain hooks follow the same three-file shape inside the component's `hooks/` directory:
+Co-located domain hooks follow the same flat shape inside the component's `hooks/` folder:
 
 ```
 src/common/
   DomainCard/
     hooks/
-      useDomainSort/
-        index.ts
-        useDomainSort.ts
-        useDomainSort.test.ts
+      useDomainSort.ts
+      useDomainSort.test.ts
     DomainCard.tsx
     DomainCard.test.tsx
     index.ts
     README.md
-```
-
----
-
-No `index.ts` under hooks directory — import by file path:
-
-```ts
-import { useGists } from 'src/hooks/useGists'
 ```
 
 ---

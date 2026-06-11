@@ -22,6 +22,8 @@ export interface CheckboxProps extends SpaceProps<Theme> {
   color?: CheckboxColor
   /** Icon size. Default: `'medium'`. */
   size?: CheckboxSize
+  /** Stretches the root to `width: 100%`. Default: `false`. */
+  fullWidth?: boolean
   /** Displays the indeterminate state (dash icon). Takes priority over `checked`. */
   indeterminate?: boolean
   /** Custom icon for the unchecked state. */
@@ -111,9 +113,16 @@ interface CheckboxRootProps extends SpaceProps<Theme> {
   color?: CheckboxColor
   size?: CheckboxSize
   disabled?: boolean
+  fullWidth?: boolean
 }
 
-const shouldForwardProp = createShouldForwardProp([...props, 'color', 'size', 'disabled'])
+const shouldForwardProp = createShouldForwardProp([
+  ...props,
+  'color',
+  'size',
+  'disabled',
+  'fullWidth',
+])
 
 const baseStyle = ({ disabled, theme }: CheckboxRootProps & { theme: Theme }) => ({
   display: 'inline-flex',
@@ -145,9 +154,13 @@ const colorStyle = ({ color = 'default', theme }: CheckboxRootProps & { theme: T
   }
 }
 
+const fullWidthStyle = ({ fullWidth }: CheckboxRootProps) =>
+  fullWidth ? ({ display: 'flex', width: '100%' } as const) : {}
+
 const CheckboxRoot = styled('label', { shouldForwardProp })<CheckboxRootProps>(
   baseStyle,
   colorStyle,
+  fullWidthStyle,
   space
 )
 
@@ -159,6 +172,7 @@ export function Checkbox({
   disabled = false,
   color = 'default',
   size = 'md',
+  fullWidth = false,
   indeterminate = false,
   icon,
   checkedIcon,
@@ -186,6 +200,7 @@ export function Checkbox({
       color={color}
       size={size}
       disabled={disabled}
+      fullWidth={fullWidth}
       className={className}
       data-testid={dataTestid}
       {...spaceProps}
