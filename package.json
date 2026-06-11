@@ -35,6 +35,7 @@
     "test:coverage:unit": "vitest run --project=unit --coverage ",
     "test:coverage:browser": "vitest run --project=unit-browser --coverage",
     "test:coverage:ui": "vitest run --coverage --project=unit && open coverage/lcov-report/index.html",
+    "coverage:check": "node scripts/coverage-check.ts",
     "storybook": "cross-env NODE_ENV=storybook storybook dev -p 6006",
     "build": "tsc -b && vite build",
     "build:compress": "cross-env COMPRESS=true pnpm build",
