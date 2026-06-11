@@ -10,6 +10,10 @@ vi.mock('src/common/Footer', () => ({
   Footer: () => <footer data-testid="footer" />,
 }))
 
+vi.mock('src/common/CookieNotice', () => ({
+  CookieNotice: () => <div data-testid="cookie-notice" />,
+}))
+
 import { Layout } from './Layout'
 
 describe('Layout', () => {
@@ -21,6 +25,11 @@ describe('Layout', () => {
   it('renders the default Footer', () => {
     renderWithTheme(<Layout>content</Layout>)
     expect(screen.getByTestId('footer')).toBeInTheDocument()
+  })
+
+  it('renders the CookieNotice', () => {
+    renderWithTheme(<Layout>content</Layout>)
+    expect(screen.getByTestId('cookie-notice')).toBeInTheDocument()
   })
 
   it('renders children inside Blueprint', () => {

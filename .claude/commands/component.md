@@ -172,6 +172,10 @@ Extract to this file: pure functions with no React or theme dependency. If a fun
 
 Extract to this file: stateful logic (state, effects, refs, derived values). If the hook is generic, propose placing it in `src/hooks/` and wait for approval.
 
+### `<Name>.data.ts` (create only if needed)
+
+Static data the component renders. Co-locate it here and import it into both `<Name>.tsx` and `<Name>.test.tsx` so the test iterates the real data. Move to `src/utils/` only if the data is shared by more than one component.
+
 ---
 
 ## Step 5 — Custom CSS proposal gate

@@ -6,6 +6,7 @@ import {
   flexbox,
   system,
   type FlexboxProps,
+  type ResponsiveValue,
 } from 'src/theme'
 import { View, type ViewProps } from 'src/theme/View'
 
@@ -13,8 +14,8 @@ import { View, type ViewProps } from 'src/theme/View'
 export type GapToken = keyof Theme['space']
 
 export interface FlexProps extends ViewProps, FlexboxProps<Theme> {
-  /** Resolves against theme.space — maps to CSS gap. */
-  gap?: GapToken
+  /** Resolves against theme.space — maps to CSS gap. Accepts responsive arrays. */
+  gap?: ResponsiveValue<GapToken>
 }
 
 // 'gap' is not in the default styled-system props list so must be added explicitly

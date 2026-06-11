@@ -6,7 +6,7 @@ import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { DomainCard } from 'src/common/DomainCard'
-import { domains } from './domainData'
+import { domains } from './domain.data'
 
 const pulseAnim = keyframes`
   0%, 100% { opacity: 1; }

@@ -2,10 +2,14 @@ import AccountTreeIcon from 'src/assets/icons/account_tree.svg?react'
 import AdsClickIcon from 'src/assets/icons/ads_click.svg?react'
 import ArchitectureIcon from 'src/assets/icons/architecture.svg?react'
 import CloudDoneIcon from 'src/assets/icons/cloud_done.svg?react'
+import CloseIcon from 'src/assets/icons/close.svg?react'
 import CodeIcon from 'src/assets/icons/code.svg?react'
+import CookieIcon from 'src/assets/icons/cookie.svg?react'
 import DatabaseIcon from 'src/assets/icons/database.svg?react'
 import DesktopWindowsIcon from 'src/assets/icons/desktop_windows.svg?react'
 import DnsIcon from 'src/assets/icons/dns.svg?react'
+import ExpandLessIcon from 'src/assets/icons/expand_less.svg?react'
+import ExpandMoreIcon from 'src/assets/icons/expand_more.svg?react'
 import ExternalLinkIcon from 'src/assets/icons/external_link.svg?react'
 import GridViewIcon from 'src/assets/icons/grid_view.svg?react'
 import GroupsIcon from 'src/assets/icons/groups.svg?react'
@@ -31,10 +35,14 @@ export const icons = {
   ads_click: AdsClickIcon,
   architecture: ArchitectureIcon,
   cloud_done: CloudDoneIcon,
+  close: CloseIcon,
   code: CodeIcon,
+  cookie: CookieIcon,
   database: DatabaseIcon,
   desktop_windows: DesktopWindowsIcon,
   dns: DnsIcon,
+  expand_less: ExpandLessIcon,
+  expand_more: ExpandMoreIcon,
   external_link: ExternalLinkIcon,
   grid_view: GridViewIcon,
   groups: GroupsIcon,
