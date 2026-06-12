@@ -21,17 +21,9 @@ All content is static and specific to the site:
 | Primary CTA   | `View Projects` (contained, primary)               |
 | Secondary CTA | `Inquire` (outlined, default)                      |
 
-## Custom CSS
+## Layout
 
-Three styled sub-components handle requirements that cannot be expressed via theme primitive props:
-
-| Component      | Why custom CSS is needed                                                                           |
-| -------------- | -------------------------------------------------------------------------------------------------- |
-| `HeroRoot`     | `background-image: radial-gradient(…)` — no styled-system equivalent                               |
-| `HeroGradient` | `background: linear-gradient(…)` and `pointer-events: none` — no styled-system equivalent          |
-| `HeroRule`     | `backgroundColor: theme.palette.primary.main` — palette colors are not in `theme.background` scale |
-
-All color references use `theme.palette.primary.main` — no hardcoded hex values.
+The gradient-backed `<section>` shell — the `Paper` surface, linear-gradient backdrop, and centered `maxWidth="1280px"` container — comes from `src/common/PageHeader`. Hero passes its content as `children` and sets `minHeight="620px"`.
 
 ## Typography mapping
 
