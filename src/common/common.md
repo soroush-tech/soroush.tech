@@ -8,11 +8,11 @@ Conventions for everything in `src/common/`. These components form the app shell
 
 `src/common/` is for **shared UI components** — building blocks that are reused across multiple pages or that assemble the app shell (header, footer, layout, navigation).
 
-| Belongs in `src/common/`                                    | Belongs elsewhere                                 |
-| ----------------------------------------------------------- | ------------------------------------------------- |
-| Reusable UI components (`Header`, `Footer`, `NavLink`)      | Page-specific UI → `src/pages/`                   |
-| App shell components (`Layout`, `Bootstrap`, `Routes`)      | Design primitives (`Flex`, `View`) → `src/theme/` |
-| Feature components used across pages (`Post`, `DomainCard`) | Utility functions and data → `src/utils/`         |
+| Belongs in `src/common/`                               | Belongs elsewhere                                 |
+| ------------------------------------------------------ | ------------------------------------------------- |
+| Reusable UI components (`Header`, `Footer`, `NavLink`) | Page-specific UI → `src/pages/`                   |
+| App shell components (`Layout`, `Bootstrap`, `Routes`) | Design primitives (`Flex`, `View`) → `src/theme/` |
+| Feature components used across pages (`DomainCard`)    | Utility functions and data → `src/utils/`         |
 
 **`src/common/` is UI — but a component's own data and logic stay with it.** Co-locate a component's static data (`ComponentName.data.ts`), pure helpers (`utils.ts` / `const.ts`, or a flat `utils/` folder), and component-specific hooks (`hooks/useX.ts`) inside its folder. Move a helper, hook, or data set to `src/utils/` or `src/hooks/` only once it is generic — used by more than one component.
 

@@ -63,6 +63,8 @@ export interface TypographyProps
   align?: TypographyAlign
   gutterBottom?: boolean
   noWrap?: boolean
+  /** Machine-readable timestamp — forwarded when rendering as `<time>` (`as="time"`). */
+  dateTime?: string
   as?: ElementType
 }
 
@@ -104,7 +106,7 @@ const TypographyBase = styled('p', { shouldForwardProp })<TypographyProps>(
   border,
   position,
   ({ align }: TypographyProps) => (align ? { textAlign: align } : {}),
-  ({ gutterBottom }: TypographyProps) => (gutterBottom ? { marginBottom: '0.35em' } : {}),
+  ({ gutterBottom }: TypographyProps) => (gutterBottom ? { marginBottom: '0.5em' } : {}),
   ({ noWrap }: TypographyProps) =>
     noWrap ? { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } : {}
 )

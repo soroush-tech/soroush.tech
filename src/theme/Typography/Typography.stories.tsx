@@ -66,7 +66,7 @@ const meta: Meta<typeof Typography> = {
     },
     gutterBottom: {
       control: 'boolean',
-      description: 'Adds margin-bottom: 0.35em beneath the element.',
+      description: 'Adds margin-bottom: 0.5em beneath the element.',
       table: { category: 'Layout', defaultValue: { summary: 'false' } },
     },
     noWrap: {
@@ -282,8 +282,8 @@ export const GutterBottom: Story = {
         Heading with gutterBottom
       </Typography>
       <Typography variant="body1" m={0}>
-        This paragraph follows directly after the heading. The gutter (0.35em) creates breathing
-        room between them without extra margin props.
+        This paragraph follows directly after the heading. The gutter (0.5em) creates breathing room
+        between them without extra margin props.
       </Typography>
     </View>
   ),
