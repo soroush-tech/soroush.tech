@@ -3,7 +3,7 @@ import { test, expect } from 'src/test/e2e/fixtures'
 test('design system page renders all sections', async ({ page }) => {
   await page.goto('/design/system')
 
-  await expect(page).toHaveTitle('SOROUSH.TECH')
+  await expect(page).toHaveTitle('Design System · SOROUSH.TECH')
   await expect(page.getByRole('heading', { level: 1, name: 'Design System' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 3, name: '01 . Typography' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 3, name: '02 . Core Layout' })).toBeVisible()

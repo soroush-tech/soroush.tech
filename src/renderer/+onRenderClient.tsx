@@ -10,7 +10,9 @@ export const onRenderClient: OnRenderClientAsync = async (
 ): ReturnType<OnRenderClientAsync> => {
   const page = <Bootstrap pageContext={pageContext} />
   if (!root) {
-    initMSW()
+    // Await so the mock worker is intercepting before the client's first fetch
+    // (e.g. a suspense refetch during hydration). No-op in production (flag off).
+    await initMSW()
   }
   const container = document.getElementById('root')!
   if (!pageContext.isHydration) {
