@@ -5,12 +5,16 @@ import svgr from 'vite-plugin-svgr'
 import { imagetools } from 'vite-imagetools'
 import { compression } from 'vite-plugin-compression2'
 import { resolve } from 'path'
-import { codeGen } from './vite-plugin'
+import { codeGen, mswServer } from './vite-plugin'
 
 // Opt-in: precompressed assets are only served by a static server configured for
 // them (nginx gzip_static/brotli_static, etc.). GitHub Pages ignores them, so this
 // stays off by default — enable with COMPRESS=true on the controlled-server build.
 const compress = process.env.COMPRESS === 'true'
+
+// Test-only: mock server-side GitHub fetches (dev SSR + prerender). The e2e commands
+// set this; CD's build never does, so production always prerenders against the live API.
+const mswEnabled = process.env.VITE_APP_MSW_ACTIVE === 'true'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,6 +27,7 @@ export default defineConfig({
     }),
     react(),
     process.env.NODE_ENV !== 'storybook' && vike(),
+    mswEnabled && mswServer(),
     compress &&
       compression({
         algorithms: ['gzip', 'brotliCompress'],

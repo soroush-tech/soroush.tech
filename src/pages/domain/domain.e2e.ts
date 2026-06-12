@@ -3,7 +3,7 @@ import { test, expect } from 'src/test/e2e/fixtures'
 test('domain page renders the hero and all domain cards', async ({ page }) => {
   await page.goto('/domain')
 
-  await expect(page).toHaveTitle('SOROUSH.TECH')
+  await expect(page).toHaveTitle('Delivery Domains · SOROUSH.TECH')
 
   // Hero
   await expect(page.getByText('DELIVERY STATUS: OPERATIONAL')).toBeVisible()

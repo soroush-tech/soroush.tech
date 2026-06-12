@@ -3,10 +3,17 @@ import { Link, type LinkProps } from 'src/theme/Link'
 
 export type NavLinkProps = LinkProps
 
-export function NavLink({ href, ...rest }: NavLinkProps) {
+export function NavLink({ href, color, ...rest }: NavLinkProps) {
   const { urlPathname } = usePageContext()
   const isActive =
     href === '/' ? urlPathname === href : href !== undefined && urlPathname?.startsWith(href)
 
-  return <Link href={href} underline="hover" {...rest} color={isActive ? 'primary' : 'secondary'} />
+  return (
+    <Link
+      href={href}
+      underline="hover"
+      {...rest}
+      color={isActive ? 'primary' : (color ?? 'secondary')}
+    />
+  )
 }
