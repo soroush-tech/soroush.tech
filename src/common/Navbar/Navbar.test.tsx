@@ -27,7 +27,7 @@ const ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/articles', label: 'Articles' },
 ]
 
 describe('Navbar', () => {
@@ -53,7 +53,7 @@ describe('Navbar', () => {
       expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
       expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
       expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects')
-      expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog')
+      expect(screen.getByRole('link', { name: 'Articles' })).toHaveAttribute('href', '/articles')
     })
 
     it('renders exactly one link per item', () => {

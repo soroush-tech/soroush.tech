@@ -18,7 +18,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/experience', label: 'Experience' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/articles', label: 'Articles' },
 ]
 
 export function Header({ position = 'fixed' }: HeaderProps) {

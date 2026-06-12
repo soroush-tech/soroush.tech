@@ -85,7 +85,7 @@ pnpm dev
 │   │       ├── [CopName].data.ts      # co-located static data
 │   │       ├── [CopName].test.tsx
 │   │       └── README.md
-│   ├── pages/                         # SSG file-based routes (about, blog, experience, projects…).
+│   ├── pages/                         # SSG file-based routes (about, articles, experience, projects…).
 │   │   └── [route]/                     # Example route — folder name maps to the URL segment:
 │   │       ├── +Page.tsx              # rendered page component
 │   │       └── @id/                   # dynamic segment (/[route]/:id)

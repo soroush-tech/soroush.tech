@@ -59,8 +59,8 @@ export const ActiveHome: Story = {
 }
 
 export const ActiveSubpath: Story = {
-  parameters: { urlPathname: '/blog/hello-world' },
-  args: { href: '/blog', children: 'Blog', variant: 'caption' },
+  parameters: { urlPathname: '/articles/hello-world' },
+  args: { href: '/articles', children: 'Articles', variant: 'caption' },
 }
 
 export const UndefinedHref: Story = {
