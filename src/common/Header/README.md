@@ -13,12 +13,12 @@ Application header built on `AppBar`. Contains the site logo linking to the home
 
 Three-column `AppBar` using `flexDirection="row"` + `justifyContent="space-between"`:
 
-| Slot   | Component             | Details                                        |
-| ------ | --------------------- | ---------------------------------------------- |
-| Root   | `AppBar`              | `position="fixed"`, `height="64px"`, `px={6}`  |
-| Left   | `Flex` (row)          | `Logo` (40 px) + `"SOROUSH"` wordmark          |
-| Center | `Flex as="nav"` (row) | `NavLink` × 4 — Home · About · Projects · Blog |
-| Right  | `Flex` (row)          | `"MODE"` label + `Switch` + Sun / Moon icon    |
+| Slot   | Component             | Details                                            |
+| ------ | --------------------- | -------------------------------------------------- |
+| Root   | `AppBar`              | `position="fixed"`, `height="64px"`, `px={6}`      |
+| Left   | `Flex` (row)          | `Logo` (40 px) + `"SOROUSH"` wordmark              |
+| Center | `Flex as="nav"` (row) | `NavLink` × 4 — Home · About · Projects · Articles |
+| Right  | `Flex` (row)          | `"MODE"` label + `Switch` + Sun / Moon icon        |
 
 ---
 

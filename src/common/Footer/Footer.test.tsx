@@ -65,9 +65,9 @@ describe('Footer', () => {
       expect(screen.getByRole('link', { name: 'AI Automation' })).toHaveAttribute('href', '/about')
     })
 
-    it('renders Contacts link to /blog', () => {
+    it('renders Contacts link to /articles', () => {
       renderWithTheme(<Footer />)
-      expect(screen.getByRole('link', { name: 'Contacts' })).toHaveAttribute('href', '/blog')
+      expect(screen.getByRole('link', { name: 'Contacts' })).toHaveAttribute('href', '/articles')
     })
   })
 

@@ -6,13 +6,14 @@ import { Flex } from 'src/theme/Flex'
 import { Grid } from 'src/theme/Grid'
 import { Typography } from 'src/theme/Typography'
 import { Navbar } from 'src/common/Navbar'
+import { Blockquote } from 'src/common/Blockquote'
 import { alpha } from 'src/theme/utils'
 
 const DIRECTORIES = [
   { href: '/design/system', label: 'Design System' },
   { href: '/domain', label: 'Delivery Domain' },
   { href: '/about', label: 'AI Automation' },
-  { href: '/blog', label: 'Contacts' },
+  { href: '/articles', label: 'Contacts' },
 ]
 
 const CONNECTIVITY = [
@@ -24,10 +25,6 @@ const CONNECTIVITY = [
 // single-side top border — View's borderColor applies to all four sides
 const FooterRoot = styled(View, { label: 'FooterRoot' })`
   border-top: 1px solid ${({ theme }) => alpha(theme.border.primary, 0.1)};
-`
-
-const TerminalBlock = styled(View, { label: 'TerminalBlock' })`
-  border-left: 2px solid ${({ theme }) => theme.border.primary};
 `
 
 const pulseAnim = keyframes`
@@ -126,7 +123,7 @@ export function Footer() {
 
           {/* Col 4 — Terminal readout + copyright (stays after the logo in tablet) */}
           <View order={[0, 2, 2, 0]}>
-            <TerminalBlock bg="primary" p={3} mb={4} display={['none', 'block']}>
+            <Blockquote bg="primary" p={3} mb={4} display={['none', 'block']}>
               <Typography
                 variant="caption"
                 color="primary"
@@ -137,7 +134,7 @@ export function Footer() {
                 SYSTEM_OUTPUT
               </Typography>
               <TerminalText>Running diagnostic sequence... OK</TerminalText>
-            </TerminalBlock>
+            </Blockquote>
             <Typography variant="caption" color="secondary" fontFamily="mono">
               © 2026 SOROUSH.TECH. ALL RIGHTS RESERVED.
             </Typography>

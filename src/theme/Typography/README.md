@@ -63,7 +63,7 @@ Resolves against `theme.text`. All 9 semantic tokens are available:
 
 ### `gutterBottom`
 
-`boolean` — adds `margin-bottom: 0.35em`. Useful between a heading and the following paragraph without needing a space prop.
+`boolean` — adds `margin-bottom: 0.5em`. Useful between a heading and the following paragraph without needing a space prop.
 
 ---
 
