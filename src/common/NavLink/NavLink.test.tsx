@@ -29,9 +29,9 @@ describe('NavLink', () => {
   })
 
   it('covers prefix match active branch for non-home links', () => {
-    vi.mocked(usePageContext).mockReturnValue({ urlPathname: '/blog/123' } as VikePageContext)
-    renderWithTheme(<NavLink href="/blog">Blog</NavLink>)
-    expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
+    vi.mocked(usePageContext).mockReturnValue({ urlPathname: '/articles/123' } as VikePageContext)
+    renderWithTheme(<NavLink href="/articles">Articles</NavLink>)
+    expect(screen.getByRole('link', { name: 'Articles' })).toBeInTheDocument()
   })
 
   it('covers inactive branch when urlPathname does not match href', () => {

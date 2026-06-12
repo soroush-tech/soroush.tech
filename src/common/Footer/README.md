@@ -16,7 +16,7 @@ The component is stateless and accepts no props. It is wired into `Layout` autom
 | Column       | Content                                                      |
 | ------------ | ------------------------------------------------------------ |
 | Branding     | Grayscale logo · "SOROUSH.TECH" · tagline                    |
-| Directories  | Internal `NavLink`s — projects, domain, about, blog          |
+| Directories  | Internal `NavLink`s — projects, domain, about, articles      |
 | Connectivity | External links — GitHub, NPM, Technical Wiki (open `_blank`) |
 | Terminal     | "SYSTEM_OUTPUT" readout with pulsing cursor · copyright year |
 

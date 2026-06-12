@@ -62,4 +62,39 @@ describe('Layout', () => {
     renderWithTheme(<Layout footer={null}>content</Layout>)
     expect(screen.queryByTestId('footer')).not.toBeInTheDocument()
   })
+
+  describe('loading', () => {
+    it('renders children inside the Suspense boundary when loading is provided', () => {
+      renderWithTheme(
+        <Layout loading={<div data-testid="fallback" />}>
+          <div data-testid="child" />
+        </Layout>
+      )
+      expect(screen.getByTestId('child')).toBeInTheDocument()
+    })
+
+    it('shows the loading fallback while a child suspends', () => {
+      function Suspending(): never {
+        throw new Promise<void>(() => {})
+      }
+      renderWithTheme(
+        <Layout loading={<div data-testid="fallback" />}>
+          <Suspending />
+        </Layout>
+      )
+      expect(screen.getByTestId('fallback')).toBeInTheDocument()
+    })
+
+    it('shows a centered CircularProgress when loading is true and a child suspends', () => {
+      function Suspending(): never {
+        throw new Promise<void>(() => {})
+      }
+      renderWithTheme(
+        <Layout loading>
+          <Suspending />
+        </Layout>
+      )
+      expect(screen.getByRole('progressbar')).toBeInTheDocument()
+    })
+  })
 })

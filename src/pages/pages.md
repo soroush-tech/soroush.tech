@@ -33,16 +33,16 @@ Only create a `+` file when its behaviour is actually needed. A route with no dy
 ## Page component shape
 
 ```tsx
-// src/pages/blog/+Page.tsx
+// src/pages/articles/+Page.tsx
 import { Suspense } from 'react'
 import { Layout } from 'src/common/Layout'
-import { Posts } from 'src/common/Posts'
+import { Articles } from 'src/section/Articles'
 
-export default function BlogPage() {
+export default function ArticlesPage() {
   return (
     <Layout>
       <Suspense fallback={<div>Loading…</div>}>
-        <Posts />
+        <Articles />
       </Suspense>
     </Layout>
   )
@@ -53,7 +53,7 @@ Rules:
 
 - **Always `export default`** — Vike requires a default export; no named exports alongside it
 - **Always wrap in `<Layout>`** — never render page content outside `Layout`
-- **Function name matches the route** — `BlogPage`, `DomainPage`, `AboutPage`; not `Page`, `App`, or anonymous
+- **Function name matches the route** — `ArticlesPage`, `DomainPage`, `AboutPage`; not `Page`, `App`, or anonymous
 - **Compose, don't build** — assemble from `src/section/`, `src/common/`, and `src/theme/` components; keep `+Page.tsx` thin. Page-specific regions belong in `src/section/`, not inline in `+Page.tsx`
 
 ---
@@ -120,13 +120,13 @@ Because pages have no unit tests, `src/pages/` is excluded from the unit coverag
 
 Vike routes are derived from the folder path under `src/pages/`:
 
-| Folder                     | URL                   |
-| -------------------------- | --------------------- |
-| `src/pages/index/`         | `/`                   |
-| `src/pages/about/`         | `/about`              |
-| `src/pages/blog/`          | `/blog`               |
-| `src/pages/blog/@id/`      | `/blog/:id` (dynamic) |
-| `src/pages/domain/`        | `/domain`             |
-| `src/pages/design/system/` | `/design/system`      |
+| Folder                     | URL                      |
+| -------------------------- | ------------------------ |
+| `src/pages/index/`         | `/`                      |
+| `src/pages/about/`         | `/about`                 |
+| `src/pages/articles/`      | `/articles`              |
+| `src/pages/article/@id/`   | `/article/:id` (dynamic) |
+| `src/pages/domain/`        | `/domain`                |
+| `src/pages/design/system/` | `/design/system`         |
 
 Use `+route.ts` only when the folder-based convention cannot express the matching logic needed.

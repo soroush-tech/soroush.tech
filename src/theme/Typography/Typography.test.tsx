@@ -143,14 +143,14 @@ describe('Typography', () => {
   // ─── gutterBottom ────────────────────────────────────────────────────────────
 
   describe('gutterBottom', () => {
-    it('applies margin-bottom: 0.35em', () => {
+    it('applies margin-bottom: 0.5em', () => {
       renderWithTheme(<Typography gutterBottom>spaced</Typography>)
-      expect(screen.getByText('spaced')).toHaveStyle({ marginBottom: '0.35em' })
+      expect(screen.getByText('spaced')).toHaveStyle({ marginBottom: '0.5em' })
     })
 
     it('does not add margin-bottom by default', () => {
       renderWithTheme(<Typography>no gutter</Typography>)
-      expect(screen.getByText('no gutter')).not.toHaveStyle({ marginBottom: '0.35em' })
+      expect(screen.getByText('no gutter')).not.toHaveStyle({ marginBottom: '0.5em' })
     })
   })
 
