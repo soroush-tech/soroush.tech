@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import type { PageContext } from 'vike/types'
 import { buildHead } from './buildHead'
 
@@ -92,6 +92,33 @@ describe('buildHead', () => {
       )
       expect(minimal).not.toContain('article:published_time')
       expect(minimal).not.toContain('"author"')
+    })
+  })
+
+  describe('security tags', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('always emits the referrer policy', () => {
+      expect(buildHead(ctx())).toContain(
+        '<meta name="referrer" content="strict-origin-when-cross-origin" />'
+      )
+    })
+
+    it('omits the CSP in dev (inline HMR scripts would be blocked)', () => {
+      expect(buildHead(ctx())).not.toContain('Content-Security-Policy')
+    })
+
+    it('emits the CSP outside dev', () => {
+      vi.stubEnv('DEV', false)
+      const head = buildHead(ctx())
+      expect(head).toContain('<meta http-equiv="Content-Security-Policy" content="')
+      expect(head).toContain("default-src 'self'")
+      expect(head).toContain("script-src 'self'")
+      expect(head).toContain("style-src 'self' 'unsafe-inline'")
+      expect(head).toContain("img-src 'self' https://*.githubusercontent.com data:")
+      expect(head).toContain("connect-src 'self' https://api.github.com")
     })
   })
 
