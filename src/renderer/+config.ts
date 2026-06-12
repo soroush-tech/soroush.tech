@@ -16,6 +16,12 @@ export const config = {
         client: true,
       },
     },
+    description: {
+      env: { server: true },
+    },
+    robots: {
+      env: { server: true },
+    },
     dataIsomorph: {
       env: { config: true },
       effect({ configDefinedAt, configValue }) {

@@ -70,6 +70,7 @@ export default defineConfig({
         '**/*.e2e.{ts,tsx}',
         'src/test/e2e/**',
         'src/pages/**/+Page.{ts,tsx,js,jsx}',
+        'src/pages/**/+config.{ts,tsx,js,jsx}',
       ],
     },
     projects: [

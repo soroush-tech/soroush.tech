@@ -42,6 +42,11 @@ describe('+onRenderClient', () => {
     expect(createRoot).toHaveBeenCalledWith(container)
   })
 
+  it('non-hydration: updates document.title from the page config', async () => {
+    await onRenderClient({ isHydration: false, config: { title: 'About' } } as never)
+    expect(document.title).toBe('About · SOROUSH.TECH')
+  })
+
   it('non-hydration: skips createRoot and initMSW on subsequent CSR calls', async () => {
     await onRenderClient({ isHydration: false } as never)
     expect(createRoot).not.toHaveBeenCalled()
