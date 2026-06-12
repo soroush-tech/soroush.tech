@@ -4,6 +4,7 @@ import createEmotionServer from '@emotion/server/create-instance'
 import { Bootstrap } from '../common/Bootstrap'
 import type { OnRenderHtmlAsync } from 'vike/types'
 import styleCache from 'src/theme/utils/styleCache'
+import { buildHead } from './buildHead'
 
 export const onRenderHtml: OnRenderHtmlAsync = async (
   pageContext
@@ -18,8 +19,8 @@ export const onRenderHtml: OnRenderHtmlAsync = async (
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/soroush.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SOROUSH.TECH</title>
-    ${styles}    
+    ${buildHead(pageContext)}
+    ${styles}
     </head>
     <body>
       <div id="root">${html}</div>

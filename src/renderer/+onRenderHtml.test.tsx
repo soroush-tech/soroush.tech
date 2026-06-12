@@ -57,4 +57,19 @@ describe('+onRenderHtml', () => {
     const result = await onRenderHtml({} as never)
     expect(result).toBeDefined()
   })
+
+  it('injects the default site title when there is no page meta', async () => {
+    const result = (await onRenderHtml({} as never)) as unknown as { __html: string }
+    expect(result.__html).toContain('<title>SOROUSH.TECH</title>')
+  })
+
+  it('injects page SEO meta from pageContext config and url', async () => {
+    const pageContext = {
+      config: { title: 'About', description: 'Who I am.' },
+      urlPathname: '/about',
+    }
+    const result = (await onRenderHtml(pageContext as never)) as unknown as { __html: string }
+    expect(result.__html).toContain('<title>About · SOROUSH.TECH</title>')
+    expect(result.__html).toContain('<link rel="canonical" href="https://soroush.tech/about" />')
+  })
 })
