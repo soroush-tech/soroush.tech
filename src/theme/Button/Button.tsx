@@ -60,6 +60,10 @@ export interface ButtonProps
   loadingPosition?: ButtonLoadingPosition
   /** The URL to link to when the button is clicked. If defined, an `a` element will be used as the root node. */
   href?: string
+  /** Anchor `target` — only meaningful when `href` is set. */
+  target?: string
+  /** Anchor `rel` — only meaningful when `href` is set. */
+  rel?: string
 }
 
 // 'gap' is not in styled-system's default props list — must be added explicitly
