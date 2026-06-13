@@ -22,3 +22,23 @@ test('article page renders the mocked gist and its SEO meta', async ({ page }) =
     'Masoud Soroush'
   )
 })
+
+// Regression: a gist published after the build has no prerendered page. Client-routing to
+// it must resolve data() in the browser (dataIsomorph) instead of fetching a server-rendered
+// pageContext that doesn't exist on our static host. We reach it by injecting a link and
+// clicking it — Vike intercepts the anchor (event delegation) and navigates client-side,
+// the same path the articles list uses. The gist-by-id mock serves any id (see handlers).
+test('client-routes to an article that was not prerendered without crashing', async ({ page }) => {
+  await page.goto('/articles')
+
+  await page.evaluate(() => {
+    const link = document.createElement('a')
+    link.href = '/article/published-after-build'
+    link.textContent = 'new article'
+    document.body.appendChild(link)
+    link.click()
+  })
+
+  await expect(page).toHaveURL('/article/published-after-build')
+  await expect(page.getByText('This is mocked article content for e2e tests.')).toBeVisible()
+})

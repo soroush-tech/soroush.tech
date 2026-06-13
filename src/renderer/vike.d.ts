@@ -4,6 +4,8 @@ declare global {
     interface Config {
       /** `<meta name="robots">` value, e.g. 'index,follow' (default) or 'noindex,nofollow'. */
       robots?: string
+      /** Run `data()` in the browser on client-side navigation too, not just on the server. */
+      dataIsomorph?: boolean
     }
   }
 }
