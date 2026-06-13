@@ -12,15 +12,15 @@ test('domain page renders the hero and all domain cards', async ({ page }) => {
     page.getByText(/complex systems get architected, scaled, and shipped under load/)
   ).toBeVisible()
 
-  // One card per domain (each DomainCard title is an h3)
-  await expect(page.getByRole('heading', { level: 3 })).toHaveCount(11)
+  // One card per domain (each DomainCard title is an h2)
+  await expect(page.getByRole('heading', { level: 2 })).toHaveCount(11)
 
   // A featured card with its title, image, and tags
   await expect(
-    page.getByRole('heading', { level: 3, name: 'FULL-STACK SYSTEMS ARCHITECTURE' })
+    page.getByRole('heading', { level: 2, name: 'FULL-STACK SYSTEMS ARCHITECTURE' })
   ).toBeVisible()
   await expect(
-    page.getByRole('heading', { level: 3, name: 'BATTLE-TESTED TECH LEADERSHIP' })
+    page.getByRole('heading', { level: 2, name: 'BATTLE-TESTED TECH LEADERSHIP' })
   ).toBeVisible()
   await expect(
     page.getByRole('img', { name: 'Soroush Mascot Full-Stack Systems Architect' })

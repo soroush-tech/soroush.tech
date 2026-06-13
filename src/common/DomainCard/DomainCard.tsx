@@ -127,7 +127,7 @@ export function DomainCard({
         )}
         <Flex flex={featured ? ['0 1 auto', '0 1 auto', '1'] : undefined}>
           <Typography
-            as="h3"
+            as="h2"
             fontSize={featured ? 4 : 3}
             fontWeight={featured ? 'black' : 'bold'}
             color="primary"
