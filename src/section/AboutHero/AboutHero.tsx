@@ -120,14 +120,21 @@ export function AboutHero() {
           </Typography>
           <Flex flexDirection="row" flexWrap="wrap" gap={4}>
             <Button
-              href="/projects"
+              href="/domain"
               variant="contained"
               size="lg"
               endIcon={<Icon name="terminal" color="inherit" size="1rem" />}
             >
-              VIEW_PROJECTS
+              VIEW_EXPERTISE
             </Button>
-            <Button variant="outlined" color="primary" size="lg">
+            <Button
+              href="https://www.linkedin.com/in/masoud-soroush-4139b152"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outlined"
+              color="primary"
+              size="lg"
+            >
               CONNECT_SOCIAL
             </Button>
           </Flex>

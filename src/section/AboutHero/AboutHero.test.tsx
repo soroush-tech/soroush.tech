@@ -28,17 +28,20 @@ describe('AboutHero', () => {
   })
 
   describe('actions', () => {
-    it('renders the VIEW_PROJECTS link to /projects', () => {
+    it('renders the VIEW_EXPERTISE link to /domain', () => {
       renderWithTheme(<AboutHero />)
-      expect(screen.getByRole('link', { name: 'VIEW_PROJECTS' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: 'VIEW_EXPERTISE' })).toHaveAttribute(
         'href',
-        '/projects'
+        '/domain'
       )
     })
 
-    it('renders the CONNECT_SOCIAL button', () => {
+    it('renders the CONNECT_SOCIAL link to LinkedIn', () => {
       renderWithTheme(<AboutHero />)
-      expect(screen.getByRole('button', { name: 'CONNECT_SOCIAL' })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'CONNECT_SOCIAL' })).toHaveAttribute(
+        'href',
+        'https://www.linkedin.com/in/masoud-soroush-4139b152'
+      )
     })
   })
 
