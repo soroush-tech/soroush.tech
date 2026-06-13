@@ -114,8 +114,12 @@ describe('Blueprint', () => {
 
   describe('HTML attribute passthrough', () => {
     it('forwards className', () => {
-      renderWithTheme(<Blueprint className="custom">content</Blueprint>)
-      expect(screen.getByText('content')).toHaveClass('custom')
+      renderWithTheme(
+        <Blueprint className="custom" data-testid="blueprint">
+          content
+        </Blueprint>
+      )
+      expect(screen.getByTestId('blueprint')).toHaveClass('custom')
     })
 
     it('forwards data attributes', () => {
