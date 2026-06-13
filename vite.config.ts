@@ -5,7 +5,7 @@ import svgr from 'vite-plugin-svgr'
 import { imagetools } from 'vite-imagetools'
 import { compression } from 'vite-plugin-compression2'
 import { resolve } from 'path'
-import { codeGen, mswServer } from './vite-plugin'
+import { codeGen, mswServer, sitemap } from './vite-plugin'
 
 // Opt-in: precompressed assets are only served by a static server configured for
 // them (nginx gzip_static/brotli_static, etc.). GitHub Pages ignores them, so this
@@ -27,6 +27,7 @@ export default defineConfig({
     }),
     react(),
     process.env.NODE_ENV !== 'storybook' && vike(),
+    sitemap(),
     mswEnabled && mswServer(),
     compress &&
       compression({
