@@ -35,6 +35,21 @@ body:
         - Adding diagrams or illustrations to clarify complex ideas
         - Providing code examples if relevant
         - Linking to any related documentation or project plans
+  - type: textarea
+    attributes:
+      label: Risks & mitigations 🚨
+      description: |
+        Describe the key risks associated with the proposed solution and how each risk will be mitigated.
+
+        Consider:
+          - Technical risks such as performance, scalability, security, or maintainability concerns
+          - User-facing risks including regressions, accessibility issues, or unexpected behavior changes
+          - Operational risks such as deployment complexity, migration requirements, or rollback limitations
+          - Dependencies on external systems, teams, or unresolved decisions
+          - Mitigation strategies including feature flags, phased rollouts, monitoring, testing, documentation, and fallback plans
+          - Risks that currently have no mitigation and require further discussion or approval
+
+        Highlight anything that is difficult to reverse, could impact production systems, or may affect existing users.
 
   - type: textarea
     attributes:
