@@ -162,6 +162,33 @@ Name each file after what it exports. Keep all files in the same directory.
 
 ---
 
+### A render closure that captures a hook instance and grows past trivial becomes a colocated component
+
+An inline `renderX` function inside a component is fine while it stays a few lines. Once it closes over a hook/instance value (so it can't move to `utils.ts`) **and** its return is a self-contained, nameable unit of UI, extract it into a sibling component instead. The inline closure is re-created every render, can't be unit-tested in isolation, and inflates the parent until it reads as internals rather than layout + composition.
+
+```tsx
+// ✗ — inline render closure: captures `form`, grown to a cohesive UI block, only testable through the parent
+function Parent() {
+  const form = useParentForm()
+  const renderItem = (item: ItemDef) => (
+    <form.Field name={item.name}>{(api) => /* label + control + error */}</form.Field>
+  )
+  return <>{items.map(renderItem)}</>
+}
+
+// ✓ — colocated component: the captured instance + item passed as props, unit-testable, parent stays compositional
+// Item.tsx
+export function Item({ form, item }: { form: ReturnType<typeof useParentForm>; item: ItemDef }) {
+  return <form.Field name={item.name}>{(api) => /* label + control + error */}</form.Field>
+}
+// Parent.tsx
+{items.map((item) => <Item key={item.name} form={form} item={item} />)}
+```
+
+Trigger: it captures something component-local (so `utils.ts` is out) **and** the render body is a cohesive UI unit. A short formatter or a one-line wrapper stays inline. Watch for the gradual case — each addition is individually reasonable, the sum crosses the line. This is a threshold, not a hard rule.
+
+---
+
 ### Section data lives in `SectionName.data.ts`, shared by component and test
 
 A section's content data (arrays of cards, steps, tags, stats) goes in a sibling `SectionName.data.ts` file — never inline in the `.tsx`, and never `export`ed from it (that trips `react-refresh/only-export-components`). The component **and** its `*.test.tsx` both import from the data file, so the test iterates over the real data instead of a hardcoded copy that silently drifts when the data changes.
