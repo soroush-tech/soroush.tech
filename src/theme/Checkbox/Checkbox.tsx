@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ChangeEvent, type ReactNode } from 'react'
+import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
@@ -169,16 +170,16 @@ const CheckboxRoot = styled('label', { shouldForwardProp })<CheckboxRootProps>(
 export function Checkbox({
   checked,
   defaultChecked,
-  disabled = false,
-  color = 'default',
-  size = 'md',
-  fullWidth = false,
+  disabled: disabledProp,
+  color: colorProp,
+  size: sizeProp,
+  fullWidth: fullWidthProp,
   indeterminate = false,
   icon,
   checkedIcon,
   onChange,
-  id,
-  required,
+  id: idProp,
+  required: requiredProp,
   name,
   value,
   children,
@@ -189,6 +190,19 @@ export function Checkbox({
   'data-testid': dataTestid,
   ...spaceProps
 }: CheckboxProps) {
+  // Resolve form-field props through context (Form → FormControl → explicit). `color` is
+  // resolved separately to keep Checkbox's own `'default'` domain; `error` has no visual here.
+  const fc = useFormControl({
+    id: idProp,
+    disabled: disabledProp,
+    required: requiredProp,
+    size: sizeProp,
+    fullWidth: fullWidthProp,
+  })
+  const { id, disabled, required, size, fullWidth } = fc
+  const color = colorProp ?? fc.color ?? 'default'
+  const describedBy = ariaDescribedby ?? fc['aria-describedby']
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -219,7 +233,7 @@ export function Checkbox({
         data-indeterminate={indeterminate || undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
-        aria-describedby={ariaDescribedby}
+        aria-describedby={describedBy}
       />
       <CheckboxIconWrapper size={size}>
         <span className="cb-unchecked">{icon ?? <UncheckedIcon />}</span>

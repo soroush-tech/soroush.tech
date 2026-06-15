@@ -2,6 +2,8 @@ import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
+import { FormControl } from 'src/theme/FormControl'
+import { FormHelperText } from 'src/theme/FormHelperText'
 import { Radio } from '../Radio'
 
 describe('Radio', () => {
@@ -206,6 +208,66 @@ describe('Radio', () => {
     it('forwards className to the root', () => {
       renderWithTheme(<Radio className="custom" data-testid="rb" />)
       expect(screen.getByTestId('rb')).toHaveClass('custom')
+    })
+  })
+
+  // ─── FormControl context ───────────────────────────────────────────────────────
+
+  describe('FormControl context', () => {
+    it('inherits the id from FormControl', () => {
+      renderWithTheme(
+        <FormControl id="plan">
+          <Radio name="plan" value="pro" />
+        </FormControl>
+      )
+      expect(screen.getByRole('radio')).toHaveAttribute('id', 'plan')
+    })
+
+    it('inherits disabled from FormControl', () => {
+      renderWithTheme(
+        <FormControl disabled>
+          <Radio name="plan" value="pro" />
+        </FormControl>
+      )
+      expect(screen.getByRole('radio')).toBeDisabled()
+    })
+
+    it('inherits color from FormControl', () => {
+      renderWithTheme(
+        <FormControl color="success">
+          <Radio name="plan" value="pro" data-testid="rb" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('rb')).toHaveStyle({ color: dark.palette.success.main })
+    })
+
+    it('sets aria-describedby from the FormControl helper text', () => {
+      renderWithTheme(
+        <FormControl id="plan">
+          <Radio name="plan" value="pro" />
+          <FormHelperText>Pick one</FormHelperText>
+        </FormControl>
+      )
+      expect(screen.getByRole('radio')).toHaveAttribute('aria-describedby', 'plan-helper')
+    })
+
+    it('lets an explicit inputProps aria-describedby override context', () => {
+      renderWithTheme(
+        <FormControl id="plan">
+          <Radio name="plan" value="pro" inputProps={{ 'aria-describedby': 'explicit' }} />
+          <FormHelperText>Pick one</FormHelperText>
+        </FormControl>
+      )
+      expect(screen.getByRole('radio')).toHaveAttribute('aria-describedby', 'explicit')
+    })
+
+    it('lets an explicit color override context', () => {
+      renderWithTheme(
+        <FormControl color="success">
+          <Radio name="plan" value="pro" color="error" data-testid="rb" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('rb')).toHaveStyle({ color: dark.palette.error.main })
     })
   })
 })

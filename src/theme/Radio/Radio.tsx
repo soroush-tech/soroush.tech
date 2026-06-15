@@ -1,4 +1,5 @@
 import { type ChangeEvent, type InputHTMLAttributes, type ReactNode } from 'react'
+import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
@@ -133,14 +134,14 @@ const RadioRoot = styled('label', { shouldForwardProp })<RadioRootProps>(
 
 export function Radio({
   checked,
-  disabled = false,
-  color = 'default',
-  size = 'md',
+  disabled: disabledProp,
+  color: colorProp,
+  size: sizeProp,
   icon,
   checkedIcon,
   onChange,
-  id,
-  required,
+  id: idProp,
+  required: requiredProp,
   name,
   value,
   inputProps,
@@ -149,6 +150,18 @@ export function Radio({
   'data-testid': dataTestid,
   ...spaceProps
 }: RadioProps) {
+  // Resolve form-field props through context (Form → FormControl → explicit). `color` is
+  // resolved separately to keep Radio's own `'default'` domain; `error` has no visual here.
+  const fc = useFormControl({
+    id: idProp,
+    disabled: disabledProp,
+    required: requiredProp,
+    size: sizeProp,
+  })
+  const { id, disabled, required, size } = fc
+  const color = colorProp ?? fc.color ?? 'default'
+  const describedBy = inputProps?.['aria-describedby'] ?? fc['aria-describedby']
+
   return (
     <RadioRoot
       color={color}
@@ -168,6 +181,7 @@ export function Radio({
         name={name}
         value={value}
         onChange={onChange}
+        aria-describedby={describedBy}
       />
       <RadioIconWrapper size={size}>
         <span className="rb-unchecked">{icon ?? <UncheckedIcon />}</span>
