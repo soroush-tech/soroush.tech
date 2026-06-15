@@ -29,8 +29,6 @@ export function PageHeader({ title, children, ...props }: PageHeaderProps) {
       justifyContent="center"
       {...props}
     >
-      <PageHeaderGradient position="absolute" top={0} right={0} width="50%" height="100%" />
-
       <View maxWidth="1280px" width="100%" mx="auto">
         {title && (
           <Typography
@@ -47,6 +45,7 @@ export function PageHeader({ title, children, ...props }: PageHeaderProps) {
 
         {children}
       </View>
+      <PageHeaderGradient position="absolute" top={0} right={0} width="50%" height="100%" />
     </Paper>
   )
 }

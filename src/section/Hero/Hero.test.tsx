@@ -39,9 +39,9 @@ describe('Hero', () => {
   })
 
   describe('CTAs', () => {
-    it('renders the Inquire button', () => {
+    it('renders the Inquire link to the contact page', () => {
       renderWithTheme(<Hero />)
-      expect(screen.getByRole('button', { name: /inquire/i })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /inquire/i })).toHaveAttribute('href', '/contact')
     })
   })
 })

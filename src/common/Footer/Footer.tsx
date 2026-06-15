@@ -13,7 +13,7 @@ const DIRECTORIES = [
   { href: '/design/system', label: 'Design System' },
   { href: '/domain', label: 'Delivery Domain' },
   { href: '/about', label: 'AI Automation' },
-  { href: '/articles', label: 'Contacts' },
+  { href: '/contact', label: 'Contacts' },
 ]
 
 const CONNECTIVITY = [

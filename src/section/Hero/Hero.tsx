@@ -40,7 +40,13 @@ export function Hero() {
       </Typography>
 
       <Flex mt={2} flexDirection={['column', 'row']} gap={3}>
-        <Button variant="contained" color="primary" size="lg" letterSpacing="widest">
+        <Button
+          href="/contact"
+          variant="contained"
+          color="primary"
+          size="lg"
+          letterSpacing="widest"
+        >
           Inquire
         </Button>
       </Flex>
