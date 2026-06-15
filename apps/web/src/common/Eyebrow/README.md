@@ -6,7 +6,6 @@ A decorative label row — a 2px horizontal rule followed by a caption-style tex
 
 ```tsx
 import { Eyebrow } from 'src/common/Eyebrow'
-
 ;<Eyebrow mb={3}>Principal Software Engineer</Eyebrow>
 ```
 
