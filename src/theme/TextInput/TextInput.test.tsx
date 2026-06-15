@@ -3,6 +3,8 @@ import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
+import { FormControl } from 'src/theme/FormControl'
+import { FormHelperText } from 'src/theme/FormHelperText'
 import { TextInput } from '../TextInput'
 
 describe('TextInput', () => {
@@ -217,10 +219,10 @@ describe('TextInput', () => {
       expect(screen.getByTestId('root')).toHaveStyle({ borderRadius: dark.radii.sq })
     })
 
-    it('outlined has secondary background', () => {
+    it('outlined has terminal background', () => {
       renderWithTheme(<TextInput variant="outlined" data-testid="root" />)
       expect(screen.getByTestId('root')).toHaveStyle({
-        backgroundColor: dark.palette.default.light,
+        backgroundColor: dark.background.terminal,
       })
     })
 
@@ -441,6 +443,79 @@ describe('TextInput', () => {
       const root = screen.getByTestId('root')
       expect(root).toHaveClass('outer')
       expect(root).toHaveClass('inner')
+    })
+  })
+
+  // ─── FormControl context ───────────────────────────────────────────────────────
+
+  describe('FormControl context', () => {
+    it('inherits the id from FormControl', () => {
+      renderWithTheme(
+        <FormControl id="email">
+          <TextInput />
+        </FormControl>
+      )
+      expect(screen.getByRole('textbox')).toHaveAttribute('id', 'email')
+    })
+
+    it('sets aria-describedby from the FormControl helper text', () => {
+      renderWithTheme(
+        <FormControl id="email">
+          <TextInput />
+          <FormHelperText>Helper</FormHelperText>
+        </FormControl>
+      )
+      expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'email-helper')
+    })
+
+    it('inherits disabled from FormControl', () => {
+      renderWithTheme(
+        <FormControl disabled>
+          <TextInput />
+        </FormControl>
+      )
+      expect(screen.getByRole('textbox')).toBeDisabled()
+    })
+
+    it('inherits the error border from FormControl', () => {
+      renderWithTheme(
+        <FormControl error>
+          <TextInput data-testid="root" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('root')).toHaveStyle({ borderColor: dark.palette.error.main })
+    })
+
+    it('lets an explicit prop override context', () => {
+      renderWithTheme(
+        <FormControl disabled>
+          <TextInput disabled={false} />
+        </FormControl>
+      )
+      expect(screen.getByRole('textbox')).not.toBeDisabled()
+    })
+
+    it('inherits textColor from FormControl', () => {
+      renderWithTheme(
+        <FormControl textColor="info">
+          <TextInput data-testid="root" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('root')).toHaveStyle({ color: dark.text.info })
+    })
+  })
+
+  // ─── textColor ─────────────────────────────────────────────────────────────────
+
+  describe('textColor', () => {
+    it('defaults the text color to text.primary', () => {
+      renderWithTheme(<TextInput data-testid="root" />)
+      expect(screen.getByTestId('root')).toHaveStyle({ color: dark.text.primary })
+    })
+
+    it('applies an explicit textColor token to the text color', () => {
+      renderWithTheme(<TextInput textColor="success" data-testid="root" />)
+      expect(screen.getByTestId('root')).toHaveStyle({ color: dark.text.success })
     })
   })
 })

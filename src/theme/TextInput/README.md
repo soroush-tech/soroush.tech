@@ -25,6 +25,14 @@ Default: `"primary"`.
 
 ---
 
+### `textColor`
+
+Text color of the typed value — resolves against `theme.text` (`primary`, `secondary`, `error`, …). Inherited from `Form`/`FormControl` context when not set.
+
+Default: `"primary"`.
+
+---
+
 ### `disabled`
 
 `boolean` — disables the input. Applies `opacity: 0.5`, `cursor: not-allowed`, and `pointer-events: none` on the root.

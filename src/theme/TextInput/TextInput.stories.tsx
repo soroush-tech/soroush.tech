@@ -5,6 +5,7 @@ import {
   textInputColorTokens,
   textInputVariantTokens,
   textInputSizeTokens,
+  textColorTokens,
 } from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
@@ -20,6 +21,7 @@ const meta: Meta<typeof TextInput> = {
       include: [
         'variant',
         'color',
+        'textColor',
         'disabled',
         'error',
         'readOnly',
@@ -57,6 +59,12 @@ const meta: Meta<typeof TextInput> = {
       options: textInputColorTokens,
       description:
         'Border color token. `palette[color].main` on focus · `palette[color].light` when disabled.',
+      table: { category: 'Visual', defaultValue: { summary: 'primary' } },
+    },
+    textColor: {
+      control: { type: 'select' },
+      options: textColorTokens,
+      description: 'Text color of the typed value — resolves against `theme.text`.',
       table: { category: 'Visual', defaultValue: { summary: 'primary' } },
     },
     disabled: {

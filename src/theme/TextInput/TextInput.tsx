@@ -6,6 +6,7 @@ import {
   type TextareaHTMLAttributes,
 } from 'react'
 import { TextAreaAutoResize } from './TextAreaAutoResize'
+import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
@@ -20,6 +21,7 @@ import {
 } from 'src/theme'
 
 export type TextInputColor = keyof Theme['palette']
+export type TextInputTextColor = keyof Theme['text']
 export type TextInputVariant = 'default' | 'outlined' | 'text' | 'underline'
 export type TextInputSize = keyof Theme['sizes']
 
@@ -40,6 +42,8 @@ export interface TextInputProps
   components?: { Input?: ElementType; Root?: ElementType }
   /** Focus/active border color — resolves to `theme.palette[color].main`. Default: `'primary'`. */
   color?: TextInputColor
+  /** Text color of the typed value — resolves against `theme.text`. Default: `'primary'`. */
+  textColor?: TextInputTextColor
   /** Disables the input. */
   disabled?: boolean
   /** Marks the field as invalid — applies error border color. */
@@ -95,6 +99,7 @@ export interface TextInputProps
 interface TextInputRootProps
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
   color?: TextInputColor
+  textColor?: TextInputTextColor
   variant?: TextInputVariant
   error?: boolean
   disabled?: boolean
@@ -106,6 +111,7 @@ const shouldForwardProp = createShouldForwardProp([
   ...props,
   'as',
   'color',
+  'textColor',
   'variant',
   'error',
   'disabled',
@@ -142,13 +148,12 @@ const variantStyles = variant({
 // system() raw function skipped here: createParser iterates props with for...in which
 // doesn't see 'variant' reliably in this styled context. Destructuring is reliable.
 const backgroundStyle = ({
-  variant: variantValue = 'outlined',
+  textColor = 'primary',
   theme,
 }: TextInputRootProps & { theme?: Theme }) => {
-  const isBoxed = variantValue === 'outlined' || variantValue === 'default'
   return {
-    backgroundColor: isBoxed ? get(theme, 'palette.default.light') : 'transparent',
-    color: get(theme, 'text.primary'),
+    backgroundColor: get(theme, 'background.terminal'),
+    color: get(theme, `text.${textColor}`),
     fontFamily: get(theme, 'fonts.body'),
     fontSize: get(theme, 'fontSizes.1'),
     lineHeight: get(theme, 'lineHeights.base'),
@@ -280,11 +285,12 @@ export function TextInput({
   borderRadius,
   classes,
   components,
-  color = 'primary',
-  disabled = false,
-  error = false,
-  fullWidth = false,
-  id,
+  color: colorProp,
+  textColor: textColorProp,
+  disabled: disabledProp,
+  error: errorProp,
+  fullWidth: fullWidthProp,
+  id: idProp,
   inputComponent,
   inputProps,
   inputSize,
@@ -295,10 +301,10 @@ export function TextInput({
   onChange,
   placeholder,
   readOnly,
-  required,
+  required: requiredProp,
   resize = false,
   rows,
-  size = 'md',
+  size: sizeProp,
   type = 'text',
   value,
   variant = 'default',
@@ -306,6 +312,22 @@ export function TextInput({
   'data-testid': dataTestid,
   ...spaceProps
 }: TextInputProps) {
+  // Resolve form-field props through context (Form → FormControl → explicit). Explicit
+  // props win; `color` keeps TextInput's own default since its domain is palette-only.
+  const fc = useFormControl({
+    id: idProp,
+    error: errorProp,
+    disabled: disabledProp,
+    required: requiredProp,
+    size: sizeProp,
+    fullWidth: fullWidthProp,
+    color: colorProp,
+    textColor: textColorProp,
+  })
+  const { id, error, disabled, required, size, fullWidth } = fc
+  const color = fc.color ?? 'primary'
+  const textColor = fc.textColor ?? 'primary'
+
   const isAutoResize = resize
   // rows > 1 implicitly enables multiline; rows === 1 stays as <input>
   const isMultiline = multiline || (rows !== undefined && Number(rows) > 1)
@@ -330,12 +352,14 @@ export function TextInput({
     type: isTextarea ? undefined : type,
     rows: isMultiline && rows !== undefined ? Number(rows) : undefined,
     size,
+    'aria-describedby': inputProps?.['aria-describedby'] ?? fc['aria-describedby'],
   }
 
   return (
     <TextInputRoot
       as={components?.Root}
       color={color}
+      textColor={textColor}
       variant={variant}
       error={error}
       disabled={disabled}

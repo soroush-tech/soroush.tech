@@ -2,6 +2,8 @@ import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { dark } from 'src/theme/themes'
+import { FormControl } from 'src/theme/FormControl'
+import { FormHelperText } from 'src/theme/FormHelperText'
 import { Checkbox } from '../Checkbox'
 
 describe('Checkbox', () => {
@@ -253,6 +255,66 @@ describe('Checkbox', () => {
     it('forwards className to the root', () => {
       renderWithTheme(<Checkbox className="custom" data-testid="cb" />)
       expect(screen.getByTestId('cb')).toHaveClass('custom')
+    })
+  })
+
+  // ─── FormControl context ───────────────────────────────────────────────────────
+
+  describe('FormControl context', () => {
+    it('inherits the id from FormControl', () => {
+      renderWithTheme(
+        <FormControl id="terms">
+          <Checkbox />
+        </FormControl>
+      )
+      expect(screen.getByRole('checkbox')).toHaveAttribute('id', 'terms')
+    })
+
+    it('inherits disabled from FormControl', () => {
+      renderWithTheme(
+        <FormControl disabled>
+          <Checkbox />
+        </FormControl>
+      )
+      expect(screen.getByRole('checkbox')).toBeDisabled()
+    })
+
+    it('inherits color from FormControl', () => {
+      renderWithTheme(
+        <FormControl color="success">
+          <Checkbox data-testid="cb" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('cb')).toHaveStyle({ color: dark.palette.success.main })
+    })
+
+    it('sets aria-describedby from the FormControl helper text', () => {
+      renderWithTheme(
+        <FormControl id="terms">
+          <Checkbox />
+          <FormHelperText>Required</FormHelperText>
+        </FormControl>
+      )
+      expect(screen.getByRole('checkbox')).toHaveAttribute('aria-describedby', 'terms-helper')
+    })
+
+    it('lets an explicit aria-describedby override context', () => {
+      renderWithTheme(
+        <FormControl id="terms">
+          <Checkbox aria-describedby="explicit" />
+          <FormHelperText>Required</FormHelperText>
+        </FormControl>
+      )
+      expect(screen.getByRole('checkbox')).toHaveAttribute('aria-describedby', 'explicit')
+    })
+
+    it('lets an explicit color override context', () => {
+      renderWithTheme(
+        <FormControl color="success">
+          <Checkbox color="error" data-testid="cb" />
+        </FormControl>
+      )
+      expect(screen.getByTestId('cb')).toHaveStyle({ color: dark.palette.error.main })
     })
   })
 })
