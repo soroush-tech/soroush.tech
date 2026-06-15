@@ -51,6 +51,58 @@ Identical to `src/common/` rules:
 
 ---
 
+## Layout standard
+
+Every section uses the same two-layer layout so pages stay visually consistent and
+responsive across **tablet and desktop**. This is not optional — match it exactly.
+
+### 1. Section root — a full-bleed band
+
+Use a semantic `View` (or `Flex`) with `as="section"`. **Never use `Paper` as the section
+root, and never fake a surface with `bg="paper"` on the root.** `Paper` is only for a
+genuine elevated card _inside_ the content container.
+
+```tsx
+<View as="section" py={10} px={4}>
+```
+
+- `px={4}` — consistent horizontal gutter on every section.
+- `py` — vertical rhythm, `6`–`10` depending on density.
+- `bg` — set a surface token (`terminal`, `default`) only when the section needs a banded
+  background; otherwise leave the root transparent.
+
+### 2. Content container — constrained and centered
+
+Wrap the section's content in a container capped at **`maxWidth="1280px"`** and centered
+with **`mx="auto"`**. Put it on a `View`, or directly on the `Flex`/`Grid` that lays out
+the content.
+
+```tsx
+<View as="section" py={10} px={4}>
+  <View maxWidth="1280px" mx="auto">
+    {/* content */}
+  </View>
+</View>
+```
+
+### 3. Responsive — mobile-first, always cover tablet and desktop
+
+Column counts, gaps, and sizes use styled-system responsive arrays `[mobile, tablet, desktop]`.
+Every multi-column layout **must define a tablet _and_ a desktop value** — never ship a
+layout that only adapts at a single breakpoint.
+
+```tsx
+<Grid gridTemplateColumns={['1fr', '1fr 1fr', 'repeat(4, 1fr)']} gap={6}>
+```
+
+| Index | Viewport | Breakpoint |
+| ----- | -------- | ---------- |
+| 0     | mobile   | base       |
+| 1     | tablet   | ≥ 40em     |
+| 2     | desktop  | ≥ 52em     |
+
+---
+
 ## Testing
 
 - Unit test the React surface with `renderWithTheme` (`SectionName.test.tsx`) — heading, content, toggles, conditional rendering.

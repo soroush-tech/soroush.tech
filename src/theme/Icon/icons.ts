@@ -1,6 +1,7 @@
 import AccountTreeIcon from 'src/assets/icons/account_tree.svg?react'
 import AdsClickIcon from 'src/assets/icons/ads_click.svg?react'
 import ArchitectureIcon from 'src/assets/icons/architecture.svg?react'
+import ArrowForwardIcon from 'src/assets/icons/arrow_forward.svg?react'
 import CloudDoneIcon from 'src/assets/icons/cloud_done.svg?react'
 import CloseIcon from 'src/assets/icons/close.svg?react'
 import CodeIcon from 'src/assets/icons/code.svg?react'
@@ -15,6 +16,7 @@ import GridViewIcon from 'src/assets/icons/grid_view.svg?react'
 import GroupsIcon from 'src/assets/icons/groups.svg?react'
 import HubIcon from 'src/assets/icons/hub.svg?react'
 import LanguageIcon from 'src/assets/icons/language.svg?react'
+import LockIcon from 'src/assets/icons/lock.svg?react'
 import NeurologyIcon from 'src/assets/icons/neurology.svg?react'
 import PsychologyIcon from 'src/assets/icons/psychology.svg?react'
 import RebaseEditIcon from 'src/assets/icons/rebase_edit.svg?react'
@@ -34,6 +36,7 @@ export const icons = {
   account_tree: AccountTreeIcon,
   ads_click: AdsClickIcon,
   architecture: ArchitectureIcon,
+  arrow_forward: ArrowForwardIcon,
   cloud_done: CloudDoneIcon,
   close: CloseIcon,
   code: CodeIcon,
@@ -48,6 +51,7 @@ export const icons = {
   groups: GroupsIcon,
   hub: HubIcon,
   language: LanguageIcon,
+  lock: LockIcon,
   neurology: NeurologyIcon,
   psychology: PsychologyIcon,
   rebase_edit: RebaseEditIcon,
