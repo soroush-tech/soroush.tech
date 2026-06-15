@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'apps/web/**'
   pull_request:
+    paths:
+      - 'apps/web/**'
 
 permissions:
   contents: read
@@ -87,7 +91,7 @@ jobs:
         id: detect-playwright
         shell: bash
         run: |
-          VERSION=$(node -p "require('./package.json').devDependencies?.['playwright'] || require('./package.json').dependencies?.['playwright']")
+          VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['playwright'] || require('./apps/web/package.json').dependencies?.['playwright']")
           echo "PLAYWRIGHT_VERSION=${VERSION#^}" >> $GITHUB_ENV
 
       - name: Restore cache - Playwright binaries
@@ -133,7 +137,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
+          files: ./apps/web/coverage/lcov.info
           slug: soroush-tech/soroush.tech
           flags: unit
           name: Unit
@@ -147,7 +151,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
+          files: ./apps/web/coverage/lcov.info
           slug: soroush-tech/soroush.tech
           flags: browser
           name: Browser
@@ -173,7 +177,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
+          files: ./apps/web/coverage/lcov.info
           slug: soroush-tech/soroush.tech
           flags: storybook
           name: Storybook
@@ -201,7 +205,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/e2e/lcov.info
+          files: ./apps/web/coverage/e2e/lcov.info
           slug: soroush-tech/soroush.tech
           flags: e2e
           name: E2E

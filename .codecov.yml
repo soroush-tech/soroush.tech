@@ -14,4 +14,4 @@ component_management:
     - component_id: theme
       name: Theme
       paths:
-        - src/theme/**
+        - apps/web/src/theme/**
