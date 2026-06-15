@@ -71,6 +71,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **Logic & data co-location:** In `common`/`section`/`pages` components, extract pure helpers to `ComponentName/utils.ts` — or a flat `ComponentName/utils/` folder with one file per helper (`utils/helperName.ts` + `utils/helperName.test.ts`) when there are several — constants to `const.ts`, and static data to `ComponentName/ComponentName.data.ts`, co-located with the component. Promote a helper, hook, or data set to `src/utils/` or `src/hooks/` only once it is generic (used by more than one component).
 - **Test placement:** Three tiers, all co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). E2E → `*.e2e.ts` (Playwright), next to its page; shared e2e infra (fixtures, coverage hooks) in `src/test/e2e/`.
 - **Lint:** `pnpm lint` uses `--max-warnings 0` — any warning fails.
+- **Issue artifacts:** Any epic, task, RFC, bug report, user story, feature request, or documentation-feedback item you draft — whether as a `docs/` file or for GitHub — must follow the matching template in `.github/ISSUE_TEMPLATE/` (`4.epic.yml`, `6.task.yml`, `3.rfc.yml`, `1.bug_report.yml`, `5.user_story.yml`, `2.feature_request.yml`, `7.documentation_feedback.yml`). Use that template's exact section headings, order, and title prefix (e.g. `[Epic]`, `[Task]`). Read the template before drafting.
 
 ## Layer conventions
 
