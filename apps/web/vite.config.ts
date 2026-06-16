@@ -5,7 +5,9 @@ import svgr from 'vite-plugin-svgr'
 import { imagetools } from 'vite-imagetools'
 import { compression } from 'vite-plugin-compression2'
 import { resolve } from 'path'
-import { codeGen, mswServer, sitemap } from './vite-plugin'
+import watch from '@soroush.tech/vite-plugin-watch'
+import mswServer from '@soroush.tech/vite-plugin-msw-server'
+import sitemap from '@soroush.tech/vite-plugin-sitemap'
 
 // Opt-in: precompressed assets are only served by a static server configured for
 // them (nginx gzip_static/brotli_static, etc.). GitHub Pages ignores them, so this
@@ -21,14 +23,17 @@ export default defineConfig({
   plugins: [
     svgr(),
     imagetools(),
-    codeGen({
+    watch({
       script: 'scripts/gen-experienceGraph.ts',
       watch: 'src/section/ExperienceGraph/ExperienceGraph.data.ts',
     }),
     react(),
     process.env.NODE_ENV !== 'storybook' && vike(),
     sitemap(),
-    mswEnabled && mswServer(),
+    mswServer({
+      enable: mswEnabled,
+      server: () => import('./src/test/mocks/server').then((m) => m.server),
+    }),
     compress &&
       compression({
         algorithms: ['gzip', 'brotliCompress'],

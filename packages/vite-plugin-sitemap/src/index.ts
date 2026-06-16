@@ -60,7 +60,7 @@ const generate = (clientDir: string): number => {
  * /projects and /design/system drop out with no hardcoded list to maintain. The empty
  * scan that precedes prerender (e.g. the client-build pass) writes nothing.
  */
-export function sitemap(): Plugin {
+export default function sitemap(): Plugin {
   let clientDir = ''
   return {
     name: 'vite-plugin-sitemap',

@@ -5,7 +5,7 @@ import type { Plugin } from 'vite'
 
 const run = promisify(execFile)
 
-export type CodeGenOptions = {
+export type WatchOptions = {
   /** Codegen script to execute, relative to the project root. */
   script: string
   /** Source file(s) whose edits re-run the script during dev. */
@@ -19,7 +19,7 @@ export type CodeGenOptions = {
  * a drift-guard test), so the plugin never runs there. Run `pnpm <script>` to regenerate
  * outside of dev.
  */
-export function codeGen({ script, watch }: CodeGenOptions): Plugin {
+export default function watch({ script, watch }: WatchOptions): Plugin {
   const watchList = watch === undefined ? [] : [watch].flat()
   let scriptPath = script
   let watchPaths = watchList
@@ -27,7 +27,7 @@ export function codeGen({ script, watch }: CodeGenOptions): Plugin {
   const generate = () => run(process.execPath, [scriptPath])
 
   return {
-    name: 'vite-plugin-codegen',
+    name: 'vite-plugin-watch',
     apply: 'serve',
     configResolved({ root }) {
       scriptPath = resolve(root, script)

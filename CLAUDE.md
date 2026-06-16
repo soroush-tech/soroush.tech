@@ -71,19 +71,21 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **Logic & data co-location:** In `common`/`section`/`pages` components, extract pure helpers to `ComponentName/utils.ts` — or a flat `ComponentName/utils/` folder with one file per helper (`utils/helperName.ts` + `utils/helperName.test.ts`) when there are several — constants to `const.ts`, and static data to `ComponentName/ComponentName.data.ts`, co-located with the component. Promote a helper, hook, or data set to `src/utils/` or `src/hooks/` only once it is generic (used by more than one component).
 - **Test placement:** Three tiers, all co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). E2E → `*.e2e.ts` (Playwright), next to its page; shared e2e infra (fixtures, coverage hooks) in `src/test/e2e/`.
 - **Lint:** `pnpm lint` uses `--max-warnings 0` — any warning fails.
+- **Packages:** Everything under `packages/` is a scoped `@soroush.tech/*` workspace package — read `packages/packages.md` first. Every package must have **100% test coverage**, and any publishable (non-`private`) package must declare a license and ship a `LICENSE` file.
 - **Issue artifacts:** Any epic, task, RFC, bug report, user story, feature request, or documentation-feedback item you draft — whether as a `docs/` file or for GitHub — must follow the matching template in `.github/ISSUE_TEMPLATE/` (`4.epic.yml`, `6.task.yml`, `3.rfc.yml`, `1.bug_report.yml`, `5.user_story.yml`, `2.feature_request.yml`, `7.documentation_feedback.yml`). Use that template's exact section headings, order, and title prefix (e.g. `[Epic]`, `[Task]`). Read the template before drafting.
 
 ## Layer conventions
 
 Read the relevant doc before working in that area:
 
-| Layer             | Convention doc               | What it covers                                                                      |
-| ----------------- | ---------------------------- | ----------------------------------------------------------------------------------- |
-| Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules |
-| Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`     |
-| Sections          | `src/section/section.md`     | Page-specific composed sections: folder structure, co-located data/logic, testing   |
-| Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                            |
-| Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests          |
+| Layer             | Convention doc               | What it covers                                                                                               |
+| ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules                          |
+| Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`                              |
+| Sections          | `src/section/section.md`     | Page-specific composed sections: folder structure, co-located data/logic, testing                            |
+| Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                                                     |
+| Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests                                   |
+| Packages          | `packages/packages.md`       | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing |
 
 ## Quick checklist before pushing
 
