@@ -1,0 +1,75 @@
+{
+  "name": "@soroush.tech/vite-plugin-msw-server",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Vite plugin that runs an msw/node mock server during dev and SSG/SSR builds, so server-side data fetching and prerendering resolve against mocks.",
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "msw",
+    "ssg",
+    "ssr",
+    "prerender",
+    "mock",
+    "vike",
+    "testing"
+  ],
+  "author": "Masoud Soroush <masoud@soroush.tech>",
+  "homepage": "https://github.com/soroush-tech/soroush.tech/tree/main/packages/vite-plugin-msw-server#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soroush-tech/soroush.tech.git",
+    "directory": "packages/vite-plugin-msw-server"
+  },
+  "bugs": {
+    "url": "https://github.com/soroush-tech/soroush.tech/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./dist/index.d.mts",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/index.d.cts",
+          "default": "./dist/index.cjs"
+        }
+      }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "vite": "^6 || ^7 || ^8"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^10.5.0",
+    "globals": "^17.6.0",
+    "tsdown": "^0.22.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
+  }
+}

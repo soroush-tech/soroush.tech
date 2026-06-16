@@ -66,7 +66,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@soroush/eslint-config": "workspace:*",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@soroush.tech/vite-plugin-msw-server": "workspace:*",
+    "@soroush.tech/vite-plugin-sitemap": "workspace:*",
+    "@soroush.tech/vite-plugin-watch": "workspace:*",
     "@chromatic-com/storybook": "^5.2.1",
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/css-prettifier": "^1.2.0",
