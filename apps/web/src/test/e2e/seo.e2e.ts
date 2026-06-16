@@ -1,5 +1,19 @@
 import { test, expect } from './fixtures'
 
+test('each page declares a self-referential https canonical URL', async ({ request }) => {
+  // Canonical tags are SSR-rendered by buildHead on every request, so they exist in
+  // both the dev-server runs and the production-build run — no E2E_COVERAGE gate needed.
+  const home = await request.get('/')
+  expect(home.status()).toBe(200)
+  expect(await home.text()).toContain('<link rel="canonical" href="https://soroush.tech/" />')
+
+  const articles = await request.get('/articles')
+  expect(articles.status()).toBe(200)
+  expect(await articles.text()).toContain(
+    '<link rel="canonical" href="https://soroush.tech/articles" />'
+  )
+})
+
 test('robots.txt is served and points to the sitemap', async ({ request }) => {
   const res = await request.get('/robots.txt')
 
