@@ -107,7 +107,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: pnpm --filter @soroush/web exec playwright install --with-deps
 
       - name: Save cache - Playwright binaries
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
