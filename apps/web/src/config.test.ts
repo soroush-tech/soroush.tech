@@ -25,6 +25,25 @@ describe('config', () => {
     })
   })
 
+  describe('API_URL', () => {
+    it('uses VITE_API_URL when defined', async () => {
+      vi.stubEnv('VITE_API_URL', 'http://localhost:8787/v1')
+      vi.resetModules()
+      const { API_URL } = await import('./config')
+      expect(API_URL).toBe('http://localhost:8787/v1')
+    })
+
+    it('falls back to empty string when VITE_API_URL is not defined', async () => {
+      const env = import.meta.env as Record<string, unknown>
+      const saved = env.VITE_API_URL
+      delete env.VITE_API_URL
+      vi.resetModules()
+      const { API_URL } = await import('./config')
+      expect(API_URL).toBe('')
+      env.VITE_API_URL = saved
+    })
+  })
+
   describe('GITHUB_KEY', () => {
     it('exposes the token to server-side code', async () => {
       vi.stubEnv('SSR', true)
