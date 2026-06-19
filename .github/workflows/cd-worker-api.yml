@@ -1,16 +1,21 @@
 name: Deploy Worker (@soroush/api)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'workers/api/**'
-      - 'packages/schema/**'
-      - 'cd-worker-api.yml'
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Continuous Integration']
+    types:
+      - completed
+    branches:
+      - main
+
+concurrency:
+  group: deploy-worker-api
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: cd-worker
     steps:
