@@ -94,6 +94,18 @@ export const fields = [
   },
 ] satisfies ContactField[]
 
+/** Copy for the post-submit success panel. */
+export const success = {
+  heading: 'TRANSMISSION RECEIVED',
+  subtext: 'Message secured. I’ll respond to your inquiry shortly.',
+  logId: 'SEC_COMM',
+  logLines: [
+    'HANDSHAKE_SUCCESSFUL',
+    'PACKETS_ROUTED_THROUGH_SECURE_NODE',
+    'END_TO_END_ENCRYPTION_VERIFIED',
+  ],
+} as const
+
 export const defaultValues: ContactFormValues = {
   name: '',
   company: '',
