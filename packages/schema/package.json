@@ -1,0 +1,26 @@
+{
+  "name": "@soroush.tech/schema",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^10.5.0",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.8"
+  }
+}
