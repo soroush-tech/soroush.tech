@@ -34,17 +34,23 @@ export function CallToAction() {
       <View maxWidth="896px" mx="auto" textAlign="center" position="relative" zIndex={1}>
         <Flex alignItems="center" gap={5}>
           <Typography variant="h1" color="initial" letterSpacing="tighter" lineHeight="tight">
-            Let&apos;s Architect <br /> Something{' '}
+            Let&apos;s Build <br /> Something{' '}
             <Typography as="span" color="primary" variant="inherit">
               Great.
             </Typography>
           </Typography>
           <Typography variant="body1" color="secondary" maxWidth="672px" mx="auto">
-            Currently accepting high-impact architectural consulting and senior leadership
+            Currently accepting high-impact development consulting and senior leadership
             opportunities.
           </Typography>
           <Flex flexDirection={['column', 'row']} gap={3} justifyContent="center">
-            <Button variant="contained" color="primary" size="lg" letterSpacing="widest">
+            <Button
+              href="/contact"
+              variant="contained"
+              color="primary"
+              size="lg"
+              letterSpacing="widest"
+            >
               Connect Now
             </Button>
           </Flex>

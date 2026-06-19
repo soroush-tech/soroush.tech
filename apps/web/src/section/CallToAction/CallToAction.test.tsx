@@ -30,7 +30,7 @@ describe('CallToAction', () => {
     it('renders the body text', () => {
       renderWithTheme(<CallToAction />)
       expect(
-        screen.getByText(/Currently accepting high-impact architectural consulting/)
+        screen.getByText(/Currently accepting high-impact development consulting/)
       ).toBeInTheDocument()
     })
 
@@ -43,9 +43,11 @@ describe('CallToAction', () => {
   })
 
   describe('CTAs', () => {
-    it('renders the Connect Now button', () => {
+    it('renders the Connect Now link to /contact', () => {
       renderWithTheme(<CallToAction />)
-      expect(screen.getByRole('button', { name: /Connect Now/i })).toBeInTheDocument()
+      const cta = screen.getByRole('link', { name: /Connect Now/i })
+      expect(cta).toBeInTheDocument()
+      expect(cta).toHaveAttribute('href', '/contact')
     })
   })
 })
