@@ -33,7 +33,13 @@ export function CallToAction() {
 
       <View maxWidth="896px" mx="auto" textAlign="center" position="relative" zIndex={1}>
         <Flex alignItems="center" gap={5}>
-          <Typography variant="h1" color="initial" letterSpacing="tighter" lineHeight="tight">
+          <Typography
+            variant="h1"
+            as="h2"
+            color="initial"
+            letterSpacing="tighter"
+            lineHeight="tight"
+          >
             Let&apos;s Build <br /> Something{' '}
             <Typography as="span" color="primary" variant="inherit">
               Great.

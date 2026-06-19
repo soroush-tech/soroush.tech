@@ -19,7 +19,7 @@ describe('GroundUp', () => {
 
     it('renders the heading', () => {
       renderWithTheme(<GroundUp />)
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
         'COMPLEX CHALLENGES // ROBUST SOLUTIONS'
       )
     })
