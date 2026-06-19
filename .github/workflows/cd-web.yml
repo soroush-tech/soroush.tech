@@ -70,6 +70,9 @@ jobs:
         env:
           VITE_BASE_URL: ${{ vars.VITE_BASE_URL }}
           VITE_GITHUB_KEY: ${{ secrets.VITE_GITHUB_KEY }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_CONTACT_HONEYPOT: ${{ vars.VITE_CONTACT_HONEYPOT }}
+          VITE_TURNSTILE_SITEKEY: ${{ secrets.VITE_TURNSTILE_SITEKEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

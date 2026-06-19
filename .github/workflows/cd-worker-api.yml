@@ -1,0 +1,48 @@
+name: Deploy Worker (@soroush/api)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/api/**'
+      - 'packages/schema/**'
+      - 'cd-worker-api.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: cd-worker
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Read Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate wrangler.json from env
+        run: pnpm --filter @soroush/api config:gen
+        env:
+          WORKER_NAME: ${{ vars.WORKER_NAME }}
+          D1_DATABASE_NAME: ${{ vars.D1_DATABASE_NAME }}
+          D1_DATABASE_ID: ${{ vars.D1_DATABASE_ID }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          VITE_CONTACT_HONEYPOT: ${{ vars.VITE_CONTACT_HONEYPOT }}
+
+      - name: Deploy
+        run: pnpm --filter @soroush/api exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
