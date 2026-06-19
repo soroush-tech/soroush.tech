@@ -78,14 +78,15 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 Read the relevant doc before working in that area:
 
-| Layer             | Convention doc               | What it covers                                                                                               |
-| ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules                          |
-| Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`                              |
-| Sections          | `src/section/section.md`     | Page-specific composed sections: folder structure, co-located data/logic, testing                            |
-| Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                                                     |
-| Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests                                   |
-| Packages          | `packages/packages.md`       | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing |
+| Layer             | Convention doc               | What it covers                                                                                                              |
+| ----------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Design system     | `src/theme/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules                                         |
+| Common components | `src/common/common.md`       | Folder structure, composition rules, custom CSS, testing with `renderWithTheme`                                             |
+| Sections          | `src/section/section.md`     | Page-specific composed sections: folder structure, co-located data/logic, testing                                           |
+| Pages             | `src/pages/pages.md`         | Vike `+` files, page shape, SSR safety, e2e-only testing                                                                    |
+| Hooks             | `src/hooks/hooks.md`         | Data-fetching pattern, `useCustomQuery`, query keys, MSW integration tests                                                  |
+| Packages          | `packages/packages.md`       | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing                |
+| Worker API        | `workers/api/worker.md`      | Hono routes, `services/` vs `utils/` split, cron `jobs/`, D1 month-table schema, env/bindings, `src/*` alias, 100% coverage |
 
 ## Quick checklist before pushing
 

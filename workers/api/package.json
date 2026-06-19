@@ -1,0 +1,34 @@
+{
+  "name": "@soroush/api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "config:gen": "node scripts/gen-wrangler.mjs",
+    "predev": "pnpm config:gen",
+    "dev": "wrangler dev",
+    "predeploy": "pnpm config:gen",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.6.1",
+    "@soroush.tech/schema": "workspace:*",
+    "hono": "^4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^10.5.0",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.8",
+    "wrangler": "^4"
+  }
+}
