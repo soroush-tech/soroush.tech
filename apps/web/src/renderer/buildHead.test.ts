@@ -118,7 +118,10 @@ describe('buildHead', () => {
       expect(head).toContain("script-src 'self'")
       expect(head).toContain("style-src 'self' 'unsafe-inline'")
       expect(head).toContain("img-src 'self' https://*.githubusercontent.com data:")
-      expect(head).toContain("connect-src 'self' https://api.github.com")
+      expect(head).toContain("connect-src 'self' https://api.github.com https://api.soroush.tech")
+      // Turnstile: script + challenge iframe from challenges.cloudflare.com
+      expect(head).toContain("script-src 'self' https://challenges.cloudflare.com")
+      expect(head).toContain('frame-src https://challenges.cloudflare.com')
     })
   })
 
