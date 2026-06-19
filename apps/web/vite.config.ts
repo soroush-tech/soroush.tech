@@ -47,6 +47,10 @@ export default defineConfig({
     },
   },
   server: {
+    // Playwright runs the dev server on a dedicated port (E2E_PORT) so it never
+    // reuses a developer's `pnpm dev` on 3000 (which has MSW off). Unset → vike's
+    // default 3000 for normal dev. Vike rejects a `--port` CLI flag, so set it here.
+    ...(process.env.E2E_PORT ? { port: Number(process.env.E2E_PORT), strictPort: true } : {}),
     // Keep the test coverage output out of the dev server: don't watch it (no
     // reload churn when `pnpm test:coverage` writes it) and don't serve it.
     watch: { ignored: ['**/coverage/**'] },

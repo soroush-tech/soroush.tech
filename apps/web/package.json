@@ -40,7 +40,7 @@
     "build:compress": "cross-env COMPRESS=true pnpm build",
     "build:storybook": "cross-env NODE_ENV=storybook storybook build",
     "preview": "vite preview",
-    "preview:e2e": "serve build/client -l 3000",
+    "preview:e2e": "serve build/client -l 9999",
     "preview:storybook": "npx serve storybook-static",
     "deploy": "gh-pages -d build"
   },
