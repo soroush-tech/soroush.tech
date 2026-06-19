@@ -29,7 +29,13 @@ export function CoreEngine() {
           <Typography variant="overline" color="primary" fontWeight="bold" letterSpacing="widest">
             MODERN TOOLING
           </Typography>
-          <Typography variant="h1" color="initial" fontWeight="black" letterSpacing="tighter">
+          <Typography
+            variant="h1"
+            as="h2"
+            color="initial"
+            fontWeight="black"
+            letterSpacing="tighter"
+          >
             CORE ENGINE SPECIFICATIONS
           </Typography>
         </Flex>

@@ -19,6 +19,7 @@ export function GroundUp() {
 
         <Typography
           variant="h1"
+          as="h2"
           color="initial"
           fontWeight="black"
           letterSpacing="tighter"

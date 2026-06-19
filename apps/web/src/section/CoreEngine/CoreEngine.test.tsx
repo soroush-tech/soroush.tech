@@ -20,7 +20,7 @@ describe('CoreEngine', () => {
 
     it('renders the heading', () => {
       renderWithTheme(<CoreEngine />)
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
         'CORE ENGINE SPECIFICATIONS'
       )
     })
