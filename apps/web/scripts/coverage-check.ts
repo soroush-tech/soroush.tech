@@ -2,7 +2,7 @@
  * coverage-check — assert per-file coverage from an lcov report.
  *
  * Parses the same `coverage/lcov.info` that CI uploads to Codecov
- * (see .github/workflows/ci.yml) and exits non-zero if any matched source
+ * (see .github/workflows/ci-web.yml) and exits non-zero if any matched source
  * file falls below the threshold.
  *
  * Usage:

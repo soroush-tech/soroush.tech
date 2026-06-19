@@ -1,4 +1,4 @@
-import { type SyntheticEvent } from 'react'
+import { useRef, type SyntheticEvent } from 'react'
 import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 import { Grid } from 'src/theme/Grid'
@@ -8,17 +8,43 @@ import { Button } from 'src/theme/Button'
 import { Icon } from 'src/theme/Icon'
 import { Form } from 'src/theme/Form'
 import { Field } from 'src/theme/Field'
-import { fields, type ContactField, type ContactFormValues } from './ContactInquire.data'
-import { useContactInquire } from './hooks/useContactInquire'
+import { Checkbox } from 'src/theme/Checkbox'
 import { Paper } from 'src/theme/Paper'
+import { contact } from '@soroush.tech/schema'
+import { fields, type ContactField } from './ContactInquire.data'
+import { useContactInquire } from 'src/hooks/useContactInquire'
+import { useContactSubmit } from 'src/hooks/useContactSubmit'
+import { useTurnstile } from 'src/hooks/useTurnstile'
 
-export interface ContactInquireProps {
-  /** Submission seam — wired to the backend endpoint separately. */
-  onSubmit?: (values: ContactFormValues) => void | Promise<void>
-}
+export function ContactInquire() {
+  // Hidden honeypot field name — read from env so it stays out of the public repo. When unset
+  // (e.g. local/dev), the honeypot isn't rendered; the Worker still enforces its own.
+  const honeypotName = import.meta.env.VITE_CONTACT_HONEYPOT
+  // Turnstile sitekey — read from env like the honeypot. When unset (local/dev) the widget
+  // isn't rendered and submission proceeds tokenless; the Worker skips verification in turn.
+  const turnstileSitekey = import.meta.env.VITE_TURNSTILE_SITEKEY ?? ''
+  const submit = useContactSubmit()
+  const honeypotRef = useRef<HTMLInputElement>(null)
+  const {
+    containerRef,
+    token: turnstileToken,
+    reset: resetTurnstile,
+  } = useTurnstile(turnstileSitekey)
 
-export function ContactInquire({ onSubmit }: ContactInquireProps) {
-  const form = useContactInquire({ onSubmit })
+  const form = useContactInquire({
+    onSubmit: async (values) => {
+      // A filled honeypot means a bot — skip the request entirely.
+      if (honeypotRef.current?.value) return
+      try {
+        await submit.mutateAsync({ ...values, turnstileToken })
+      } catch {
+        // Surfaced to the user via submit.isError below.
+      }
+    },
+  })
+
+  // When a captcha is configured, hold submission until the widget yields a token.
+  const captchaPending = Boolean(turnstileSitekey) && !turnstileToken
 
   const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -26,8 +52,6 @@ export function ContactInquire({ onSubmit }: ContactInquireProps) {
     void form.handleSubmit()
   }
 
-  // Field owns the label / error wiring; FormControl context links id / htmlFor /
-  // aria-describedby. labelProps preserves the terminal-style label look.
   const renderField = (field: ContactField) => (
     <Field
       key={field.name}
@@ -73,45 +97,113 @@ export function ContactInquire({ onSubmit }: ContactInquireProps) {
 
         <View mb={8} maxWidth="36rem">
           <Typography variant="h2" color="primary" letterSpacing="tighter" gutterBottom>
-            SECURE INQUIRE
+            CONTACT INQUIRE
           </Typography>
           <Typography variant="overline" as="p" color="secondary">
             Awaiting payload transmission. Authorized communication only.
           </Typography>
         </View>
 
-        <Form onSubmit={handleSubmit} noValidate textColor="initial">
-          <Grid gridTemplateColumns={['1fr', '1fr', '1fr 1fr']} gap={3}>
-            {gridFields.map(renderField)}
-          </Grid>
+        {submit.isSuccess ? (
+          <View role="status" py={6}>
+            <Typography variant="h2" color="success" letterSpacing="tighter" gutterBottom>
+              TRANSMISSION RECEIVED
+            </Typography>
+            <Typography variant="overline" as="p" color="secondary">
+              Message secured. I’ll respond to your inquiry shortly.
+            </Typography>
+          </View>
+        ) : (
+          <Form onSubmit={handleSubmit} noValidate textColor="initial">
+            <Grid gridTemplateColumns={['1fr', '1fr', '1fr 1fr']} gap={3}>
+              {gridFields.map(renderField)}
+            </Grid>
 
-          <Flex mt={6} gap={3}>
-            {fullFields.map(renderField)}
-          </Flex>
-          <Typography variant="caption" as="p" color="secondary" mt={2}>
-            By submitting this form, your information will only be used to respond to your inquiry
-            and will not be shared with third parties.
-          </Typography>
-          <View mt={4}>
-            <View>
-              <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
-                {([canSubmit, isSubmitting]) => (
+            <Flex mt={6} gap={3}>
+              {fullFields.map(renderField)}
+            </Flex>
+
+            {honeypotName && (
+              <View
+                aria-hidden
+                position="absolute"
+                left="-9999px"
+                width="1px"
+                height="1px"
+                overflow="hidden"
+              >
+                <input
+                  ref={honeypotRef}
+                  type="text"
+                  name={honeypotName}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </View>
+            )}
+
+            {turnstileSitekey && (
+              <View mt={6}>
+                <div ref={containerRef} />
+              </View>
+            )}
+
+            <form.Field name="consent">
+              {(field) => (
+                <View mt={4}>
+                  <Checkbox
+                    checked={field.state.value}
+                    onChange={(event) => field.handleChange(event.target.checked)}
+                    required
+                  >
+                    <Typography variant="caption" as="span" color="secondary">
+                      {contact.consentText}
+                    </Typography>
+                  </Checkbox>
+                </View>
+              )}
+            </form.Field>
+            {submit.isError && (
+              <Typography variant="overline" as="p" color="error" mt={4}>
+                Transmission failed. Check your connection and retry.
+              </Typography>
+            )}
+            <View mt={4}>
+              <View>
+                <form.Subscribe selector={(state) => [state.values, state.isSubmitting] as const}>
+                  {([values, isSubmitting]) => (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="lg"
+                      disabled={
+                        !contact.schema.safeParse(values).success || isSubmitting || captchaPending
+                      }
+                      loading={isSubmitting}
+                      loadingPosition="end"
+                    >
+                      {submit.isError ? 'Retry' : 'Send'}
+                    </Button>
+                  )}
+                </form.Subscribe>
+                {submit.isError && (
                   <Button
-                    type="submit"
                     variant="contained"
                     size="lg"
-                    disabled={!canSubmit}
-                    loading={isSubmitting}
-                    loadingPosition="end"
-                    endIcon={<Icon name="arrow_forward" color="inherit" size="1rem" />}
+                    color="default"
+                    ml={2}
+                    onClick={() => {
+                      submit.reset()
+                      resetTurnstile()
+                    }}
                   >
-                    EXECUTE TRANSMISSION
+                    Reset
                   </Button>
                 )}
-              </form.Subscribe>
+              </View>
             </View>
-          </View>
-        </Form>
+          </Form>
+        )}
       </Paper>
     </View>
   )

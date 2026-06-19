@@ -55,6 +55,7 @@ test('contact form clears errors and submits with valid input', async ({ page })
 
   await page.getByRole('textbox', { name: /NAME/ }).fill('Jane Doe')
   await page.getByRole('textbox', { name: /E-MAIL/ }).fill('jane@example.com')
+  await page.getByRole('textbox', { name: /SUBJECT/ }).fill('Project inquiry')
   // The message is an auto-resizing textarea — type per-key so its onChange fires.
   const message = page.getByRole('textbox', { name: /MESSAGE/ })
   await message.click()
