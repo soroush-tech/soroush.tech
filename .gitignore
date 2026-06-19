@@ -28,6 +28,16 @@ coverage
 playwright-report
 cov.txt
 
+# Cloudflare Worker — generated from default.wrangler.json + env (never commit real IDs)
+workers/*/wrangler.json
+workers/*/.wrangler
+workers/*/.dev.vars
+workers/*/.env
+
+# Local SQLite artifacts (e.g. identifier.sqlite from SQLite editor tools)
+*.sqlite
+*.sqlite3
+
 # Build
 node_modules
 build
