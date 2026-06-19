@@ -17,12 +17,15 @@ const isArticleMeta = (data: unknown): data is PageMeta =>
 
 // 'unsafe-inline' styles are required by Emotion's critical-CSS extraction;
 // *.githubusercontent.com covers avatars and gist-proxied images.
+// challenges.cloudflare.com loads the Turnstile script and renders its challenge
+// in an iframe (frame-src — otherwise default-src 'self' would block it).
 const CSP = [
   "default-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' https://*.githubusercontent.com data:",
-  "connect-src 'self' https://api.github.com",
+  "connect-src 'self' https://api.github.com https://api.soroush.tech",
+  'frame-src https://challenges.cloudflare.com',
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
