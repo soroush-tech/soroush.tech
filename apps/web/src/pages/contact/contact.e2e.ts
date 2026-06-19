@@ -1,10 +1,19 @@
 import { test, expect } from 'src/test/e2e/fixtures'
 import type { Page } from '@playwright/test'
 
-// Navigate and wait for the client app to hydrate so form handlers are attached.
+// Navigate to the contact page. The embedded Turnstile widget keeps the network
+// busy, so we can't wait for `networkidle`; Playwright's web-first assertions below
+// auto-wait for hydration before interacting.
 const gotoContact = async (page: Page) => {
   await page.goto('/contact')
-  await page.waitForLoadState('networkidle')
+  await page.waitForTimeout(1000)
+}
+
+// Focus then blur an empty field to trigger blur-mode validation for it.
+const blurField = async (page: Page, name: RegExp) => {
+  const field = page.getByRole('textbox', { name })
+  await field.focus()
+  await field.blur()
 }
 
 test('contact page renders the secure inquiry form', async ({ page }) => {
@@ -12,21 +21,24 @@ test('contact page renders the secure inquiry form', async ({ page }) => {
 
   await expect(page).toHaveTitle('Contact Masoud · SOROUSH.TECH')
 
-  await expect(page.getByRole('heading', { level: 2, name: 'SECURE INQUIRE' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'CONTACT INQUIRE' })).toBeVisible()
   await expect(
     page.getByText('Awaiting payload transmission. Authorized communication only.')
   ).toBeVisible()
-
   await expect(page.getByRole('textbox', { name: /NAME/ })).toBeVisible()
   await expect(page.getByRole('textbox', { name: /E-MAIL/ })).toBeVisible()
   await expect(page.getByRole('textbox', { name: /MESSAGE/ })).toBeVisible()
-  await expect(page.getByRole('button', { name: /EXECUTE TRANSMISSION/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Send/ })).toBeVisible()
 })
 
-test('contact form flags required fields on submit', async ({ page }) => {
+test('contact form flags required fields on blur', async ({ page }) => {
   await gotoContact(page)
 
-  await page.getByRole('button', { name: /EXECUTE TRANSMISSION/ }).click()
+  // Validation runs on blur; the submit button stays disabled while the form is invalid,
+  // so required errors surface by visiting and leaving each empty field, not by submitting.
+  await blurField(page, /NAME/)
+  await blurField(page, /E-MAIL/)
+  await blurField(page, /MESSAGE/)
 
   await expect(page.getByText('Name is required')).toBeVisible()
   await expect(page.getByText('A valid e-mail is required')).toBeVisible()
@@ -46,23 +58,26 @@ test('contact form flags a malformed field on blur', async ({ page }) => {
   await expect(page.getByText('A valid e-mail is required')).toBeVisible()
 })
 
-test('contact form clears errors and submits with valid input', async ({ page }) => {
+test('contact form clears errors as fields are corrected', async ({ page }) => {
   await gotoContact(page)
 
-  // Surface an error first, then correct each field.
-  await page.getByRole('button', { name: /EXECUTE TRANSMISSION/ }).click()
+  // Surface an error first, then correct each field; blurring revalidates and clears it.
+  await blurField(page, /NAME/)
   await expect(page.getByText('Name is required')).toBeVisible()
 
-  await page.getByRole('textbox', { name: /NAME/ }).fill('Jane Doe')
-  await page.getByRole('textbox', { name: /E-MAIL/ }).fill('jane@example.com')
-  await page.getByRole('textbox', { name: /SUBJECT/ }).fill('Project inquiry')
-  // The message is an auto-resizing textarea — type per-key so its onChange fires.
-  const message = page.getByRole('textbox', { name: /MESSAGE/ })
-  await message.click()
-  await message.pressSequentially('Hello, this is a test inquiry.')
+  const name = page.getByRole('textbox', { name: /NAME/ })
+  await name.fill('Jane Doe')
+  await name.blur()
 
-  // Submitting the now-valid form revalidates and clears every error; the page stays put.
-  await page.getByRole('button', { name: /EXECUTE TRANSMISSION/ }).click()
+  const email = page.getByRole('textbox', { name: /E-MAIL/ })
+  await email.fill('jane@example.com')
+  await email.blur()
+
+  await page.getByRole('textbox', { name: /SUBJECT/ }).fill('Project inquiry')
+
+  const message = page.getByRole('textbox', { name: /MESSAGE/ })
+  await message.fill('Hello, this is a test inquiry.')
+  await message.blur()
 
   await expect(page.getByText('Name is required')).toBeHidden()
   await expect(page.getByText('A valid e-mail is required')).toBeHidden()

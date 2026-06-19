@@ -1,6 +1,7 @@
 import AccountTreeIcon from 'src/assets/icons/account_tree.svg?react'
 import AdsClickIcon from 'src/assets/icons/ads_click.svg?react'
 import ArchitectureIcon from 'src/assets/icons/architecture.svg?react'
+import ArrowBackIcon from 'src/assets/icons/arrow_back.svg?react'
 import ArrowForwardIcon from 'src/assets/icons/arrow_forward.svg?react'
 import CloudDoneIcon from 'src/assets/icons/cloud_done.svg?react'
 import CloseIcon from 'src/assets/icons/close.svg?react'
@@ -36,6 +37,7 @@ export const icons = {
   account_tree: AccountTreeIcon,
   ads_click: AdsClickIcon,
   architecture: ArchitectureIcon,
+  arrow_back: ArrowBackIcon,
   arrow_forward: ArrowForwardIcon,
   cloud_done: CloudDoneIcon,
   close: CloseIcon,
