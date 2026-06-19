@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { contactSchema, useContactInquire } from './useContactInquire'
+import { useContactInquire } from './useContactInquire'
 
+// Schema validation itself is covered in @soroush.tech/schema; here we only exercise
+// the hook wiring, so the values just need to pass validation.
 const validValues = {
   name: 'Jane Doe',
   company: '',
@@ -10,39 +12,9 @@ const validValues = {
   website: '',
   project: '',
   timeline: '',
-  subject: '',
+  subject: 'Project inquiry',
   message: 'Hello there.',
 }
-
-describe('contactSchema', () => {
-  it('accepts a fully valid payload', () => {
-    expect(contactSchema.safeParse(validValues).success).toBe(true)
-  })
-
-  it('accepts a valid website URL', () => {
-    expect(
-      contactSchema.safeParse({ ...validValues, website: 'https://example.com' }).success
-    ).toBe(true)
-  })
-
-  it.each([['415-555-1234'], ['(415) 555-1234'], ['415.555.1234'], ['+4155551234']])(
-    'accepts the phone number %s',
-    (phone) => {
-      expect(contactSchema.safeParse({ ...validValues, phone }).success).toBe(true)
-    }
-  )
-
-  it.each([
-    ['empty name', { name: '' }],
-    ['invalid email', { email: 'not-an-email' }],
-    ['malformed website', { website: 'not a url' }],
-    ['malformed phone', { phone: 'call me' }],
-    ['too-short phone', { phone: '123' }],
-    ['empty message', { message: '' }],
-  ])('rejects %s', (_label, override) => {
-    expect(contactSchema.safeParse({ ...validValues, ...override }).success).toBe(false)
-  })
-})
 
 describe('useContactInquire', () => {
   it('invokes onSubmit with the form values once valid', async () => {
@@ -52,7 +24,9 @@ describe('useContactInquire', () => {
     act(() => {
       result.current.setFieldValue('name', validValues.name)
       result.current.setFieldValue('email', validValues.email)
+      result.current.setFieldValue('subject', validValues.subject)
       result.current.setFieldValue('message', validValues.message)
+      result.current.setFieldValue('consent', true)
     })
     await act(async () => {
       await result.current.handleSubmit()
@@ -67,6 +41,7 @@ describe('useContactInquire', () => {
     act(() => {
       result.current.setFieldValue('name', validValues.name)
       result.current.setFieldValue('email', validValues.email)
+      result.current.setFieldValue('subject', validValues.subject)
       result.current.setFieldValue('message', validValues.message)
     })
 

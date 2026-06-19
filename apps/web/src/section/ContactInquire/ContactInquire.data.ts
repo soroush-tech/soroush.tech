@@ -1,16 +1,9 @@
-/** Form field keys — single source of truth for the value shape and schema. */
-export type ContactFieldName =
-  | 'name'
-  | 'company'
-  | 'email'
-  | 'phone'
-  | 'website'
-  | 'project'
-  | 'timeline'
-  | 'subject'
-  | 'message'
+import type { contact } from '@soroush.tech/schema'
 
-export type ContactFormValues = Record<ContactFieldName, string>
+/** Form field keys — derived from the shared contact schema (the single source of truth). */
+export type ContactFieldName = keyof contact.Values
+
+export type ContactFormValues = contact.Values
 
 export interface ContactField {
   name: ContactFieldName
@@ -111,4 +104,5 @@ export const defaultValues: ContactFormValues = {
   timeline: '',
   subject: '',
   message: '',
+  consent: false,
 }

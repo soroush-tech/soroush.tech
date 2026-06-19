@@ -45,6 +45,7 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
+    "@soroush.tech/schema": "workspace:*",
     "@emotion/cache": "^11.14.0",
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
