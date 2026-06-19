@@ -15,3 +15,27 @@ component_management:
       name: Theme
       paths:
         - apps/web/src/theme/**
+    - component_id: schema
+      name: schema
+      paths:
+        - packages/schema/**
+    - component_id: eslint-config
+      name: eslint-config
+      paths:
+        - packages/eslint-config/**
+    - component_id: vite-plugin-msw-server
+      name: vite-plugin-msw-server
+      paths:
+        - packages/vite-plugin-msw-server/**
+    - component_id: vite-plugin-sitemap
+      name: vite-plugin-sitemap
+      paths:
+        - packages/vite-plugin-sitemap/**
+    - component_id: vite-plugin-watch
+      name: vite-plugin-watch
+      paths:
+        - packages/vite-plugin-watch/**
+    - component_id: api
+      name: api
+      paths:
+        - workers/api/**
