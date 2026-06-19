@@ -18,7 +18,7 @@ jobs:
   # expose everything as outputs the other jobs reuse via needs.prepare.outputs.*
   prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     outputs:
       node_version: ${{ steps.node-version.outputs.version }}
       manager: ${{ steps.detect-package-manager.outputs.manager }}
@@ -129,7 +129,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
-      fail-fast: false
       matrix:
         include:
           - { dir: schema, filter: '@soroush.tech/schema', flag: schema }
@@ -230,7 +229,6 @@ jobs:
     timeout-minutes: 30
 
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
