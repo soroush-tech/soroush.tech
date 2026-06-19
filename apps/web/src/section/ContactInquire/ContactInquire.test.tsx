@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { server } from 'src/test/mocks/server'
 import { renderWithApp } from 'src/test/utils/wrapper'
+import { PageContext } from 'src/common/PageContext'
 import { ContactInquire } from './ContactInquire'
 import { fields, type ContactField } from './ContactInquire.data'
 
@@ -118,6 +119,66 @@ describe('ContactInquire', () => {
       expect(screen.queryByRole('button', { name: /Send/i })).not.toBeInTheDocument()
     })
 
+    it('surfaces field errors and does not submit an invalid form (e.g. submitted via Enter)', async () => {
+      let posted = false
+      server.use(
+        http.post(/\/contact$/, () => {
+          posted = true
+          return HttpResponse.json({ ok: true })
+        })
+      )
+      const { container } = renderWithApp(<ContactInquire />)
+
+      // The disabled button can't be clicked, but Enter still fires the form's submit handler.
+      fireEvent.submit(container.querySelector('form') as HTMLFormElement)
+
+      expect(await screen.findByText('Name is required')).toBeInTheDocument()
+      expect(posted).toBe(false)
+    })
+
+    it('resets to a cleared form when New inquiry is clicked on the success panel', async () => {
+      server.use(http.post(/\/contact$/, () => HttpResponse.json({ ok: true })))
+      renderWithApp(<ContactInquire />)
+
+      fillRequired()
+      await waitFor(() => expect(submitButton()).toBeEnabled())
+      fireEvent.click(submitButton())
+
+      await screen.findByRole('status')
+      fireEvent.click(screen.getByRole('button', { name: /New inquiry/i }))
+
+      // Back on the form with the previously entered value cleared.
+      expect(submitButton()).toBeInTheDocument()
+      expect(
+        screen.getByRole('textbox', { name: accessibleName(fieldByName('name')) })
+      ).toHaveValue('')
+    })
+
+    it('submits a valid form even after fields were blurred while empty (autofill scenario)', async () => {
+      let posted = false
+      server.use(
+        http.post(/\/contact$/, () => {
+          posted = true
+          return HttpResponse.json({ ok: true })
+        })
+      )
+      renderWithApp(<ContactInquire />)
+
+      // Blur the required fields while still empty → sets blur-mode validation errors.
+      ;(['name', 'email', 'subject', 'message'] as const).forEach((name) =>
+        fireEvent.blur(screen.getByRole('textbox', { name: accessibleName(fieldByName(name)) }))
+      )
+
+      // Then fill them via change only (as browser autofill does) — without re-blurring.
+      fillRequired()
+
+      await waitFor(() => expect(submitButton()).toBeEnabled())
+      fireEvent.click(submitButton())
+
+      expect(await screen.findByRole('status')).toBeInTheDocument()
+      expect(posted).toBe(true)
+    })
+
     it('shows an error banner on failure', async () => {
       server.use(http.post(/\/contact$/, () => HttpResponse.json({ ok: false }, { status: 400 })))
       renderWithApp(<ContactInquire />)
@@ -142,7 +203,7 @@ describe('ContactInquire', () => {
       await waitFor(() => expect(screen.queryByText(/Transmission failed/)).not.toBeInTheDocument())
     })
 
-    it('short-circuits a submission whose honeypot is filled', async () => {
+    it('shows the success screen without sending a request when the honeypot is filled', async () => {
       vi.stubEnv('VITE_CONTACT_HONEYPOT', 'fax')
       let posted = false
       server.use(
@@ -157,12 +218,36 @@ describe('ContactInquire', () => {
       await waitFor(() => expect(submitButton()).toBeEnabled())
       const trap = document.querySelector('input[name="fax"]')
       expect(trap).not.toBeNull()
+      // Opted out of browser/password-manager autofill so real users don't trip the trap.
+      expect(trap).toHaveAttribute('autocomplete', 'off')
+      expect(trap).toHaveAttribute('data-lpignore', 'true')
+      expect((trap as HTMLInputElement).closest('[aria-hidden]')).toHaveStyle({ display: 'none' })
       fireEvent.change(trap as HTMLInputElement, { target: { value: 'i-am-a-bot' } })
       fireEvent.click(submitButton())
 
-      await new Promise((resolve) => setTimeout(resolve, 50))
+      // Bot sees the decoy success panel, but no request was ever sent.
+      expect(await screen.findByRole('status')).toHaveTextContent('TRANSMISSION RECEIVED')
       expect(posted).toBe(false)
-      expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('back navigation', () => {
+    it('omits the Back button on a direct (non-in-app) visit', () => {
+      renderWithApp(<ContactInquire />)
+      expect(screen.queryByRole('button', { name: /Back/i })).not.toBeInTheDocument()
+    })
+
+    it('renders a Back button after in-app navigation and goes back on click', () => {
+      const back = vi.spyOn(window.history, 'back').mockImplementation(() => undefined)
+      renderWithApp(
+        <PageContext.Provider value={{ isClientSideNavigation: true } as never}>
+          <ContactInquire />
+        </PageContext.Provider>
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: /Back/i }))
+      expect(back).toHaveBeenCalledOnce()
+      back.mockRestore()
     })
   })
 

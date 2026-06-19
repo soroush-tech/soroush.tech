@@ -1,4 +1,4 @@
-import { useRef, type SyntheticEvent } from 'react'
+import { useRef, useState, type SyntheticEvent } from 'react'
 import { View } from 'src/theme/View'
 import { Flex } from 'src/theme/Flex'
 import { Grid } from 'src/theme/Grid'
@@ -11,10 +11,12 @@ import { Field } from 'src/theme/Field'
 import { Checkbox } from 'src/theme/Checkbox'
 import { Paper } from 'src/theme/Paper'
 import { contact } from '@soroush.tech/schema'
-import { fields, type ContactField } from './ContactInquire.data'
+import { fields, success, type ContactField } from './ContactInquire.data'
 import { useContactInquire } from 'src/hooks/useContactInquire'
 import { useContactSubmit } from 'src/hooks/useContactSubmit'
 import { useTurnstile } from 'src/hooks/useTurnstile'
+import { usePageContext } from 'src/hooks/usePageContext'
+import { Blockquote } from 'src/common/Blockquote'
 
 export function ContactInquire() {
   // Hidden honeypot field name — read from env so it stays out of the public repo. When unset
@@ -31,25 +33,35 @@ export function ContactInquire() {
     reset: resetTurnstile,
   } = useTurnstile(turnstileSitekey)
 
-  const form = useContactInquire({
-    onSubmit: async (values) => {
-      // A filled honeypot means a bot — skip the request entirely.
-      if (honeypotRef.current?.value) return
-      try {
-        await submit.mutateAsync({ ...values, turnstileToken })
-      } catch {
-        // Surfaced to the user via submit.isError below.
-      }
-    },
-  })
+  const form = useContactInquire()
+
+  // A tripped honeypot shows the same success screen as a real send (without any request), so a
+  // bot gets no signal it was caught — and a real visitor who autofills the trap isn't left stuck.
+  const [decoySuccess, setDecoySuccess] = useState(false)
 
   // When a captcha is configured, hold submission until the widget yields a token.
   const captchaPending = Boolean(turnstileSitekey) && !turnstileToken
 
+  // Show a Back button (top of the card, in either form or success state) only when the user
+  // reached /contact via in-app (client-side) navigation, so it can return them to where they came from.
+  const cameFromApp = Boolean(usePageContext()?.isClientSideNavigation)
+
   const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
     event.stopPropagation()
-    void form.handleSubmit()
+    const { values } = form.state
+    // Gate on the schema directly (same check as the submit button) rather than the form's
+    // `canSubmit`, which can stay stale-false after autofill and silently block a valid send.
+    if (!contact.schema.safeParse(values).success) {
+      void form.handleSubmit() // surface field errors; an invalid form never submits
+      return
+    }
+    // A filled honeypot means a bot — skip the request but show the success screen anyway.
+    if (honeypotRef.current?.value) {
+      setDecoySuccess(true)
+      return
+    }
+    submit.mutate({ ...values, turnstileToken })
   }
 
   const renderField = (field: ContactField) => (
@@ -89,11 +101,27 @@ export function ContactInquire() {
         id="contact"
         position="relative"
         overflow="hidden"
-        p={[6, 8, 10]}
+        pl={[6, 8, 10]}
+        pr={[6, 8, 10]}
+        pb={[6, 8, 10]}
+        pt={[2, 4]}
       >
         <View aria-hidden position="absolute" top={0} right={0} p={4} opacity={0.2}>
           <Icon name="lock" color="primary" size="3.5rem" />
         </View>
+
+        {cameFromApp && (
+          <View mb={6}>
+            <Button
+              variant="text"
+              size="sm"
+              startIcon={<Icon name="arrow_back" size="1.1rem" />}
+              onClick={() => window.history.back()}
+            >
+              Back
+            </Button>
+          </View>
+        )}
 
         <View mb={8} maxWidth="36rem">
           <Typography variant="h2" color="primary" letterSpacing="tighter" gutterBottom>
@@ -104,14 +132,66 @@ export function ContactInquire() {
           </Typography>
         </View>
 
-        {submit.isSuccess ? (
-          <View role="status" py={6}>
-            <Typography variant="h2" color="success" letterSpacing="tighter" gutterBottom>
-              TRANSMISSION RECEIVED
-            </Typography>
-            <Typography variant="overline" as="p" color="secondary">
-              Message secured. I’ll respond to your inquiry shortly.
-            </Typography>
+        {submit.isSuccess || decoySuccess ? (
+          <View
+            role="status"
+            position="relative"
+            py={[8, 10]}
+            px={[4, 6]}
+            bg="grid"
+            borderColor="light"
+            borderWidth="thin"
+            borderStyle="solid"
+          >
+            <Flex alignItems="center" textAlign="center">
+              <Icon name="cloud_done" color="primary" size="4rem" />
+              <Typography variant="h2" color="primary" letterSpacing="tighter" mt={4} gutterBottom>
+                {success.heading}
+              </Typography>
+              <Typography variant="overline" as="p" color="secondary">
+                {success.subtext}
+              </Typography>
+
+              <Blockquote bg="terminal" p={5} mt={8} width="100%" maxWidth="28rem" textAlign="left">
+                <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    letterSpacing="widest"
+                    textTransform="uppercase"
+                  >
+                    System Log
+                  </Typography>
+                  <Typography variant="caption" color="primary" letterSpacing="widest">
+                    LOG_ID: {success.logId}
+                  </Typography>
+                </Flex>
+                <View height="1px" bg="grid" mt={2} />
+                <View mt={3}>
+                  {success.logLines.map((line) => (
+                    <Typography key={line} variant="caption" as="p" color="secondary">
+                      &gt; {line}
+                    </Typography>
+                  ))}
+                </View>
+              </Blockquote>
+
+              <View mt={8}>
+                <Button
+                  variant="contained"
+                  size="lg"
+                  endIcon={<Icon name="arrow_forward" size="1.1rem" color="inherit" />}
+                  onClick={() => {
+                    submit.reset()
+                    form.reset()
+                    resetTurnstile()
+                    setDecoySuccess(false)
+                  }}
+                >
+                  New inquiry
+                </Button>
+              </View>
+            </Flex>
           </View>
         ) : (
           <Form onSubmit={handleSubmit} noValidate textColor="initial">
@@ -124,20 +204,19 @@ export function ContactInquire() {
             </Flex>
 
             {honeypotName && (
-              <View
-                aria-hidden
-                position="absolute"
-                left="-9999px"
-                width="1px"
-                height="1px"
-                overflow="hidden"
-              >
+              // Hidden bot trap. `display:none` (not off-screen) so browser autofill — Chrome's
+              // native autofill honors it but ignores the data-* hints — and password managers
+              // skip it; an autofilled honeypot would otherwise drop a real user's submission.
+              <View aria-hidden display="none">
                 <input
                   ref={honeypotRef}
                   type="text"
                   name={honeypotName}
                   tabIndex={-1}
                   autoComplete="off"
+                  data-1p-ignore="true"
+                  data-lpignore="true"
+                  data-form-type="other"
                 />
               </View>
             )}
@@ -170,16 +249,18 @@ export function ContactInquire() {
             )}
             <View mt={4}>
               <View>
-                <form.Subscribe selector={(state) => [state.values, state.isSubmitting] as const}>
-                  {([values, isSubmitting]) => (
+                <form.Subscribe selector={(state) => state.values}>
+                  {(values) => (
                     <Button
                       type="submit"
                       variant="contained"
                       size="lg"
                       disabled={
-                        !contact.schema.safeParse(values).success || isSubmitting || captchaPending
+                        !contact.schema.safeParse(values).success ||
+                        submit.isPending ||
+                        captchaPending
                       }
-                      loading={isSubmitting}
+                      loading={submit.isPending}
                       loadingPosition="end"
                     >
                       {submit.isError ? 'Retry' : 'Send'}
