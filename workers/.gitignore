@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Generated Wrangler configuration
+wrangler.json
+
+# Wrangler local development
+.wrangler/
+.dev.vars
+
+# Coverage reports
+coverage/
+
+# Build output
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
