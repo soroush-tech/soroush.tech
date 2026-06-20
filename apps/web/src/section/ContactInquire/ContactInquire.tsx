@@ -22,7 +22,7 @@ import { Blockquote } from 'src/common/Blockquote'
 export function ContactInquire() {
   // Hidden honeypot field name — read from env so it stays out of the public repo. When unset
   // (e.g. local/dev), the honeypot isn't rendered; the Worker still enforces its own.
-  const honeypotName = import.meta.env.VITE_CONTACT_HONEYPOT
+  const honeypotName = import.meta.env.VITE_CONTACT_HONEYPOT ?? null
   // Turnstile sitekey — read from env like the honeypot. When unset (local/dev) the widget
   // isn't rendered and submission proceeds tokenless; the Worker skips verification in turn.
   const turnstileSitekey = import.meta.env.VITE_TURNSTILE_SITEKEY ?? ''

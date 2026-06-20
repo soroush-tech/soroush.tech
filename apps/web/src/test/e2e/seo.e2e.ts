@@ -5,7 +5,11 @@ test('each page declares a self-referential https canonical URL', async ({ reque
   // both the dev-server runs and the production-build run — no E2E_COVERAGE gate needed.
   const home = await request.get('/')
   expect(home.status()).toBe(200)
-  expect(await home.text()).toContain('<link rel="canonical" href="https://soroush.tech/" />')
+  const homeHtml = await home.text()
+  expect(homeHtml).toContain('<link rel="canonical" href="https://soroush.tech/" />')
+  // Home maps to the portrait, so it carries an absolute og:image (asset URL differs
+  // between the dev-server and prod-build runs, so match the prefix only).
+  expect(homeHtml).toMatch(/<meta property="og:image" content="https:\/\/soroush\.tech\//)
 
   const articles = await request.get('/articles')
   expect(articles.status()).toBe(200)
