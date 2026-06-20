@@ -72,7 +72,7 @@ describe('sitemap', () => {
     // index.html -> '/', about has a lastmod, projects is noindex, app.js is not html.
     expect(xml).toContain('<url><loc>https://soroush.tech/</loc></url>')
     expect(xml).toContain(
-      '<url><loc>https://soroush.tech/about</loc><lastmod>2024-03-04</lastmod></url>'
+      '<url><loc>https://soroush.tech/about/</loc><lastmod>2024-03-04</lastmod></url>'
     )
     expect(xml).not.toContain('/projects')
     expect(xml).not.toContain('app.js')

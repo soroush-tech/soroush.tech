@@ -32,10 +32,10 @@ describe('buildHead', () => {
 
     it('renders description, canonical, and website OG tags', () => {
       expect(head).toContain('<meta name="description" content="Who I am." />')
-      expect(head).toContain('<link rel="canonical" href="https://soroush.tech/about" />')
+      expect(head).toContain('<link rel="canonical" href="https://soroush.tech/about/" />')
       expect(head).toContain('<meta property="og:type" content="website" />')
       expect(head).toContain('<meta property="og:title" content="About" />')
-      expect(head).toContain('<meta property="og:url" content="https://soroush.tech/about" />')
+      expect(head).toContain('<meta property="og:url" content="https://soroush.tech/about/" />')
       expect(head).toContain('<meta name="twitter:description" content="Who I am." />')
     })
 
@@ -83,7 +83,7 @@ describe('buildHead', () => {
       expect(head).toContain('"@type":"BlogPosting"')
       expect(head).toContain('"headline":"My Article"')
       expect(head).toContain('"author":{"@type":"Person","name":"Masoud Soroush"}')
-      expect(head).toContain('"mainEntityOfPage":"https://soroush.tech/article/abc"')
+      expect(head).toContain('"mainEntityOfPage":"https://soroush.tech/article/abc/"')
     })
 
     it('omits article time and author tags when absent', () => {
