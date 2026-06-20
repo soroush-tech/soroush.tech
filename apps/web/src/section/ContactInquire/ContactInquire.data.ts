@@ -52,7 +52,7 @@ export const fields = [
     name: 'phone',
     code: '04',
     label: 'PHONE',
-    placeholder: '+49xxxxxx',
+    placeholder: '030-XXXXXX',
     type: 'tel',
     required: false,
     autoComplete: 'tel',
@@ -98,7 +98,6 @@ export const fields = [
 export const success = {
   heading: 'TRANSMISSION RECEIVED',
   subtext: 'Message secured. I’ll respond to your inquiry shortly.',
-  logId: 'SEC_COMM',
   logLines: [
     'HANDSHAKE_SUCCESSFUL',
     'PACKETS_ROUTED_THROUGH_SECURE_NODE',

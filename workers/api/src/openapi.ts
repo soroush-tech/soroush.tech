@@ -15,6 +15,27 @@ const okResponse = {
   },
 }
 
+/** Contact 200 body: `{ ok: true, id }`. `id` is omitted for dropped honeypot hits. */
+const contactOkResponse = {
+  description: 'Success',
+  content: {
+    'application/json': {
+      schema: {
+        type: 'object',
+        properties: {
+          ok: { type: 'boolean', const: true },
+          id: {
+            type: 'string',
+            description:
+              'Short reference for the stored submission, e.g. REQ-2606-F47AC10B. Omitted for dropped honeypot hits.',
+          },
+        },
+        required: ['ok'],
+      },
+    },
+  },
+}
+
 /** Error body: `{ ok: false, error: string }`. */
 const errorResponse = (description: string) => ({
   description,
@@ -104,7 +125,7 @@ export const openApiDocument = {
           },
         },
         responses: {
-          '200': okResponse,
+          '200': contactOkResponse,
           '400': validationErrorResponse,
           '403': errorResponse('Captcha verification failed'),
           '413': errorResponse('Payload too large'),
