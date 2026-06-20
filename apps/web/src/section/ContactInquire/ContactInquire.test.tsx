@@ -238,6 +238,12 @@ describe('ContactInquire', () => {
       expect(status.textContent).toMatch(/ID: res_\d{9}/)
       expect(posted).toBe(false)
     })
+
+    it('renders no honeypot field when VITE_CONTACT_HONEYPOT is unset', () => {
+      vi.stubEnv('VITE_CONTACT_HONEYPOT', undefined)
+      renderWithApp(<ContactInquire />)
+      expect(document.querySelector('input[data-lpignore="true"]')).toBeNull()
+    })
   })
 
   describe('back navigation', () => {
