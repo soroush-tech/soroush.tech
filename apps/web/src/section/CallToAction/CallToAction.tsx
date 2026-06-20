@@ -57,7 +57,7 @@ export function CallToAction() {
               size="lg"
               letterSpacing="widest"
             >
-              Connect Now
+              Contact Now
             </Button>
           </Flex>
         </Flex>
