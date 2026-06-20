@@ -48,6 +48,24 @@ describe('buildHead', () => {
     })
   })
 
+  describe('meta description from config', () => {
+    it('renders the page description', () => {
+      expect(buildHead(ctx({ description: 'Who I am.' }))).toContain(
+        '<meta name="description" content="Who I am." />'
+      )
+    })
+
+    it('resolves a function description (e.g. the article +description hook)', () => {
+      expect(buildHead(ctx({ description: () => 'A summary. - Masoud Soroush' }))).toContain(
+        '<meta name="description" content="A summary. - Masoud Soroush" />'
+      )
+    })
+
+    it('omits the description when the config has none', () => {
+      expect(buildHead(ctx())).not.toContain('name="description"')
+    })
+  })
+
   describe('canonical/og:url trailing slash', () => {
     it('keeps a single slash for the home page', () => {
       expect(buildHead(ctx(undefined, '/'))).toContain('href="https://soroush.tech/"')

@@ -1,7 +1,7 @@
 import type { PageContext } from 'vike/types'
 import { SITE_URL } from 'src/config'
 import type { HeadMeta, MetaTag } from './head'
-import { SITE_NAME, documentTitle } from './seo'
+import { SITE_NAME, documentTitle, pageDescription } from './seo'
 
 /** Escapes a value for safe interpolation into HTML text and attribute contexts. */
 const escape = (value: string): string =>
@@ -52,6 +52,9 @@ export const buildHead = (pageContext: PageContext): string => {
   const path = pageContext.urlPathname || '/'
   const url = escape(`${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`)
   const head = isHeadMeta(pageContext.data) ? pageContext.data : undefined
+  // Canonical description from the page config, resolved the same way as the title
+  // (article pages supply it via their +description hook). socialMeta owns og/twitter only.
+  const description = pageDescription(pageContext)
 
   const tags = [
     `<title>${escape(documentTitle(pageContext))}</title>`,
@@ -64,6 +67,7 @@ export const buildHead = (pageContext: PageContext): string => {
     `<meta property="og:url" content="${url}" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
     `<meta name="robots" content="${escape(robots)}" />`,
+    ...(description ? [`<meta name="description" content="${escape(description)}" />`] : []),
     ...(head?.meta ?? []).map(metaTag),
   ]
 

@@ -17,6 +17,6 @@ describe('data', () => {
 
     expect(queryClient.getQueryData(['gists'])).toEqual(gists)
     expect(result.meta).toContainEqual({ property: 'og:title', content: 'Articles' })
-    expect(result.meta).toContainEqual({ name: 'description', content: 'All posts.' })
+    expect(result.meta).toContainEqual({ property: 'og:description', content: 'All posts.' })
   })
 })

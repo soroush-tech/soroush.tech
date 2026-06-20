@@ -19,7 +19,7 @@ const blurField = async (page: Page, name: RegExp) => {
 test('contact page renders the secure inquiry form', async ({ page }) => {
   await gotoContact(page)
 
-  await expect(page).toHaveTitle('Contact Masoud · SOROUSH.TECH')
+  await expect(page).toHaveTitle('Contact Masoud Soroush · SOROUSH.TECH')
 
   await expect(page.getByRole('heading', { level: 2, name: 'CONTACT INQUIRE' })).toBeVisible()
   await expect(
