@@ -92,8 +92,13 @@ describe('POST /v1/contact', () => {
     const urls = stubFetch()
     const res = await post(valid, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    const json = (await res.json()) as { ok: boolean; id: string }
+    expect(json.ok).toBe(true)
+    // A REQ-YYMM-XXXXXXXX reference is returned, derived from the stored UUID bound into the INSERT.
+    expect(json.id).toMatch(/^REQ-\d{4}-[0-9A-F]{8}$/)
     expect(inserts).toHaveLength(1)
+    const storedId = inserts[0][0] as string
+    expect(json.id.endsWith(storedId.slice(0, 8).toUpperCase())).toBe(true)
     expect(inserts[0]).toContain('ada@example.com')
     expect(urls.some((u) => u.includes('api.resend.com'))).toBe(true)
     // Writes into the current month's partition, creating it first.
@@ -116,7 +121,7 @@ describe('POST /v1/contact', () => {
     stubFetch({ emailOk: false })
     const res = await post(valid, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect((await res.json()) as { ok: boolean }).toMatchObject({ ok: true })
     expect(inserts).toHaveLength(1)
   })
 
@@ -193,7 +198,7 @@ describe('POST /v1/contact — Turnstile captcha', () => {
     const { env, inserts } = makeEnv('fax', 'secret')
     const res = await post({ ...valid, turnstileToken: 'good' }, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect((await res.json()) as { ok: boolean }).toMatchObject({ ok: true })
     expect(inserts).toHaveLength(1)
   })
 

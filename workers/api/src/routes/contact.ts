@@ -5,6 +5,7 @@ import { notify } from 'src/services/email'
 import { verifyTurnstile } from 'src/services/turnstile'
 import { monthTableName, createTableStatement } from 'src/utils/tables'
 import { sanitizeContact } from 'src/utils/sanitize'
+import { formatRequestId } from 'src/utils/requestId'
 
 /** Reject bodies larger than this many bytes before parsing — a cheap abuse guard. */
 const MAX_BODY_BYTES = 16 * 1024
@@ -67,6 +68,7 @@ contactRoute.post('/contact', async (c) => {
   // next month, but create-if-not-exists here covers the first write of a month either way.
   const now = new Date()
   const table = monthTableName(now)
+  const id = crypto.randomUUID()
   await c.env.DB.prepare(createTableStatement(table)).run()
   await c.env.DB.prepare(
     `INSERT INTO ${table}
@@ -74,7 +76,7 @@ contactRoute.post('/contact', async (c) => {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
-      crypto.randomUUID(),
+      id,
       now.toISOString(),
       v.name,
       v.company,
@@ -98,5 +100,6 @@ contactRoute.post('/contact', async (c) => {
     // swallow — the row is stored; the notification can be recovered from D1 if needed.
   }
 
-  return c.json({ ok: true })
+  // Return a short reference derived from the stored id so the user can quote it in follow-ups.
+  return c.json({ ok: true, id: formatRequestId(id, now) })
 })
