@@ -1,15 +1,3 @@
-/** Minimal shape of the Cloudflare Email Sending binding used to notify the owner. */
-export interface EmailSendBinding {
-  send(message: {
-    to: string
-    from: { email: string; name?: string }
-    replyTo?: string
-    subject: string
-    html: string
-    text: string
-  }): Promise<unknown>
-}
-
 /** Cloudflare Workers rate-limit binding: `limit({ key })` → `{ success }`. */
 export interface RateLimit {
   limit(options: { key: string }): Promise<{ success: boolean }>
@@ -22,8 +10,8 @@ export interface Env {
   DB: D1Database
   /** R2 bucket where retention archives expired submissions. */
   BACKUPS: R2Bucket
-  /** Cloudflare Email Sending binding for owner notifications. */
-  EMAIL: EmailSendBinding
+  /** Resend API key (a Worker secret) for sending owner notifications via the Resend HTTP API. */
+  RESEND_API_KEY: string
   /** Cloudflare Turnstile secret (a Worker secret). Empty disables captcha verification. */
   TURNSTILE_SECRET: string
   /** Per-IP rate limiter for the contact endpoint (1 request / 60s). */
