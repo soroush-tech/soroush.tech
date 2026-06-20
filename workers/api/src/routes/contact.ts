@@ -12,14 +12,6 @@ const MAX_BODY_BYTES = 16 * 1024
 export const contactRoute = new Hono<{ Bindings: Env }>()
 
 contactRoute.post('/contact', async (c) => {
-  // Per-IP rate limit (1 req / 60s). `cf-connecting-ip` is always set behind Cloudflare; it's
-  // absent only in local dev / direct access, where we skip rather than block.
-  const ip = c.req.header('cf-connecting-ip')
-  if (ip) {
-    const { success } = await c.env.RATE_LIMITER.limit({ key: ip })
-    if (!success) return c.json({ ok: false, error: 'Too many requests' }, 429)
-  }
-
   if (Number(c.req.header('content-length') ?? '0') > MAX_BODY_BYTES) {
     return c.json({ ok: false, error: 'Payload too large' }, 413)
   }
@@ -47,7 +39,11 @@ contactRoute.post('/contact', async (c) => {
     let passed = false
     if (typeof token === 'string') {
       const ip = c.req.header('cf-connecting-ip')
-      passed = await verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip)
+      const hostnames = (c.env.TURNSTILE_HOSTNAME ?? '')
+        .split(',')
+        .map((h) => h.trim())
+        .filter(Boolean)
+      passed = await verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip, hostnames)
     }
     if (!passed) {
       return c.json({ ok: false, error: 'Captcha verification failed' }, 403)

@@ -17,6 +17,23 @@ const ALLOWED_ORIGINS = ['https://soroush.tech', 'https://www.soroush.tech']
 const resolveOrigin = (origin: string, c: Context<{ Bindings: Env }>) =>
   ALLOWED_ORIGINS.includes(origin) || origin === c.env.ALLOW_ORIGIN ? origin : null
 
+/**
+ * Paths exempt from the origin guard and rate limit: `/health` (uptime monitors send no Origin and
+ * poll frequently) and the docs routes (opened by direct browser navigation, which also sends no
+ * Origin; already gated by `DOCS_ENABLED`).
+ */
+const GUARD_EXEMPT = ['/v1/health', '/v1/docs', '/v1/openapi.json']
+
+/** Origin of a `Referer` header, or `null` when it's absent or unparseable. */
+const refererOrigin = (referer: string | undefined): string | null => {
+  if (!referer) return null
+  try {
+    return new URL(referer).origin
+  } catch {
+    return null
+  }
+}
+
 /** Docs (Swagger UI + OpenAPI) are served only when `DOCS_ENABLED` is set — never in production. */
 const docsEnabled = (c: { env: Env }) => c.env.DOCS_ENABLED === 'true'
 
@@ -28,13 +45,41 @@ export const createApp = () => {
   const app = new Hono<{ Bindings: Env }>().basePath('/v1')
 
   app.use(
-    '*',
+    '/*',
     cors({
       origin: resolveOrigin,
       allowMethods: ['POST', 'OPTIONS'],
       allowHeaders: ['Content-Type', 'Authorization'],
     })
   )
+
+  // Belt-and-suspenders origin gate: reject requests whose Origin (or Referer, as a fallback) is
+  // not our site before they reach a route. Non-browser clients can forge these headers, so this
+  // is noise reduction, not security — Turnstile is the real gate. `cors()` above already
+  // short-circuits the OPTIONS preflight, so only real requests reach here.
+  app.use('/*', async (c, next) => {
+    if (GUARD_EXEMPT.includes(c.req.path)) return next()
+    const allowed = c.env.ALLOW_ORIGIN ? [...ALLOWED_ORIGINS, c.env.ALLOW_ORIGIN] : ALLOWED_ORIGINS
+    const origin = c.req.header('Origin')
+    const allowedByOrigin = origin ? allowed.includes(origin) : false
+    const allowedByReferer = allowed.includes(refererOrigin(c.req.header('Referer')) ?? '')
+    if (!allowedByOrigin && !allowedByReferer) {
+      return c.json({ ok: false, error: 'Forbidden' }, 403)
+    }
+    return next()
+  })
+
+  // Per-IP rate limit across all routes. `cf-connecting-ip` is always set behind Cloudflare; it's
+  // absent only in local dev / direct access, where we skip rather than block.
+  app.use('/*', async (c, next) => {
+    if (GUARD_EXEMPT.includes(c.req.path)) return next()
+    const ip = c.req.header('cf-connecting-ip')
+    if (ip) {
+      const { success } = await c.env.RATE_LIMITER.limit({ key: ip })
+      if (!success) return c.json({ ok: false, error: 'Too many requests' }, 429)
+    }
+    return next()
+  })
 
   app.get('/health', (c) => c.json({ ok: true }))
   app.route('/', contactRoute)
