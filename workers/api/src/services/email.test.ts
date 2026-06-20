@@ -1,8 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { notify } from './email'
 import type { Env } from 'src/env'
-
-type Message = Parameters<Env['EMAIL']['send']>[0]
 
 const values = {
   name: 'Ada Lovelace',
@@ -16,58 +14,68 @@ const values = {
   message: 'Hello there.',
 }
 
+const env = { RESEND_API_KEY: 'test-key' } as unknown as Env
+
+/** Stub global fetch with the given response shape and return the mock for assertions. */
+const stubFetch = (impl: () => Partial<Response>) => {
+  const mock = vi.fn(async () => impl() as Response)
+  vi.stubGlobal('fetch', mock)
+  return mock
+}
+
+/** Parse the JSON body of the first fetch call. */
+const sentBody = (mock: ReturnType<typeof stubFetch>) =>
+  JSON.parse((mock.mock.calls[0][1] as RequestInit).body as string)
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
 describe('notify', () => {
-  it('sends to the owner with the submitter as reply-to', async () => {
-    let sent: Message | undefined
-    const env = {
-      EMAIL: {
-        send: async (message: Message) => {
-          sent = message
-        },
-      },
-    } as unknown as Env
+  it('POSTs to Resend with the owner as recipient and the submitter as reply-to', async () => {
+    const mock = stubFetch(() => ({ ok: true, status: 200 }))
 
     await notify(env, values)
 
-    expect(sent?.to).toBe('masoud@soroush.tech')
-    expect(sent?.from.email).toBe('contact@soroush.tech')
-    expect(sent?.replyTo).toBe('ada@example.com')
-    expect(sent?.subject).toBe('New inquiry: Project inquiry')
-    expect(sent?.text).toContain('ada@example.com')
-    expect(sent?.html).toContain('Hello there.')
+    expect(mock).toHaveBeenCalledTimes(1)
+    const [url, init] = mock.mock.calls[0] as [string, RequestInit]
+    expect(url).toBe('https://api.resend.com/emails')
+    expect(init.method).toBe('POST')
+    expect((init.headers as Record<string, string>).authorization).toBe('Bearer test-key')
+
+    const body = sentBody(mock)
+    expect(body.to).toEqual(['masoud@soroush.tech'])
+    expect(body.from).toContain('contact@soroush.tech')
+    expect(body.reply_to).toBe('ada@example.com')
+    expect(body.subject).toBe('New inquiry: Project inquiry')
+    expect(body.text).toContain('ada@example.com')
+    expect(body.html).toContain('Hello there.')
   })
 
   it('HTML-escapes submitted values so markup cannot be injected into the email body', async () => {
-    let sent: Message | undefined
-    const env = {
-      EMAIL: {
-        send: async (message: Message) => {
-          sent = message
-        },
-      },
-    } as unknown as Env
+    const mock = stubFetch(() => ({ ok: true, status: 200 }))
 
     await notify(env, { ...values, message: '<script>alert(1)</script>', name: 'a<b>&"\'' })
 
-    expect(sent?.html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;')
-    expect(sent?.html).toContain('a&lt;b&gt;&amp;&quot;&#39;')
-    expect(sent?.html).not.toContain('<script>')
+    const body = sentBody(mock)
+    expect(body.html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;')
+    expect(body.html).toContain('a&lt;b&gt;&amp;&quot;&#39;')
+    expect(body.html).not.toContain('<script>')
     // The plain-text part keeps the original characters.
-    expect(sent?.text).toContain('<script>alert(1)</script>')
+    expect(body.text).toContain('<script>alert(1)</script>')
   })
 
   it('collapses newlines in the subject to prevent header injection', async () => {
-    let sent: Message | undefined
-    const env = {
-      EMAIL: {
-        send: async (message: Message) => {
-          sent = message
-        },
-      },
-    } as unknown as Env
+    const mock = stubFetch(() => ({ ok: true, status: 200 }))
 
     await notify(env, { ...values, subject: 'Hi\r\nBcc: evil@example.com' })
 
-    expect(sent?.subject).toBe('New inquiry: Hi Bcc: evil@example.com')
+    expect(sentBody(mock).subject).toBe('New inquiry: Hi Bcc: evil@example.com')
+  })
+
+  it('throws when Resend responds with a non-2xx status', async () => {
+    stubFetch(() => ({ ok: false, status: 422 }))
+
+    await expect(notify(env, values)).rejects.toThrow('Resend send failed: 422')
   })
 })

@@ -1,8 +1,9 @@
 import type { contact } from '@soroush.tech/schema'
 import type { Env } from 'src/env'
 
-const FROM = { email: 'contact@soroush.tech', name: 'Soroush.tech' }
+const FROM = 'Soroush.tech <contact@soroush.tech>'
 const TO = 'masoud@soroush.tech'
+const RESEND_ENDPOINT = 'https://api.resend.com/emails'
 
 /** Escape HTML-significant characters so submitted text can't inject markup into the email. */
 const escapeHtml = (value: string): string =>
@@ -14,8 +15,9 @@ const escapeHtml = (value: string): string =>
     .replace(/'/g, '&#39;')
 
 /**
- * Notify the owner of a new contact submission via the Cloudflare Email Sending binding.
- * `replyTo` is set to the submitter so a reply in the mailbox goes straight back to them.
+ * Notify the owner of a new contact submission via the Resend HTTP API. `reply_to` is set to the
+ * submitter so a reply in the mailbox goes straight back to them. Throws on a non-2xx response so
+ * the caller (best-effort) can log it without the stored submission being affected.
  */
 export const notify = async (env: Env, values: contact.Values): Promise<void> => {
   const text = [
@@ -32,13 +34,24 @@ export const notify = async (env: Env, values: contact.Values): Promise<void> =>
     .filter(Boolean)
     .join('\n')
 
-  await env.EMAIL.send({
-    to: TO,
-    from: FROM,
-    replyTo: values.email,
-    // Collapse CR/LF so a crafted subject can't inject extra email headers.
-    subject: `New inquiry: ${values.subject}`.replace(/[\r\n]+/g, ' '),
-    text,
-    html: `<pre>${escapeHtml(text)}</pre>`,
+  const response = await fetch(RESEND_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to: [TO],
+      reply_to: values.email,
+      // Collapse CR/LF so a crafted subject can't inject extra email headers.
+      subject: `New inquiry: ${values.subject}`.replace(/[\r\n]+/g, ' '),
+      text,
+      html: `<pre>${escapeHtml(text)}</pre>`,
+    }),
   })
+
+  if (!response.ok) {
+    throw new Error(`Resend send failed: ${response.status}`)
+  }
 }

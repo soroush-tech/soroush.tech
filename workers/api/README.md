@@ -1,7 +1,7 @@
 # @soroush/api
 
 The contact-form backend Worker (Hono). Exposes `POST /v1/contact` and a `GET /v1/health`
-check, persists submissions to D1, and emails the owner via Cloudflare Email Sending.
+check, persists submissions to D1, and emails the owner via the Resend HTTP API.
 
 ## Data model & retention
 
@@ -38,10 +38,11 @@ CORS is locked to `https://soroush.tech` and `https://www.soroush.tech`.
 ## Bindings & config
 
 `wrangler.json` is **generated from env** (see the `default.wrangler.json` template and
-`scripts/gen-wrangler.mjs`) so no IDs land in the repo. Bindings: `DB` (D1), `BACKUPS` (R2),
-`EMAIL` (Email Sending). Vars: `VITE_CONTACT_HONEYPOT` (hidden field name, shared key with the web),
-`RETENTION_MONTHS`
-(default `6`). The schema template `*.sql` is bundled as a string via wrangler's default `Text`
+`scripts/gen-wrangler.mjs`) so no IDs land in the repo. Bindings: `DB` (D1), `BACKUPS` (R2).
+Secrets: `RESEND_API_KEY` (Resend send), `TURNSTILE_SECRET` (captcha). Vars:
+`VITE_CONTACT_HONEYPOT` (hidden field name, shared key with the web), `RETENTION_MONTHS`
+(default `6`), `TURNSTILE_HOSTNAME` (comma-separated hostnames a Turnstile token may be solved on;
+set in prod config only, so the local test secret keeps working). The schema template `*.sql` is bundled as a string via wrangler's default `Text`
 module rule.
 
 Month tables are created at runtime, so **no `wrangler d1 migrations apply` is needed** — a fresh
@@ -55,17 +56,22 @@ retired rather than kept forever, e.g. via `wrangler r2 bucket lifecycle ...` or
 
 ## One-time email setup
 
-Email Sending is outbound-only and coexists with Google Workspace handling inbound mail —
-**do not enable Email Routing** on the domain (it would hijack MX).
+Email is sent via [Resend](https://resend.com) (free tier) over HTTPS — sending-only, so it
+coexists with Google Workspace handling inbound mail. **Do not enable Cloudflare Email Routing**
+on the domain (it would hijack the Google MX).
 
-1. `wrangler email sending enable soroush.tech`
-2. Add the DKIM CNAME records Cloudflare provides.
-3. **Merge** the SPF record with Google's, e.g.
-   `v=spf1 include:_spf.google.com include:<cloudflare-send-include> ~all` — do not replace it.
+1. Create a Resend account and **verify `soroush.tech`** (Domains → Add) — add exactly the
+   records Resend lists (DKIM `resend._domainkey` + a `send.` subdomain MX/SPF). These are
+   sending-only on a subdomain, so the apex `MX` for Google stays untouched. Separately, the apex
+   has **no SPF** today — add `v=spf1 include:_spf.google.com ~all` for your Google-sent mail.
+2. Create a Resend API key and set it as the Worker secret:
+   `wrangler secret put RESEND_API_KEY`.
+3. For local dev, put `RESEND_API_KEY` where the other dev secrets live (see `default.env`).
 
-Mail is sent from `contact@soroush.tech` to `masoud@soroush.tech`, `replyTo` the submitter.
+Mail is sent from `contact@soroush.tech` to `masoud@soroush.tech`, `reply_to` the submitter.
 
 ## Testing
 
 `pnpm --filter @soroush/api test:coverage` — the Hono app is exercised in-process via
-`app.request()` with mocked D1/R2/EMAIL bindings; 100% coverage is required.
+`app.request()` with mocked D1/R2 bindings and a stubbed `fetch` (Resend + Turnstile); 100%
+coverage is required.
