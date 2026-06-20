@@ -52,7 +52,9 @@ export const buildHead = (pageContext: PageContext): string => {
   const description = pageDescription(pageContext)
   const robots =
     typeof pageContext.config?.robots === 'string' ? pageContext.config.robots : 'index,follow'
-  const url = `${SITE_URL}${pageContext.urlPathname ?? ''}`
+  // Trailing slash matches GitHub Pages, which 301-redirects `/about` -> `/about/`.
+  const path = pageContext.urlPathname || '/'
+  const url = `${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`
   const article = isArticleMeta(pageContext.data) ? pageContext.data : undefined
 
   const ogTitle = escape(title ?? SITE_NAME)

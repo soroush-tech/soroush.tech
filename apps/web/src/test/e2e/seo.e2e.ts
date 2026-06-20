@@ -10,7 +10,7 @@ test('each page declares a self-referential https canonical URL', async ({ reque
   const articles = await request.get('/articles')
   expect(articles.status()).toBe(200)
   expect(await articles.text()).toContain(
-    '<link rel="canonical" href="https://soroush.tech/articles" />'
+    '<link rel="canonical" href="https://soroush.tech/articles/" />'
   )
 })
 
@@ -34,7 +34,7 @@ test('sitemap.xml lists indexable pages and omits noindex ones', async ({ reques
   expect(res.status()).toBe(200)
   const xml = await res.text()
   expect(xml).toContain('<loc>https://soroush.tech/</loc>')
-  expect(xml).toContain('<loc>https://soroush.tech/articles</loc>')
+  expect(xml).toContain('<loc>https://soroush.tech/articles/</loc>')
   // noindex pages must never be listed.
   expect(xml).not.toContain('/projects</loc>')
   expect(xml).not.toContain('/design/system</loc>')

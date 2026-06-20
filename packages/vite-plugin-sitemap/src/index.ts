@@ -14,14 +14,13 @@ const meta = (html: string, name: string): string | undefined => {
   return match ? (match[1] ?? match[2]) : undefined
 }
 
-// `about/index.html` -> `/about`, `index.html` -> `/`, `article/x/index.html` -> `/article/x`.
-const toPath = (relative: string): string => {
-  const url = relative
+// `about/index.html` -> `/about/`, `index.html` -> `/`, `article/x/index.html` -> `/article/x/`.
+// Trailing slashes match GitHub Pages, which 301-redirects `/about` -> `/about/`.
+const toPath = (relative: string): string =>
+  `/${relative
     .split(sep)
     .join('/')
-    .replace(/\/?index\.html$/, '')
-  return `/${url}`.replace(/\/$/, '') || '/'
-}
+    .replace(/index\.html$/, '')}`
 
 const generate = (clientDir: string): number => {
   const entries = readdirSync(clientDir, { recursive: true })
