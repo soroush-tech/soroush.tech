@@ -30,6 +30,10 @@ pnpm install   # from the repo root
 pnpm dev       # start the Vite dev server
 ```
 
+`pnpm install` bootstraps `apps/web/.env.local` from [`default.env`](./default.env) (via the
+root `postprepare` → `pnpm run setup`) so Vite has its `VITE_*` values — it never overwrites an
+existing file. Edit `.env.local` for your local secrets, or re-run `pnpm run setup`.
+
 ---
 
 ## 📁 Structure

@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "config:gen": "node scripts/gen-wrangler.mjs",
+    "setup": "node scripts/setup-env.mjs",
     "predev": "pnpm config:gen",
     "dev": "wrangler dev",
     "predeploy": "pnpm config:gen",

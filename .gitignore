@@ -45,6 +45,7 @@ dist
 dist-ssr
 *.local
 .env
+.env.local
 prod.env
 
 # Local issue drafts
