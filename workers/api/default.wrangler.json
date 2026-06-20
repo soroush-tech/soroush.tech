@@ -16,5 +16,9 @@
   ],
   "r2_buckets": [{ "binding": "BACKUPS", "bucket_name": "${R2_BUCKET}" }],
   "triggers": { "crons": ["0 3 1 * *"] },
-  "vars": { "VITE_CONTACT_HONEYPOT": "${VITE_CONTACT_HONEYPOT}", "RETENTION_MONTHS": "3" }
+  "vars": {
+    "VITE_CONTACT_HONEYPOT": "${VITE_CONTACT_HONEYPOT}",
+    "RETENTION_MONTHS": "3",
+    "TURNSTILE_HOSTNAME": "soroush.tech,www.soroush.tech"
+  }
 }

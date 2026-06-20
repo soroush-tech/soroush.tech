@@ -47,4 +47,23 @@ describe('verifyTurnstile', () => {
     stubFetch({})
     expect(await verifyTurnstile('the-secret', 'the-token')).toBe(false)
   })
+
+  it('returns true when the attested hostname is allowed', async () => {
+    stubFetch({ success: true, hostname: 'soroush.tech' })
+    expect(await verifyTurnstile('the-secret', 'the-token', undefined, ['soroush.tech'])).toBe(true)
+  })
+
+  it('returns false when the attested hostname is not allowed', async () => {
+    stubFetch({ success: true, hostname: 'evil.example' })
+    expect(await verifyTurnstile('the-secret', 'the-token', undefined, ['soroush.tech'])).toBe(
+      false
+    )
+  })
+
+  it('returns false when the hostname is absent but a list is required', async () => {
+    stubFetch({ success: true })
+    expect(await verifyTurnstile('the-secret', 'the-token', undefined, ['soroush.tech'])).toBe(
+      false
+    )
+  })
 })
