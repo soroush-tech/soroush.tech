@@ -17,11 +17,12 @@ describe('socialMeta', () => {
     expect(has(tags, 'og:image')).toBe(false)
   })
 
-  it('adds description tags when provided', () => {
+  it('adds og/twitter description tags when provided, but not name=description', () => {
     const tags = socialMeta({ title: 'T', description: 'D' })
-    expect(tags).toContainEqual({ name: 'description', content: 'D' })
     expect(tags).toContainEqual({ property: 'og:description', content: 'D' })
     expect(tags).toContainEqual({ name: 'twitter:description', content: 'D' })
+    // The canonical name=description is owned by buildHead, not socialMeta.
+    expect(has(tags, 'description')).toBe(false)
   })
 
   it('omits description tags when absent', () => {
@@ -58,7 +59,7 @@ describe('pageSocialMeta', () => {
   it('sources title and description from the page config', () => {
     const tags = pageSocialMeta(ctx({ title: 'About', description: 'Who I am.' }))
     expect(tags).toContainEqual({ property: 'og:title', content: 'About' })
-    expect(tags).toContainEqual({ name: 'description', content: 'Who I am.' })
+    expect(tags).toContainEqual({ property: 'og:description', content: 'Who I am.' })
   })
 
   it('falls back to the site name when the config has no title', () => {

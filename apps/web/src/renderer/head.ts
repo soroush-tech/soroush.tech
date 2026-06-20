@@ -30,7 +30,10 @@ interface SocialMetaInput {
   type?: 'website' | 'article'
 }
 
-/** Standard social/SEO meta tags (description, Open Graph, Twitter) for a page. */
+/**
+ * Open Graph / Twitter social meta tags for a page. The canonical `<meta name="description">`
+ * is emitted by buildHead from the page's config (symmetric with the document title).
+ */
 export const socialMeta = ({
   title,
   description,
@@ -45,7 +48,6 @@ export const socialMeta = ({
   ]
   if (description)
     tags.push(
-      { name: 'description', content: description },
       { property: 'og:description', content: description },
       { name: 'twitter:description', content: description }
     )
