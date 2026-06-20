@@ -1,7 +1,7 @@
 import type { PageContext } from 'vike/types'
-import type { PageMeta } from 'src/pages/article/@id/+data'
 import { SITE_URL } from 'src/config'
-import { SITE_NAME, pageTitle, pageDescription, documentTitle } from './seo'
+import type { HeadMeta, MetaTag } from './head'
+import { SITE_NAME, documentTitle } from './seo'
 
 /** Escapes a value for safe interpolation into HTML text and attribute contexts. */
 const escape = (value: string): string =>
@@ -12,8 +12,8 @@ const escape = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
 
-const isArticleMeta = (data: unknown): data is PageMeta =>
-  typeof data === 'object' && data !== null && 'title' in data
+const isHeadMeta = (data: unknown): data is HeadMeta =>
+  typeof data === 'object' && data !== null && ('meta' in data || 'jsonLd' in data)
 
 // 'unsafe-inline' styles are required by Emotion's critical-CSS extraction;
 // *.githubusercontent.com covers avatars and gist-proxied images.
@@ -31,33 +31,27 @@ const CSP = [
   "form-action 'self'",
 ].join('; ')
 
-const jsonLd = (meta: PageMeta, url: string): string => {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: meta.title,
-    description: meta.description,
-    datePublished: meta.publishedTime,
-    dateModified: meta.modifiedTime,
-    author: meta.author ? { '@type': 'Person', name: meta.author } : undefined,
-    mainEntityOfPage: url,
-  }
-  // < guards against a "</script>" sequence breaking out of the tag.
-  return JSON.stringify(schema).replace(/</g, '\\u003c')
-}
+const metaTag = (tag: MetaTag): string =>
+  'name' in tag
+    ? `<meta name="${escape(tag.name)}" content="${escape(tag.content)}" />`
+    : `<meta property="${escape(tag.property)}" content="${escape(tag.content)}" />`
 
-/** Builds the per-page `<head>` tags from the page's config + data (article SEO extras). */
+const jsonLdScript = (data: object): string =>
+  // < guards against a "</script>" sequence breaking out of the tag.
+  `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`
+
+/**
+ * Builds the per-page `<head>`: the mechanical/required tags (title, canonical, og:url, CSP,
+ * referrer, robots, og:site_name) plus the page-owned tags from `+data.ts` (`HeadMeta.meta`
+ * rendered generically, and `HeadMeta.jsonLd` as a script). Pages declare their SEO via `+data`.
+ */
 export const buildHead = (pageContext: PageContext): string => {
-  const title = pageTitle(pageContext)
-  const description = pageDescription(pageContext)
   const robots =
     typeof pageContext.config?.robots === 'string' ? pageContext.config.robots : 'index,follow'
   // Trailing slash matches GitHub Pages, which 301-redirects `/about` -> `/about/`.
   const path = pageContext.urlPathname || '/'
-  const url = `${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`
-  const article = isArticleMeta(pageContext.data) ? pageContext.data : undefined
-
-  const ogTitle = escape(title ?? SITE_NAME)
+  const url = escape(`${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`)
+  const head = isHeadMeta(pageContext.data) ? pageContext.data : undefined
 
   const tags = [
     `<title>${escape(documentTitle(pageContext))}</title>`,
@@ -66,38 +60,14 @@ export const buildHead = (pageContext: PageContext): string => {
       ? []
       : [`<meta http-equiv="Content-Security-Policy" content="${CSP}" />`]),
     `<meta name="referrer" content="strict-origin-when-cross-origin" />`,
-    `<link rel="canonical" href="${escape(url)}" />`,
-    `<meta name="robots" content="${escape(robots)}" />`,
-    `<meta property="og:type" content="${article ? 'article' : 'website'}" />`,
-    `<meta property="og:title" content="${ogTitle}" />`,
-    `<meta property="og:url" content="${escape(url)}" />`,
+    `<link rel="canonical" href="${url}" />`,
+    `<meta property="og:url" content="${url}" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
-    `<meta name="twitter:card" content="summary" />`,
-    `<meta name="twitter:title" content="${ogTitle}" />`,
+    `<meta name="robots" content="${escape(robots)}" />`,
+    ...(head?.meta ?? []).map(metaTag),
   ]
 
-  if (description) {
-    const desc = escape(description)
-    tags.push(
-      `<meta name="description" content="${desc}" />`,
-      `<meta property="og:description" content="${desc}" />`,
-      `<meta name="twitter:description" content="${desc}" />`
-    )
-  }
-
-  if (article) {
-    if (article.publishedTime)
-      tags.push(
-        `<meta property="article:published_time" content="${escape(article.publishedTime)}" />`
-      )
-    if (article.modifiedTime)
-      tags.push(
-        `<meta property="article:modified_time" content="${escape(article.modifiedTime)}" />`
-      )
-    if (article.author)
-      tags.push(`<meta property="article:author" content="${escape(article.author)}" />`)
-    tags.push(`<script type="application/ld+json">${jsonLd(article, url)}</script>`)
-  }
+  if (head?.jsonLd) tags.push(jsonLdScript(head.jsonLd))
 
   return tags.join('\n    ')
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import LogoSvg from '/soroush.svg'
+import LogoSvg from 'src/assets/soroush.svg'
 
 interface LogoProps {
   size?: number
