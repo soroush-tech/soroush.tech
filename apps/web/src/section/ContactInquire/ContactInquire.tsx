@@ -12,6 +12,7 @@ import { Checkbox } from 'src/theme/Checkbox'
 import { Paper } from 'src/theme/Paper'
 import { contact } from '@soroush.tech/schema'
 import { fields, success, type ContactField } from './ContactInquire.data'
+import { makeDecoyId } from './utils'
 import { useContactInquire } from 'src/hooks/useContactInquire'
 import { useContactSubmit } from 'src/hooks/useContactSubmit'
 import { useTurnstile } from 'src/hooks/useTurnstile'
@@ -21,7 +22,7 @@ import { Blockquote } from 'src/common/Blockquote'
 export function ContactInquire() {
   // Hidden honeypot field name — read from env so it stays out of the public repo. When unset
   // (e.g. local/dev), the honeypot isn't rendered; the Worker still enforces its own.
-  const honeypotName = import.meta.env.VITE_CONTACT_HONEYPOT
+  const honeypotName = import.meta.env.VITE_CONTACT_HONEYPOT ?? null
   // Turnstile sitekey — read from env like the honeypot. When unset (local/dev) the widget
   // isn't rendered and submission proceeds tokenless; the Worker skips verification in turn.
   const turnstileSitekey = import.meta.env.VITE_TURNSTILE_SITEKEY ?? ''
@@ -37,7 +38,9 @@ export function ContactInquire() {
 
   // A tripped honeypot shows the same success screen as a real send (without any request), so a
   // bot gets no signal it was caught — and a real visitor who autofills the trap isn't left stuck.
+  // The decoy carries its own `res_` reference since it never reaches the server to get a real id.
   const [decoySuccess, setDecoySuccess] = useState(false)
+  const [decoyId, setDecoyId] = useState('')
 
   // When a captcha is configured, hold submission until the widget yields a token.
   const captchaPending = Boolean(turnstileSitekey) && !turnstileToken
@@ -58,6 +61,7 @@ export function ContactInquire() {
     }
     // A filled honeypot means a bot — skip the request but show the success screen anyway.
     if (honeypotRef.current?.value) {
+      setDecoyId(makeDecoyId())
       setDecoySuccess(true)
       return
     }
@@ -93,8 +97,23 @@ export function ContactInquire() {
   const gridFields = fields.filter((field) => !field.fullwidth)
   const fullFields = fields.filter((field) => field.fullwidth)
 
+  // Real sends carry a server-formatted reference; the decoy path (no request) uses its own ref.
+  const requestId = submit.data ? submit.data.id : decoyId
+
   return (
     <View as="section" py={6} px={4}>
+      {cameFromApp && (
+        <View mb={4} maxWidth="1280px" mx="auto">
+          <Button
+            variant="text"
+            size="sm"
+            startIcon={<Icon name="arrow_back" size="1.1rem" />}
+            onClick={() => window.history.back()}
+          >
+            Back
+          </Button>
+        </View>
+      )}
       <Paper
         maxWidth="1280px"
         mx="auto"
@@ -109,19 +128,6 @@ export function ContactInquire() {
         <View aria-hidden position="absolute" top={0} right={0} p={4} opacity={0.2}>
           <Icon name="lock" color="primary" size="3.5rem" />
         </View>
-
-        {cameFromApp && (
-          <View mb={6}>
-            <Button
-              variant="text"
-              size="sm"
-              startIcon={<Icon name="arrow_back" size="1.1rem" />}
-              onClick={() => window.history.back()}
-            >
-              Back
-            </Button>
-          </View>
-        )}
 
         <View mb={8} maxWidth="36rem">
           <Typography variant="h2" color="primary" letterSpacing="tighter" gutterBottom>
@@ -154,19 +160,19 @@ export function ContactInquire() {
 
               <Blockquote bg="terminal" p={5} mt={8} width="100%" maxWidth="28rem" textAlign="left">
                 <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                  <Typography
-                    variant="caption"
-                    color="primary"
-                    letterSpacing="widest"
-                    textTransform="uppercase"
-                  >
-                    System Log
-                  </Typography>
                   <Typography variant="caption" color="primary" letterSpacing="widest">
-                    LOG_ID: {success.logId}
+                    ID: {requestId}
                   </Typography>
                 </Flex>
                 <View height="1px" bg="grid" mt={2} />
+                <Typography
+                  variant="caption"
+                  color="primary"
+                  letterSpacing="widest"
+                  textTransform="uppercase"
+                >
+                  System Log
+                </Typography>
                 <View mt={3}>
                   {success.logLines.map((line) => (
                     <Typography key={line} variant="caption" as="p" color="secondary">
@@ -176,7 +182,17 @@ export function ContactInquire() {
                 </View>
               </Blockquote>
 
-              <View mt={8}>
+              <Flex flexDirection="row" mt={8} gap={2}>
+                {cameFromApp && (
+                  <Button
+                    variant="contained"
+                    size="lg"
+                    startIcon={<Icon name="arrow_back" size="1.1rem" color="inherit" />}
+                    onClick={() => window.history.back()}
+                  >
+                    Back
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   size="lg"
@@ -190,7 +206,7 @@ export function ContactInquire() {
                 >
                   New inquiry
                 </Button>
-              </View>
+              </Flex>
             </Flex>
           </View>
         ) : (

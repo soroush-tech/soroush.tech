@@ -107,15 +107,20 @@ describe('ContactInquire', () => {
   })
 
   describe('submission', () => {
-    it('shows a success panel after a 2xx response', async () => {
-      server.use(http.post(/\/contact$/, () => HttpResponse.json({ ok: true })))
+    it('shows a success panel with the returned reference after a 2xx response', async () => {
+      server.use(
+        http.post(/\/contact$/, () => HttpResponse.json({ ok: true, id: 'REQ-2606-F47AC10B' }))
+      )
       renderWithApp(<ContactInquire />)
 
       fillRequired()
       await waitFor(() => expect(submitButton()).toBeEnabled())
       fireEvent.click(submitButton())
 
-      expect(await screen.findByRole('status')).toHaveTextContent('TRANSMISSION RECEIVED')
+      const status = await screen.findByRole('status')
+      expect(status).toHaveTextContent('TRANSMISSION RECEIVED')
+      // The Worker returns the formatted reference; the panel shows it verbatim.
+      expect(status).toHaveTextContent('REQ-2606-F47AC10B')
       expect(screen.queryByRole('button', { name: /Send/i })).not.toBeInTheDocument()
     })
 
@@ -137,7 +142,9 @@ describe('ContactInquire', () => {
     })
 
     it('resets to a cleared form when New inquiry is clicked on the success panel', async () => {
-      server.use(http.post(/\/contact$/, () => HttpResponse.json({ ok: true })))
+      server.use(
+        http.post(/\/contact$/, () => HttpResponse.json({ ok: true, id: 'abcdef01-2345' }))
+      )
       renderWithApp(<ContactInquire />)
 
       fillRequired()
@@ -159,7 +166,7 @@ describe('ContactInquire', () => {
       server.use(
         http.post(/\/contact$/, () => {
           posted = true
-          return HttpResponse.json({ ok: true })
+          return HttpResponse.json({ ok: true, id: 'abcdef01-2345' })
         })
       )
       renderWithApp(<ContactInquire />)
@@ -225,9 +232,17 @@ describe('ContactInquire', () => {
       fireEvent.change(trap as HTMLInputElement, { target: { value: 'i-am-a-bot' } })
       fireEvent.click(submitButton())
 
-      // Bot sees the decoy success panel, but no request was ever sent.
-      expect(await screen.findByRole('status')).toHaveTextContent('TRANSMISSION RECEIVED')
+      // Bot sees the decoy success panel with a client-side res_ reference, but no request was sent.
+      const status = await screen.findByRole('status')
+      expect(status).toHaveTextContent('TRANSMISSION RECEIVED')
+      expect(status.textContent).toMatch(/ID: res_\d{9}/)
       expect(posted).toBe(false)
+    })
+
+    it('renders no honeypot field when VITE_CONTACT_HONEYPOT is unset', () => {
+      vi.stubEnv('VITE_CONTACT_HONEYPOT', undefined)
+      renderWithApp(<ContactInquire />)
+      expect(document.querySelector('input[data-lpignore="true"]')).toBeNull()
     })
   })
 
@@ -246,6 +261,29 @@ describe('ContactInquire', () => {
       )
 
       fireEvent.click(screen.getByRole('button', { name: /Back/i }))
+      expect(back).toHaveBeenCalledOnce()
+      back.mockRestore()
+    })
+
+    it('renders a Back button on the success panel after in-app navigation', async () => {
+      const back = vi.spyOn(window.history, 'back').mockImplementation(() => undefined)
+      server.use(
+        http.post(/\/contact$/, () => HttpResponse.json({ ok: true, id: 'REQ-2606-F47AC10B' }))
+      )
+      renderWithApp(
+        <PageContext.Provider value={{ isClientSideNavigation: true } as never}>
+          <ContactInquire />
+        </PageContext.Provider>
+      )
+
+      fillRequired()
+      await waitFor(() => expect(submitButton()).toBeEnabled())
+      fireEvent.click(submitButton())
+
+      await screen.findByRole('status')
+      // Two Back buttons now: the card header and the success panel; click the panel's (last).
+      const backButtons = screen.getAllByRole('button', { name: /Back/i })
+      fireEvent.click(backButtons[backButtons.length - 1])
       expect(back).toHaveBeenCalledOnce()
       back.mockRestore()
     })
@@ -272,7 +310,7 @@ describe('ContactInquire', () => {
       server.use(
         http.post(/\/contact$/, async ({ request }) => {
           posted = (await request.json()) as Record<string, unknown>
-          return HttpResponse.json({ ok: true })
+          return HttpResponse.json({ ok: true, id: 'abcdef01-2345' })
         })
       )
       renderWithApp(<ContactInquire />)

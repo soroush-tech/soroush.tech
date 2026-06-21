@@ -10,6 +10,8 @@
   },
   "scripts": {
     "prepare": "husky",
+    "postprepare": "pnpm -r run setup",
+    "setup": "pnpm -r run setup",
     "format": "prettier --write .",
     "dev": "pnpm --parallel -r dev",
     "dev:web": "pnpm --filter @soroush/web dev",

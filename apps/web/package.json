@@ -12,6 +12,7 @@
   "license": "Custom -> SEE LICENSE file",
   "scripts": {
     "dev": "vite",
+    "setup": "node scripts/setup-env.mjs",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives --cache --max-warnings 0",
     "git:refresh": "git update-index -q --refresh",
     "gen:experienceGraph": "node scripts/gen-experienceGraph.ts",
@@ -40,7 +41,7 @@
     "build:compress": "cross-env COMPRESS=true pnpm build",
     "build:storybook": "cross-env NODE_ENV=storybook storybook build",
     "preview": "vite preview",
-    "preview:e2e": "serve build/client -l 3000",
+    "preview:e2e": "serve build/client -l 9999",
     "preview:storybook": "npx serve storybook-static",
     "deploy": "gh-pages -d build"
   },

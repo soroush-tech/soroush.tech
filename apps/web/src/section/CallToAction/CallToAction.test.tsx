@@ -14,12 +14,12 @@ describe('CallToAction', () => {
   describe('content', () => {
     it('renders the heading', () => {
       renderWithTheme(<CallToAction />)
-      expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument()
     })
 
     it('renders "Something" in the heading', () => {
       renderWithTheme(<CallToAction />)
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Something')
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Something')
     })
 
     it('renders the "Great." accent', () => {
@@ -45,7 +45,7 @@ describe('CallToAction', () => {
   describe('CTAs', () => {
     it('renders the Connect Now link to /contact', () => {
       renderWithTheme(<CallToAction />)
-      const cta = screen.getByRole('link', { name: /Connect Now/i })
+      const cta = screen.getByRole('link', { name: /Contact Now/i })
       expect(cta).toBeInTheDocument()
       expect(cta).toHaveAttribute('href', '/contact')
     })

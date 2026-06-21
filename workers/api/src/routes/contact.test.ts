@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { app } from 'src/app'
 import type { Env } from 'src/env'
 import { monthTableName } from 'src/utils/tables'
@@ -17,20 +17,14 @@ const valid = {
   consent: true,
 }
 
-/** Fake env: D1 records prepared SQL + bound insert args, EMAIL records (or fails) sends. */
-const makeEnv = (
-  honeypot = 'fax',
-  emailFails = false,
-  turnstileSecret = '',
-  rateLimitOk = true
-) => {
+/** Fake env: D1 records prepared SQL + bound insert args. Email/Turnstile go over `fetch`. */
+const makeEnv = (honeypot = 'fax', turnstileSecret = '') => {
   const sqls: string[] = []
   const inserts: unknown[][] = []
-  const emails: unknown[] = []
   const env = {
     VITE_CONTACT_HONEYPOT: honeypot,
+    RESEND_API_KEY: 'test-key',
     TURNSTILE_SECRET: turnstileSecret,
-    RATE_LIMITER: { limit: async () => ({ success: rateLimitOk }) },
     DB: {
       prepare: (sql: string) => {
         sqls.push(sql)
@@ -47,22 +41,46 @@ const makeEnv = (
       },
     },
     BACKUPS: {},
-    EMAIL: {
-      send: async (message: unknown) => {
-        if (emailFails) throw new Error('email down')
-        emails.push(message)
-      },
-    },
   } as unknown as Env
-  return { env, sqls, inserts, emails }
+  return { env, sqls, inserts }
 }
+
+/**
+ * Stub the two outbound fetches the route makes: Turnstile siteverify (returns `{ success }`) and
+ * the Resend email POST (returns ok/!ok). Returns the requested URLs for assertions.
+ */
+const stubFetch = ({ turnstileOk = true, emailOk = true, hostname = 'soroush.tech' } = {}) => {
+  const urls: string[] = []
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: string | URL) => {
+      const url = String(input)
+      urls.push(url)
+      if (url.includes('api.resend.com')) {
+        return { ok: emailOk, status: emailOk ? 200 : 500 } as Response
+      }
+      return new Response(JSON.stringify({ success: turnstileOk, hostname }))
+    })
+  )
+  return urls
+}
+
+beforeEach(() => {
+  stubFetch()
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 const post = (body: unknown, env: Env, headers: Record<string, string> = {}) =>
   app.request(
     '/v1/contact',
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...headers },
+      // An allowed Origin so requests clear the app-level origin guard; the guard itself is
+      // covered in app.test.ts.
+      headers: { 'Content-Type': 'application/json', Origin: 'https://soroush.tech', ...headers },
       body: typeof body === 'string' ? body : JSON.stringify(body),
     },
     env
@@ -70,13 +88,19 @@ const post = (body: unknown, env: Env, headers: Record<string, string> = {}) =>
 
 describe('POST /v1/contact', () => {
   it('accepts a valid submission, persists it, and emails the owner', async () => {
-    const { env, sqls, inserts, emails } = makeEnv()
+    const { env, sqls, inserts } = makeEnv()
+    const urls = stubFetch()
     const res = await post(valid, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    const json = (await res.json()) as { ok: boolean; id: string }
+    expect(json.ok).toBe(true)
+    // A REQ-YYMM-XXXXXXXX reference is returned, derived from the stored UUID bound into the INSERT.
+    expect(json.id).toMatch(/^REQ-\d{4}-[0-9A-F]{8}$/)
     expect(inserts).toHaveLength(1)
+    const storedId = inserts[0][0] as string
+    expect(json.id.endsWith(storedId.slice(0, 8).toUpperCase())).toBe(true)
     expect(inserts[0]).toContain('ada@example.com')
-    expect(emails).toHaveLength(1)
+    expect(urls.some((u) => u.includes('api.resend.com'))).toBe(true)
     // Writes into the current month's partition, creating it first.
     const table = monthTableName(Date.now())
     expect(sqls.some((s) => s.includes(`CREATE TABLE IF NOT EXISTS ${table}`))).toBe(true)
@@ -93,10 +117,11 @@ describe('POST /v1/contact', () => {
   })
 
   it('still succeeds when the email notification fails', async () => {
-    const { env, inserts } = makeEnv('fax', true)
+    const { env, inserts } = makeEnv()
+    stubFetch({ emailOk: false })
     const res = await post(valid, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect((await res.json()) as { ok: boolean }).toMatchObject({ ok: true })
     expect(inserts).toHaveLength(1)
   })
 
@@ -168,28 +193,18 @@ describe('POST /v1/contact', () => {
 })
 
 describe('POST /v1/contact — Turnstile captcha', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals()
-  })
-
-  const stubVerify = (success: boolean) =>
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => new Response(JSON.stringify({ success })))
-    )
-
   it('verifies the token and proceeds when verification succeeds', async () => {
-    stubVerify(true)
-    const { env, inserts } = makeEnv('fax', false, 'secret')
+    stubFetch({ turnstileOk: true })
+    const { env, inserts } = makeEnv('fax', 'secret')
     const res = await post({ ...valid, turnstileToken: 'good' }, env)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect((await res.json()) as { ok: boolean }).toMatchObject({ ok: true })
     expect(inserts).toHaveLength(1)
   })
 
   it('rejects with 403 when verification fails', async () => {
-    stubVerify(false)
-    const { env, inserts } = makeEnv('fax', false, 'secret')
+    stubFetch({ turnstileOk: false })
+    const { env, inserts } = makeEnv('fax', 'secret')
     const res = await post({ ...valid, turnstileToken: 'bad' }, env)
     expect(res.status).toBe(403)
     expect(await res.json()).toEqual({ ok: false, error: 'Captcha verification failed' })
@@ -197,26 +212,27 @@ describe('POST /v1/contact — Turnstile captcha', () => {
   })
 
   it('rejects with 403 when the token is missing', async () => {
-    const { env, inserts } = makeEnv('fax', false, 'secret')
+    const { env, inserts } = makeEnv('fax', 'secret')
     const res = await post(valid, env)
     expect(res.status).toBe(403)
     expect(inserts).toHaveLength(0)
   })
-})
 
-describe('POST /v1/contact — rate limit', () => {
-  it('rejects with 429 when the per-IP limit is exceeded', async () => {
-    const { env, inserts } = makeEnv('fax', false, '', false)
-    const res = await post(valid, env, { 'cf-connecting-ip': '203.0.113.7' })
-    expect(res.status).toBe(429)
-    expect(await res.json()).toEqual({ ok: false, error: 'Too many requests' })
-    expect(inserts).toHaveLength(0)
-  })
-
-  it('proceeds when under the rate limit', async () => {
-    const { env, inserts } = makeEnv('fax', false, '', true)
-    const res = await post(valid, env, { 'cf-connecting-ip': '203.0.113.7' })
+  it('proceeds when the token is solved on a configured hostname', async () => {
+    stubFetch({ turnstileOk: true, hostname: 'soroush.tech' })
+    const { env, inserts } = makeEnv('fax', 'secret')
+    env.TURNSTILE_HOSTNAME = 'soroush.tech,www.soroush.tech'
+    const res = await post({ ...valid, turnstileToken: 'good' }, env)
     expect(res.status).toBe(200)
     expect(inserts).toHaveLength(1)
+  })
+
+  it('rejects a token solved on a non-configured hostname', async () => {
+    stubFetch({ turnstileOk: true, hostname: 'evil.example' })
+    const { env, inserts } = makeEnv('fax', 'secret')
+    env.TURNSTILE_HOSTNAME = 'soroush.tech,www.soroush.tech'
+    const res = await post({ ...valid, turnstileToken: 'good' }, env)
+    expect(res.status).toBe(403)
+    expect(inserts).toHaveLength(0)
   })
 })

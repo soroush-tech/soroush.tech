@@ -7,12 +7,18 @@ export interface ContactSubmitPayload extends ContactFormValues {
   turnstileToken: string
 }
 
+/** Worker response: `ok` plus the stored submission `id` used to show a reference to the user. */
+export interface ContactSubmitResponse {
+  ok: boolean
+  id: string
+}
+
 /**
  * Submits a validated contact form to the Worker `POST /contact` endpoint via the dedicated API
  * client (`VITE_API_URL`). The axios client rejects on a non-2xx response, surfacing as `isError`.
  */
 export function useContactSubmit() {
-  return useCustomMutation<unknown, ContactSubmitPayload>({
+  return useCustomMutation<ContactSubmitResponse, ContactSubmitPayload>({
     config: { url: '/contact', method: 'post' },
     client: apiClient,
   })

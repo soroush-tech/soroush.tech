@@ -1,5 +1,5 @@
 import type { PageContext } from 'vike/types'
-import type { PageMeta } from './+data'
+import type { HeadMeta } from 'src/renderer/head'
 
 export default (pageContext: PageContext): string =>
-  ((pageContext.data as PageMeta | undefined)?.description ?? '') + ' - Masoud Soroush'
+  ((pageContext.data as HeadMeta | undefined)?.description ?? '') + ' - Masoud Soroush'

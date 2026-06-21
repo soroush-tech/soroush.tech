@@ -5,6 +5,7 @@ import { notify } from 'src/services/email'
 import { verifyTurnstile } from 'src/services/turnstile'
 import { monthTableName, createTableStatement } from 'src/utils/tables'
 import { sanitizeContact } from 'src/utils/sanitize'
+import { formatRequestId } from 'src/utils/requestId'
 
 /** Reject bodies larger than this many bytes before parsing — a cheap abuse guard. */
 const MAX_BODY_BYTES = 16 * 1024
@@ -12,14 +13,6 @@ const MAX_BODY_BYTES = 16 * 1024
 export const contactRoute = new Hono<{ Bindings: Env }>()
 
 contactRoute.post('/contact', async (c) => {
-  // Per-IP rate limit (1 req / 60s). `cf-connecting-ip` is always set behind Cloudflare; it's
-  // absent only in local dev / direct access, where we skip rather than block.
-  const ip = c.req.header('cf-connecting-ip')
-  if (ip) {
-    const { success } = await c.env.RATE_LIMITER.limit({ key: ip })
-    if (!success) return c.json({ ok: false, error: 'Too many requests' }, 429)
-  }
-
   if (Number(c.req.header('content-length') ?? '0') > MAX_BODY_BYTES) {
     return c.json({ ok: false, error: 'Payload too large' }, 413)
   }
@@ -47,7 +40,11 @@ contactRoute.post('/contact', async (c) => {
     let passed = false
     if (typeof token === 'string') {
       const ip = c.req.header('cf-connecting-ip')
-      passed = await verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip)
+      const hostnames = (c.env.TURNSTILE_HOSTNAME ?? '')
+        .split(',')
+        .map((h) => h.trim())
+        .filter(Boolean)
+      passed = await verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip, hostnames)
     }
     if (!passed) {
       return c.json({ ok: false, error: 'Captcha verification failed' }, 403)
@@ -71,6 +68,7 @@ contactRoute.post('/contact', async (c) => {
   // next month, but create-if-not-exists here covers the first write of a month either way.
   const now = new Date()
   const table = monthTableName(now)
+  const id = crypto.randomUUID()
   await c.env.DB.prepare(createTableStatement(table)).run()
   await c.env.DB.prepare(
     `INSERT INTO ${table}
@@ -78,7 +76,7 @@ contactRoute.post('/contact', async (c) => {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
-      crypto.randomUUID(),
+      id,
       now.toISOString(),
       v.name,
       v.company,
@@ -102,5 +100,6 @@ contactRoute.post('/contact', async (c) => {
     // swallow — the row is stored; the notification can be recovered from D1 if needed.
   }
 
-  return c.json({ ok: true })
+  // Return a short reference derived from the stored id so the user can quote it in follow-ups.
+  return c.json({ ok: true, id: formatRequestId(id, now) })
 })

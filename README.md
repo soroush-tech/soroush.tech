@@ -3,7 +3,7 @@
 
 # soroush.tech
 
-**Personal website of Masoud Soroush**  
+**Personal portfolio of Masoud Soroush**  
 [https://soroush.tech](https://soroush.tech)
 
 This repository is my digital home — a place to share article posts, showcase my
@@ -12,6 +12,26 @@ systems, and anything else worth sharing as I grow and learn.
 
 It is organized as a **pnpm workspace monorepo**: the website is one app among
 its own shared tooling packages and (soon) backend workers.
+
+## 🚀 Getting started
+
+### Prerequisites
+
+- **Node 25** — pinned in [`.nvmrc`](./.nvmrc) (`nvm use`).
+- **pnpm 10.13.1** — pinned via the `packageManager` field.
+
+### Install & run
+
+```bash
+pnpm install   # installs every workspace (also runs the setup below)
+pnpm prepare   # set up all you need — git hooks + per-workspace local env
+pnpm dev       # starts the web app dev server
+```
+
+`pnpm prepare` runs husky and then each workspace's `setup` (`pnpm -r run setup`):
+it bootstraps `apps/web/.env.local` and `workers/api/.env` from their `default.env`
+templates (never overwriting an existing file, skipped in CI). It runs automatically
+on `pnpm install`; re-run it any time with `pnpm prepare` (or `pnpm run setup`).
 
 ---
 
@@ -58,27 +78,6 @@ Globs live in [`pnpm-workspace.yaml`](./pnpm-workspace.yaml) (`apps/*`,
 **SEO** is handled at build time: `@soroush.tech/vite-plugin-sitemap` emits
 `sitemap.xml` from the prerendered HTML (skipping `noindex` pages), and a
 static `robots.txt` ships from `apps/web/public/`.
-
----
-
-## 🚀 Getting started
-
-### Prerequisites
-
-- **Node 25** — pinned in [`.nvmrc`](./.nvmrc) (`nvm use`).
-- **pnpm 10.13.1** — pinned via the `packageManager` field.
-
-### Install & run
-
-```bash
-pnpm install   # installs every workspace
-pnpm dev       # starts the web app dev server
-```
-
-Top-level scripts proxy into `apps/web` (e.g. `pnpm dev`, `pnpm build`,
-`pnpm test`, `pnpm deploy`), while `pnpm lint` and `pnpm typecheck` run
-**recursively across all workspaces** (`pnpm -r`). For app-specific scripts and
-structure, see [apps/web/README.md](./apps/web/README.md).
 
 ---
 
