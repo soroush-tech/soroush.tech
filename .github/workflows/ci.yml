@@ -26,8 +26,9 @@ jobs:
       runner: ${{ steps.detect-package-manager.outputs.runner }}
       playwright_version: ${{ steps.detect-playwright.outputs.version }}
       web: ${{ steps.filter.outputs.web }}
-      packages: ${{ steps.filter.outputs.packages }}
       worker: ${{ steps.filter.outputs.worker }}
+      has_packages: ${{ steps.pkg-matrix.outputs.has_packages }}
+      changed_packages: ${{ steps.pkg-matrix.outputs.changed_packages }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -72,23 +73,49 @@ jobs:
         id: filter
         with:
           filters: |
+            shared: &shared
+              - 'pnpm-lock.yaml'
+              - '.nvmrc'
+              - '.github/workflows/ci.yml'
             web:
               - 'apps/web/**'
               - 'packages/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
-            packages:
-              - 'packages/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
+              - *shared
             worker:
               - 'workers/api/**'
               - 'packages/schema/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
+              - *shared
+            schema:
+              - 'packages/schema/**'
+              - *shared
+            eslint-config:
+              - 'packages/eslint-config/**'
+              - *shared
+            vite-plugin-msw-server:
+              - 'packages/vite-plugin-msw-server/**'
+              - *shared
+            vite-plugin-sitemap:
+              - 'packages/vite-plugin-sitemap/**'
+              - *shared
+            vite-plugin-watch:
+              - 'packages/vite-plugin-watch/**'
+              - *shared
+
+      # Turn the matched package filters into a matrix include list so only the
+      # changed packages run. Shared paths (lockfile / .nvmrc / ci.yml) hit every
+      # package filter → full matrix. Empty list → packages job skipped.
+      - name: Build changed-packages matrix
+        id: pkg-matrix
+        env:
+          CHANGES: ${{ steps.filter.outputs.changes }}
+        run: |
+          node <<'NODE' >> "$GITHUB_OUTPUT"
+          const all = ['schema', 'eslint-config', 'vite-plugin-msw-server', 'vite-plugin-sitemap', 'vite-plugin-watch']
+          const changed = JSON.parse(process.env.CHANGES).filter((n) => all.includes(n))
+          const include = changed.map((name) => ({ dir: name, filter: `@soroush.tech/${name}`, flag: name }))
+          console.log(`changed_packages=${JSON.stringify({ include })}`)
+          console.log(`has_packages=${include.length ? 'true' : 'false'}`)
+          NODE
 
   # Lint + typecheck the whole workspace once (cheap, recursive).
   lint:
@@ -125,30 +152,13 @@ jobs:
   # Shared packages: one job per package, each uploads its own Codecov flag.
   packages:
     needs: [prepare, lint]
-    if: needs.prepare.outputs.packages == 'true'
+    if: needs.prepare.outputs.has_packages == 'true'
     runs-on: ubuntu-latest
     environment: CI
     timeout-minutes: 15
     strategy:
-      matrix:
-        include:
-          - { dir: schema, filter: '@soroush.tech/schema', flag: schema }
-          - { dir: eslint-config, filter: '@soroush.tech/eslint-config', flag: eslint-config }
-          - {
-              dir: vite-plugin-msw-server,
-              filter: '@soroush.tech/vite-plugin-msw-server',
-              flag: vite-plugin-msw-server,
-            }
-          - {
-              dir: vite-plugin-sitemap,
-              filter: '@soroush.tech/vite-plugin-sitemap',
-              flag: vite-plugin-sitemap,
-            }
-          - {
-              dir: vite-plugin-watch,
-              filter: '@soroush.tech/vite-plugin-watch',
-              flag: vite-plugin-watch,
-            }
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.changed_packages) }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
