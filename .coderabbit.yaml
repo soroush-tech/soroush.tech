@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  review_status: true
+  poem: false
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches: [main]
+  path_filters:
+    - '!pnpm-lock.yaml'
+    - '!**/coverage/**'
+    - '!apps/web/build/**'
+  path_instructions:
+    - path: 'apps/web/src/**'
+      instructions: >-
+        Use the 'src/...' path alias, never relative '../../'. Prefer Flex/View/Typography
+        from src/theme over raw div/p. Guard browser-only APIs with `typeof window`.
+        Co-locate tests: *.test (unit), *.spec (integration), *.e2e (Playwright).
+    - path: 'workers/api/**'
+      instructions: >-
+        Hono routes; split services/ (business logic) vs utils/ (pure helpers); cron in jobs/.
+        Use the 'src/*' alias. Require 100% test coverage.
+    - path: 'packages/**'
+      instructions: >-
+        Scoped @soroush.tech/* package. Require 100% coverage and a co-located *.test.ts
+        per source file. Publishable (non-private) packages must ship a LICENSE.
+chat:
+  auto_reply: true
