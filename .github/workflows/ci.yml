@@ -26,8 +26,9 @@ jobs:
       runner: ${{ steps.detect-package-manager.outputs.runner }}
       playwright_version: ${{ steps.detect-playwright.outputs.version }}
       web: ${{ steps.filter.outputs.web }}
-      packages: ${{ steps.filter.outputs.packages }}
       worker: ${{ steps.filter.outputs.worker }}
+      has_packages: ${{ steps.pkg-matrix.outputs.has_packages }}
+      changed_packages: ${{ steps.pkg-matrix.outputs.changed_packages }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -67,28 +68,50 @@ jobs:
           VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['playwright'] || require('./apps/web/package.json').dependencies?.['playwright']")
           echo "version=${VERSION#^}" >> "$GITHUB_OUTPUT"
 
+      # Discover workspace packages once so the change filters and the test matrix
+      # share a single source of truth: the folder name and its package.json name.
+      - name: Discover packages
+        id: pkgs
+        run: |
+          node <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require('fs')
+          const shared = ['pnpm-lock.yaml', '.nvmrc', '.github/workflows/ci.yml']
+          const dirs = fs
+            .readdirSync('packages', { withFileTypes: true })
+            .filter((d) => d.isDirectory() && fs.existsSync(`packages/${d.name}/package.json`))
+            .map((d) => d.name)
+          const list = dirs.map((dir) => ({ dir, name: require(`./packages/${dir}/package.json`).name, flag: dir }))
+          const filters = Object.fromEntries(list.map((p) => [p.flag, [`packages/${p.dir}/**`, ...shared]]))
+          filters.web = ['apps/web/**', 'packages/**', ...shared]
+          filters.worker = ['workers/api/**', 'packages/schema/**', ...shared]
+          console.log(`list=${JSON.stringify(list)}`)
+          console.log(`filters=${JSON.stringify(filters)}`)
+          NODE
+
       - name: Detect changed areas
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         id: filter
         with:
-          filters: |
-            web:
-              - 'apps/web/**'
-              - 'packages/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
-            packages:
-              - 'packages/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
-            worker:
-              - 'workers/api/**'
-              - 'packages/schema/**'
-              - 'pnpm-lock.yaml'
-              - '.nvmrc'
-              - '.github/workflows/ci.yml'
+          filters: ${{ steps.pkgs.outputs.filters }} # JSON is valid YAML
+
+      # Intersect the discovered packages with the filters that matched so only the
+      # changed packages run. Shared paths (lockfile / .nvmrc / ci.yml) hit every
+      # package filter → full matrix. Empty list → packages job skipped.
+      - name: Build changed-packages matrix
+        id: pkg-matrix
+        env:
+          LIST: ${{ steps.pkgs.outputs.list }}
+          CHANGES: ${{ steps.filter.outputs.changes }}
+        run: |
+          node <<'NODE' >> "$GITHUB_OUTPUT"
+          const list = JSON.parse(process.env.LIST)
+          const changed = new Set(JSON.parse(process.env.CHANGES))
+          const include = list
+            .filter((p) => changed.has(p.flag))
+            .map((p) => ({ dir: p.dir, filter: p.name, flag: p.flag }))
+          console.log(`changed_packages=${JSON.stringify({ include })}`)
+          console.log(`has_packages=${include.length ? 'true' : 'false'}`)
+          NODE
 
   # Lint + typecheck the whole workspace once (cheap, recursive).
   lint:
@@ -124,30 +147,14 @@ jobs:
 
   # Shared packages: one job per package, each uploads its own Codecov flag.
   packages:
-    needs: prepare
-    if: needs.prepare.outputs.packages == 'true'
+    needs: [prepare, lint]
+    if: needs.prepare.outputs.has_packages == 'true'
     runs-on: ubuntu-latest
+    environment: CI
     timeout-minutes: 15
     strategy:
-      matrix:
-        include:
-          - { dir: schema, filter: '@soroush.tech/schema', flag: schema }
-          - { dir: eslint-config, filter: '@soroush.tech/eslint-config', flag: eslint-config }
-          - {
-              dir: vite-plugin-msw-server,
-              filter: '@soroush.tech/vite-plugin-msw-server',
-              flag: vite-plugin-msw-server,
-            }
-          - {
-              dir: vite-plugin-sitemap,
-              filter: '@soroush.tech/vite-plugin-sitemap',
-              flag: vite-plugin-sitemap,
-            }
-          - {
-              dir: vite-plugin-watch,
-              filter: '@soroush.tech/vite-plugin-watch',
-              flag: vite-plugin-watch,
-            }
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.changed_packages) }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -183,9 +190,10 @@ jobs:
 
   # Cloudflare Worker API.
   worker:
-    needs: prepare
+    needs: [prepare, lint]
     if: needs.prepare.outputs.worker == 'true'
     runs-on: ubuntu-latest
+    environment: CI
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
@@ -222,7 +230,7 @@ jobs:
 
   # Web app: full multi-OS suite with unit / browser / storybook / e2e coverage tiers.
   web:
-    needs: prepare
+    needs: [prepare, lint]
     if: needs.prepare.outputs.web == 'true'
     runs-on: ${{ matrix.os }}
     environment: CI
@@ -276,6 +284,7 @@ jobs:
         run: ${{ needs.prepare.outputs.runner }} run build
         env:
           SKIP_PRERENDER: 'true'
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run Test
         run: ${{ needs.prepare.outputs.runner }} --filter @soroush/web test
@@ -362,3 +371,18 @@ jobs:
           slug: soroush-tech/soroush.tech
           flags: e2e
           name: E2E
+
+  # Single stable status check for branch protection: tolerates change-gated jobs
+  # being skipped, fails only if a required job actually failed or was cancelled.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [prepare, lint, packages, worker, web]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all jobs to pass
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "A required job failed or was cancelled."
+          exit 1
