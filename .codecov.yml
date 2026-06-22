@@ -3,6 +3,32 @@ comment:
   behavior: default # Add a comment on every PR with updated coverage
   require_changes: false # Always show comment, even if no coverage change
 
+# Change-gated CI jobs don't upload every flag on every commit. Carry the last
+# known report forward so skipped flags keep their coverage instead of dropping
+# to "No report uploaded". paths map each flag to the files it covers.
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: schema
+      paths:
+        - packages/schema/
+    - name: eslint-config
+      paths:
+        - packages/eslint-config/
+    - name: vite-plugin-msw-server
+      paths:
+        - packages/vite-plugin-msw-server/
+    - name: vite-plugin-sitemap
+      paths:
+        - packages/vite-plugin-sitemap/
+    - name: vite-plugin-watch
+      paths:
+        - packages/vite-plugin-watch/
+    - name: api
+      paths:
+        - workers/api/
+
 component_management:
   default_rules:
     statuses:
