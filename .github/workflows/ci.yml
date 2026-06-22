@@ -279,6 +279,7 @@ jobs:
         run: ${{ needs.prepare.outputs.runner }} run build
         env:
           SKIP_PRERENDER: 'true'
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run Test
         run: ${{ needs.prepare.outputs.runner }} --filter @soroush/web test

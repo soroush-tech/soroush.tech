@@ -8,6 +8,7 @@ import { resolve } from 'path'
 import watch from '@soroush.tech/vite-plugin-watch'
 import mswServer from '@soroush.tech/vite-plugin-msw-server'
 import sitemap from '@soroush.tech/vite-plugin-sitemap'
+import { codecovVitePlugin } from '@codecov/vite-plugin'
 
 // Opt-in: precompressed assets are only served by a static server configured for
 // them (nginx gzip_static/brotli_static, etc.). GitHub Pages ignores them, so this
@@ -40,6 +41,13 @@ export default defineConfig({
         threshold: 10240,
         deleteOriginalAssets: false,
       }),
+    // Codecov Bundle Analysis: only upload from CI, CD
+    codecovVitePlugin({
+      enableBundleAnalysis: Boolean(process.env.CI && process.env.CODECOV_TOKEN),
+      bundleName: process.env.APP_ENV === 'production' ? '@soroush.tech/prod' : '@soroush.tech/dev',
+      uploadToken: process.env.CODECOV_TOKEN,
+      gitService: 'github',
+    }),
   ],
   resolve: {
     alias: {
