@@ -94,7 +94,6 @@ jobs:
   lint:
     needs: prepare
     runs-on: ubuntu-latest
-    environment: CI
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
@@ -125,7 +124,7 @@ jobs:
 
   # Shared packages: one job per package, each uploads its own Codecov flag.
   packages:
-    needs: prepare
+    needs: [prepare, lint]
     if: needs.prepare.outputs.packages == 'true'
     runs-on: ubuntu-latest
     environment: CI
@@ -185,7 +184,7 @@ jobs:
 
   # Cloudflare Worker API.
   worker:
-    needs: prepare
+    needs: [prepare, lint]
     if: needs.prepare.outputs.worker == 'true'
     runs-on: ubuntu-latest
     environment: CI
@@ -225,7 +224,7 @@ jobs:
 
   # Web app: full multi-OS suite with unit / browser / storybook / e2e coverage tiers.
   web:
-    needs: prepare
+    needs: [prepare, lint]
     if: needs.prepare.outputs.web == 'true'
     runs-on: ${{ matrix.os }}
     environment: CI
