@@ -94,6 +94,7 @@ jobs:
   lint:
     needs: prepare
     runs-on: ubuntu-latest
+    environment: CI
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
@@ -127,6 +128,7 @@ jobs:
     needs: prepare
     if: needs.prepare.outputs.packages == 'true'
     runs-on: ubuntu-latest
+    environment: CI
     timeout-minutes: 15
     strategy:
       matrix:
@@ -186,6 +188,7 @@ jobs:
     needs: prepare
     if: needs.prepare.outputs.worker == 'true'
     runs-on: ubuntu-latest
+    environment: CI
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
