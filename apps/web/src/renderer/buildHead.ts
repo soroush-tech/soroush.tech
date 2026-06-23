@@ -93,7 +93,7 @@ const serialize = (tag: HeadTag): string => {
   if (tag.el === 'title') return `<title ${MARK}>${escape(tag.text)}</title>`
   if (tag.el === 'script')
     // < guards against a "</script>" sequence breaking out of the tag.
-    return `<script type="application/ld+json" ${MARK}>${JSON.stringify(tag.json).replaceAll('<', '\\u003c')}</script>`
+    return `<script type="application/ld+json" ${MARK}>${JSON.stringify(tag.json).replaceAll('<', String.raw`\u003c`)}</script>`
   const attrs = Object.entries(tag.attrs)
     .map(([key, value]) => `${key}="${escape(value)}"`)
     .join(' ')
