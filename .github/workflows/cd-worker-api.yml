@@ -14,8 +14,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  changes:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      worker: ${{ steps.read.outputs.worker }}
+    steps:
+      - name: Download changed areas from CI
+        if: github.event_name == 'workflow_run'
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: changed-areas
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decide whether to deploy
+        id: read
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f worker.flag ]; then
+            echo "worker=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "worker=$(cat worker.flag)" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: changes
+    if: needs.changes.outputs.worker == 'true'
     runs-on: ubuntu-latest
     environment: cd-worker
     steps:

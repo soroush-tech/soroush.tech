@@ -113,6 +113,23 @@ jobs:
           console.log(`has_packages=${include.length ? 'true' : 'false'}`)
           NODE
 
+      # Publish the changed-area flags so the workflow_run-triggered CD workflows
+      # can gate their deploys on what actually changed. workflow_run events carry
+      # no diff base of their own, so they read the answer this push-event run
+      # already computed against github.event.before..after.
+      - name: Record changed areas
+        run: |
+          printf '%s' '${{ steps.filter.outputs.worker }}' > worker.flag
+          printf '%s' '${{ steps.filter.outputs.web }}' > web.flag
+
+      - name: Upload changed areas
+        uses: actions/upload-artifact@v7
+        with:
+          name: changed-areas
+          path: |
+            worker.flag
+            web.flag
+
   # Lint + typecheck the whole workspace once (cheap, recursive).
   lint:
     needs: prepare
