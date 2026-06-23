@@ -253,6 +253,11 @@ jobs:
     environment: CI
     timeout-minutes: 30
 
+    # Pin the browser download location so one cache path/key works on every OS
+    # (the default location differs per platform: ~/.cache, ~/Library/Caches, AppData).
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -278,7 +283,7 @@ jobs:
         uses: actions/cache/restore@v5
         id: playwright-cache
         with:
-          path: ~/.cache/ms-playwright
+          path: ${{ github.workspace }}/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
 
       - name: Install dependencies
@@ -293,7 +298,7 @@ jobs:
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v5
         with:
-          path: ~/.cache/ms-playwright
+          path: ${{ github.workspace }}/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
 
       - name: Build project
