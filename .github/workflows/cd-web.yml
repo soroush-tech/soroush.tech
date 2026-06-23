@@ -15,8 +15,36 @@ concurrency:
   group: 'pages'
   cancel-in-progress: false
 jobs:
-  build:
+  changes:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      web: ${{ steps.read.outputs.web }}
+    steps:
+      - name: Download changed areas from CI
+        if: github.event_name == 'workflow_run'
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: changed-areas
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decide whether to deploy
+        id: read
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f web.flag ]; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "web=$(cat web.flag)" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     environment: github-pages
     runs-on: ubuntu-latest
     steps:
