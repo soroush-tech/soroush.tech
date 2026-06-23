@@ -104,13 +104,15 @@ static `robots.txt` ships from `apps/web/public/`.
 - **Deploy** — CI success on `main` triggers the CD workflow, which builds with
   production env and deploys to **GitHub Pages**.
 
-Full pipeline detail lives in [`.github/workflows/`](./.github/workflows/) and
-the [app README](./apps/web/README.md).
+Full pipeline detail — with Mermaid diagrams of every workflow — lives in
+[`.github/workflows/README.md`](./.github/workflows/README.md) and the
+[app README](./apps/web/README.md).
 
 ---
 
 ## 📚 Documentation
 
+- [.github/workflows/README.md](./.github/workflows/README.md) — CI/CD pipeline explained with Mermaid diagrams.
 - [apps/web/README.md](./apps/web/README.md) — the website: structure, scripts, testing.
 - [packages/README.md](./packages/README.md) — workspace packages and their conventions.
 - [workers/README.md](./workers/README.md) — backend deployables (WIP).
