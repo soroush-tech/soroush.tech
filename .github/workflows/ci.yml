@@ -197,7 +197,7 @@ jobs:
         run: ${{ needs.prepare.outputs.runner }} --filter ${{ matrix.filter }} test:coverage
 
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.dir }}/coverage/lcov.info
@@ -237,7 +237,7 @@ jobs:
         run: ${{ needs.prepare.outputs.runner }} --filter @soroush/api test:coverage
 
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./workers/api/coverage/lcov.info
@@ -317,7 +317,7 @@ jobs:
 
       - name: Upload Unit Test Coverage
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -331,7 +331,7 @@ jobs:
 
       - name: Upload Browser Test Coverage
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -358,7 +358,7 @@ jobs:
 
       - name: Upload Coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -386,7 +386,7 @@ jobs:
 
       - name: Upload E2E Coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/e2e/lcov.info
