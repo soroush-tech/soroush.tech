@@ -25,10 +25,10 @@ jobs:
       command: ${{ steps.detect-package-manager.outputs.command }}
       runner: ${{ steps.detect-package-manager.outputs.runner }}
       playwright_version: ${{ steps.detect-playwright.outputs.version }}
-      web: ${{ steps.filter.outputs.web }}
-      worker: ${{ steps.filter.outputs.worker }}
-      has_packages: ${{ steps.pkg-matrix.outputs.has_packages }}
-      changed_packages: ${{ steps.pkg-matrix.outputs.changed_packages }}
+      web: ${{ steps.assemble.outputs.web }}
+      worker: ${{ steps.assemble.outputs.worker }}
+      has_packages: ${{ steps.assemble.outputs.has_packages }}
+      changed_packages: ${{ steps.assemble.outputs.changed_packages }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -65,70 +65,79 @@ jobs:
       - name: Read Playwright version from package.json
         id: detect-playwright
         run: |
-          VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['playwright'] || require('./apps/web/package.json').dependencies?.['playwright']")
+          VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['@playwright/test'] || require('./apps/web/package.json').dependencies?.['@playwright/test']")
           echo "version=${VERSION#^}" >> "$GITHUB_OUTPUT"
 
-      # Discover workspace packages once so the change filters and the test matrix
-      # share a single source of truth: the folder name and its package.json name.
-      - name: Discover packages
-        id: pkgs
+      # Discover apps / workers / packages (folders with a package.json) and the
+      # workflow files, then build a per-entity paths-filter config so we can report
+      # exactly which ones changed.
+      - name: Discover workspace entities
+        id: discover
         run: |
           node <<'NODE' >> "$GITHUB_OUTPUT"
           const fs = require('fs')
-          const shared = ['pnpm-lock.yaml', '.nvmrc', '.github/workflows/ci.yml']
-          const dirs = fs
-            .readdirSync('packages', { withFileTypes: true })
-            .filter((d) => d.isDirectory() && fs.existsSync(`packages/${d.name}/package.json`))
-            .map((d) => d.name)
-          const list = dirs.map((dir) => ({ dir, name: require(`./packages/${dir}/package.json`).name, flag: dir }))
-          const filters = Object.fromEntries(list.map((p) => [p.flag, [`packages/${p.dir}/**`, ...shared]]))
-          filters.web = ['apps/web/**', 'packages/**', ...shared]
-          filters.worker = ['workers/api/**', 'packages/schema/**', ...shared]
-          console.log(`list=${JSON.stringify(list)}`)
+          const dirsWithPkg = (root) => fs.existsSync(root) ? fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && fs.existsSync(`${root}/${d.name}/package.json`)).map((d) => d.name) : []
+          const apps = dirsWithPkg('apps')
+          const workers = dirsWithPkg('workers')
+          const packages = dirsWithPkg('packages')
+          const workflows = fs.readdirSync('.github/workflows').filter((f) => /\.ya?ml$/.test(f))
+          const filters = {}
+          apps.forEach((n) => (filters[`app__${n}`] = [`apps/${n}/**`]))
+          workers.forEach((n) => (filters[`worker__${n}`] = [`workers/${n}/**`]))
+          packages.forEach((n) => (filters[`pkg__${n}`] = [`packages/${n}/**`]))
+          workflows.forEach((f) => (filters[`wf__${f.replace(/\.ya?ml$/, '')}`] = [`.github/workflows/${f}`]))
+          // Root = build/deploy-affecting top-level files only (lockfile, workspace,
+          // manifest, .nvmrc, tsconfig). Root docs/tooling dotfiles must NOT trigger a
+          // full workspace validate + deploy, so list them explicitly rather than glob.
+          filters.root = ['pnpm-lock.yaml', 'pnpm-workspace.yaml', 'package.json', '.nvmrc', 'tsconfig.json']
           console.log(`filters=${JSON.stringify(filters)}`)
+          console.log(`packages=${JSON.stringify(packages)}`)
           NODE
 
-      - name: Detect changed areas
+      - name: Detect changed entities
         uses: dorny/paths-filter@v4
         id: filter
         with:
-          filters: ${{ steps.pkgs.outputs.filters }} # JSON is valid YAML
+          filters: ${{ steps.discover.outputs.filters }} # JSON is valid YAML
 
-      # Intersect the discovered packages with the filters that matched so only the
-      # changed packages run. Shared paths (lockfile / .nvmrc / ci.yml) hit every
-      # package filter → full matrix. Empty list → packages job skipped.
-      - name: Build changed-packages matrix
-        id: pkg-matrix
+      # Assemble the single changes.json the CD workflows read: apps/worker/packages/
+      # workflows are lists of the changed names, root is a boolean. Also derive the
+      # booleans + package matrix this CI run's own jobs gate on.
+      - name: Assemble changes.json
+        id: assemble
         env:
-          LIST: ${{ steps.pkgs.outputs.list }}
           CHANGES: ${{ steps.filter.outputs.changes }}
+          ALL_PACKAGES: ${{ steps.discover.outputs.packages }}
         run: |
           node <<'NODE' >> "$GITHUB_OUTPUT"
-          const list = JSON.parse(process.env.LIST)
+          const fs = require('fs')
           const changed = new Set(JSON.parse(process.env.CHANGES))
-          const include = list
-            .filter((p) => changed.has(p.flag))
-            .map((p) => ({ dir: p.dir, filter: p.name, flag: p.flag }))
+          const allPackages = JSON.parse(process.env.ALL_PACKAGES)
+          const pick = (prefix) => [...changed].filter((k) => k.startsWith(prefix)).map((k) => k.slice(prefix.length))
+          const apps = pick('app__')
+          const worker = pick('worker__')
+          const packages = pick('pkg__')
+          const workflows = pick('wf__')
+          const root = changed.has('root')
+          fs.writeFileSync('changes.json', JSON.stringify({ apps, worker, packages, workflows, root }))
+          // CI gating: a root or workflow change validates the whole workspace.
+          const infra = root || workflows.length > 0
+          const pkgsForCI = infra ? allPackages : packages
+          const include = pkgsForCI.map((dir) => ({ dir, filter: require(`./packages/${dir}/package.json`).name, flag: dir }))
+          console.log(`web=${apps.includes('web') || packages.length > 0 || infra}`)
+          console.log(`worker=${worker.includes('api') || packages.includes('schema') || infra}`)
+          console.log(`has_packages=${pkgsForCI.length ? 'true' : 'false'}`)
           console.log(`changed_packages=${JSON.stringify({ include })}`)
-          console.log(`has_packages=${include.length ? 'true' : 'false'}`)
           NODE
 
-      # Publish the changed-area flags so the workflow_run-triggered CD workflows
-      # can gate their deploys on what actually changed. workflow_run events carry
-      # no diff base of their own, so they read the answer this push-event run
-      # already computed against github.event.before..after.
-      - name: Record changed areas
-        run: |
-          printf '%s' '${{ steps.filter.outputs.worker }}' > worker.flag
-          printf '%s' '${{ steps.filter.outputs.web }}' > web.flag
-
-      - name: Upload changed areas
+      # Hand the single changes.json to the workflow_run-triggered CD workflows; they
+      # carry no diff base of their own and read this run's answer (computed against
+      # github.event.before..after) to decide whether to deploy/publish.
+      - name: Upload changes.json
         uses: actions/upload-artifact@v7
         with:
-          name: changed-areas
-          path: |
-            worker.flag
-            web.flag
+          name: changes
+          path: changes.json
 
   # Lint + typecheck the whole workspace once (cheap, recursive).
   lint:
@@ -309,11 +318,17 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run Test
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush/web test
+        shell: bash
+        run: |
+          echo "### 🧪 Full suite — \`test\`" >> "$GITHUB_STEP_SUMMARY"
+          ${{ needs.prepare.outputs.runner }} --filter @soroush/web test
 
       - name: Run Unit Tests with Coverage
         if: matrix.os == 'ubuntu-latest'
-        run: ${{ needs.prepare.outputs.runner }} run test:coverage:unit
+        shell: bash
+        run: |
+          echo "### 🧪 Unit — \`test:coverage:unit\`" >> "$GITHUB_STEP_SUMMARY"
+          ${{ needs.prepare.outputs.runner }} run test:coverage:unit
 
       - name: Upload Unit Test Coverage
         if: matrix.os == 'ubuntu-latest'
@@ -327,7 +342,10 @@ jobs:
 
       - name: Run Browser Tests with Coverage
         if: matrix.os == 'ubuntu-latest'
-        run: ${{ needs.prepare.outputs.runner }} run test:coverage:browser
+        shell: bash
+        run: |
+          echo "### 🧪 Browser — \`test:coverage:browser\`" >> "$GITHUB_STEP_SUMMARY"
+          ${{ needs.prepare.outputs.runner }} run test:coverage:browser
 
       - name: Upload Browser Test Coverage
         if: matrix.os == 'ubuntu-latest'
@@ -352,7 +370,10 @@ jobs:
 
       - name: Run Storybook Tests with Coverage
         if: matrix.os == 'ubuntu-latest'
-        run: ${{ needs.prepare.outputs.runner }} run test:coverage:storybook
+        shell: bash
+        run: |
+          echo "### 🧪 Storybook — \`test:coverage:storybook\`" >> "$GITHUB_STEP_SUMMARY"
+          ${{ needs.prepare.outputs.runner }} run test:coverage:storybook
         env:
           SB_URL: ${{ steps.chromatic.outputs.storybookUrl }}
 

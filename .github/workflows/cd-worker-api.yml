@@ -23,22 +23,28 @@ jobs:
     outputs:
       worker: ${{ steps.read.outputs.worker }}
     steps:
-      - name: Download changed areas from CI
+      - name: Download changes from CI
         if: github.event_name == 'workflow_run'
         continue-on-error: true
         uses: actions/download-artifact@v8
         with:
-          name: changed-areas
+          name: changes
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Decide whether to deploy
         id: read
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f worker.flag ]; then
+          # Manual dispatch or a missing artifact → deploy. Otherwise deploy when the
+          # worker, the schema package it consumes, or a root config changed.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f changes.json ]; then
             echo "worker=true" >> "$GITHUB_OUTPUT"
           else
-            echo "worker=$(cat worker.flag)" >> "$GITHUB_OUTPUT"
+            node <<'NODE' >> "$GITHUB_OUTPUT"
+            const c = require('./changes.json')
+            const worker = (c.worker || []).includes('api') || (c.packages || []).includes('schema') || c.root
+            console.log(`worker=${worker}`)
+          NODE
           fi
 
   deploy:

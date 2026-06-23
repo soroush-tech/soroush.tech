@@ -24,22 +24,28 @@ jobs:
     outputs:
       web: ${{ steps.read.outputs.web }}
     steps:
-      - name: Download changed areas from CI
+      - name: Download changes from CI
         if: github.event_name == 'workflow_run'
         continue-on-error: true
         uses: actions/download-artifact@v8
         with:
-          name: changed-areas
+          name: changes
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Decide whether to deploy
         id: read
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f web.flag ]; then
+          # Manual dispatch or a missing artifact → deploy. Otherwise deploy when the
+          # web app, any package (web bundles them), or a root config changed.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ ! -f changes.json ]; then
             echo "web=true" >> "$GITHUB_OUTPUT"
           else
-            echo "web=$(cat web.flag)" >> "$GITHUB_OUTPUT"
+            node <<'NODE' >> "$GITHUB_OUTPUT"
+            const c = require('./changes.json')
+            const web = (c.apps || []).includes('web') || (c.packages || []).length > 0 || c.root
+            console.log(`web=${web}`)
+          NODE
           fi
 
   build:
