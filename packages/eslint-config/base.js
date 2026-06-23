@@ -8,7 +8,7 @@ import prettierConfig from 'eslint-config-prettier'
  * Consumers layer their own environment/framework rules on top
  * (e.g. apps/web adds React, Storybook, and browser globals).
  */
-export default tseslint.config(
+const config = tseslint.config(
   { ignores: ['dist', 'build', 'coverage'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -38,3 +38,5 @@ export default tseslint.config(
     },
   }
 )
+
+export default config

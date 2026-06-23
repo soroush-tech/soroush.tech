@@ -5,7 +5,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['src/contact.ts', 'src/index.ts'],
+      include: ['src/**/*.{js,ts,tsx,jsx}'],
       thresholds: { 100: true },
     },
   },
