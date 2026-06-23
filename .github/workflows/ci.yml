@@ -65,7 +65,7 @@ jobs:
       - name: Read Playwright version from package.json
         id: detect-playwright
         run: |
-          VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['playwright'] || require('./apps/web/package.json').dependencies?.['playwright']")
+          VERSION=$(node -p "require('./apps/web/package.json').devDependencies?.['@playwright/test'] || require('./apps/web/package.json').dependencies?.['@playwright/test']")
           echo "version=${VERSION#^}" >> "$GITHUB_OUTPUT"
 
       # Discover workspace packages once so the change filters and the test matrix
