@@ -65,7 +65,8 @@ export const collectHeadTags = (pageContext: PageContext): HeadTag[] => {
     typeof pageContext.config?.robots === 'string' ? pageContext.config.robots : 'index,follow'
   // Trailing slash matches GitHub Pages, which 301-redirects `/about` -> `/about/`.
   const path = pageContext.urlPathname || '/'
-  const url = `${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`
+  const slashedPath = path.endsWith('/') ? path : `${path}/`
+  const url = `${SITE_URL}${slashedPath}`
   const head = isHeadMeta(pageContext.data) ? pageContext.data : undefined
   // Canonical description from the page config, resolved the same way as the title
   // (article pages supply it via their +description hook). socialMeta owns og/twitter only.
@@ -92,7 +93,7 @@ const serialize = (tag: HeadTag): string => {
   if (tag.el === 'title') return `<title ${MARK}>${escape(tag.text)}</title>`
   if (tag.el === 'script')
     // < guards against a "</script>" sequence breaking out of the tag.
-    return `<script type="application/ld+json" ${MARK}>${JSON.stringify(tag.json).replace(/</g, '\\u003c')}</script>`
+    return `<script type="application/ld+json" ${MARK}>${JSON.stringify(tag.json).replaceAll('<', '\\u003c')}</script>`
   const attrs = Object.entries(tag.attrs)
     .map(([key, value]) => `${key}="${escape(value)}"`)
     .join(' ')
