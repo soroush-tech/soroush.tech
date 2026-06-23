@@ -86,8 +86,10 @@ jobs:
           workers.forEach((n) => (filters[`worker__${n}`] = [`workers/${n}/**`]))
           packages.forEach((n) => (filters[`pkg__${n}`] = [`packages/${n}/**`]))
           workflows.forEach((f) => (filters[`wf__${f.replace(/\.ya?ml$/, '')}`] = [`.github/workflows/${f}`]))
-          // Root = shared top-level files only (lockfile, .nvmrc, root configs).
-          filters.root = ['*', '.*']
+          // Root = build/deploy-affecting top-level files only (lockfile, workspace,
+          // manifest, .nvmrc, tsconfig). Root docs/tooling dotfiles must NOT trigger a
+          // full workspace validate + deploy, so list them explicitly rather than glob.
+          filters.root = ['pnpm-lock.yaml', 'pnpm-workspace.yaml', 'package.json', '.nvmrc', 'tsconfig.json']
           console.log(`filters=${JSON.stringify(filters)}`)
           console.log(`packages=${JSON.stringify(packages)}`)
           NODE
