@@ -24,6 +24,15 @@ const escape = (value: string): string =>
 const isHeadMeta = (data: unknown): data is HeadMeta =>
   typeof data === 'object' && data !== null && ('meta' in data || 'jsonLd' in data)
 
+// `isHeadMeta` only proves `meta` exists, not that each entry is well-formed. Validate the
+// shape so a malformed payload is skipped rather than crashing `escape()` during serialization.
+const isMetaTag = (value: unknown): value is MetaTag => {
+  if (typeof value !== 'object' || value === null) return false
+  const tag = value as Record<string, unknown>
+  if (typeof tag.content !== 'string') return false
+  return typeof tag.name === 'string' || typeof tag.property === 'string'
+}
+
 // 'unsafe-inline' styles are required by Emotion's critical-CSS extraction;
 // *.githubusercontent.com covers avatars and gist-proxied images.
 // challenges.cloudflare.com loads the Turnstile script and renders its challenge
@@ -71,7 +80,8 @@ export const collectHeadTags = (pageContext: PageContext): HeadTag[] => {
     { el: 'meta', attrs: { name: 'robots', content: robots } },
   ]
   if (description) tags.push({ el: 'meta', attrs: { name: 'description', content: description } })
-  for (const tag of head?.meta ?? []) tags.push({ el: 'meta', attrs: metaAttrs(tag) })
+  for (const tag of head?.meta ?? [])
+    if (isMetaTag(tag)) tags.push({ el: 'meta', attrs: metaAttrs(tag) })
   if (head?.jsonLd) tags.push({ el: 'script', json: head.jsonLd })
 
   return tags

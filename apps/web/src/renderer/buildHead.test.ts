@@ -100,6 +100,24 @@ describe('buildHead', () => {
     })
   })
 
+  describe('malformed page-owned meta is skipped', () => {
+    it('drops entries that are not a valid name/property + string-content tag', () => {
+      const head = buildHead(
+        ctx(undefined, '/x', {
+          meta: [
+            { name: 'description', content: 'kept' },
+            { name: 'broken', content: 42 },
+            { content: 'no key' },
+            null,
+          ],
+        })
+      )
+      expect(head).toContain('<meta name="description" content="kept" data-mh />')
+      expect(head).not.toContain('broken')
+      expect(head).not.toContain('no key')
+    })
+  })
+
   describe('jsonLd from data', () => {
     it('renders a script tag and neutralizes a </script> sequence', () => {
       const head = buildHead(
