@@ -17,10 +17,10 @@ export const config = {
       },
     },
     description: {
-      env: { server: true },
+      env: { server: true, client: true },
     },
     robots: {
-      env: { server: true },
+      env: { server: true, client: true },
     },
     dataIsomorph: {
       env: { config: true },

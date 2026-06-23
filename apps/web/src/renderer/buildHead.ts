@@ -3,6 +3,15 @@ import { SITE_URL } from 'src/config'
 import type { HeadMeta, MetaTag } from './head'
 import { SITE_NAME, documentTitle, pageDescription } from './seo'
 
+/** Marks tags this module owns, so the client can remove the previous page's set on navigation. */
+const MARK = 'data-mh'
+
+/** A managed head tag, rendered to HTML on the server and to a DOM node on the client. */
+type HeadTag =
+  | { el: 'title'; text: string }
+  | { el: 'meta' | 'link'; attrs: Record<string, string> }
+  | { el: 'script'; json: object }
+
 /** Escapes a value for safe interpolation into HTML text and attribute contexts. */
 const escape = (value: string): string =>
   value
@@ -31,47 +40,96 @@ const CSP = [
   "form-action 'self'",
 ].join('; ')
 
-const metaTag = (tag: MetaTag): string =>
+const metaAttrs = (tag: MetaTag): Record<string, string> =>
   'name' in tag
-    ? `<meta name="${escape(tag.name)}" content="${escape(tag.content)}" />`
-    : `<meta property="${escape(tag.property)}" content="${escape(tag.content)}" />`
-
-const jsonLdScript = (data: object): string =>
-  // < guards against a "</script>" sequence breaking out of the tag.
-  `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`
+    ? { name: tag.name, content: tag.content }
+    : { property: tag.property, content: tag.content }
 
 /**
- * Builds the per-page `<head>`: the mechanical/required tags (title, canonical, og:url, CSP,
- * referrer, robots, og:site_name) plus the page-owned tags from `+data.ts` (`HeadMeta.meta`
- * rendered generically, and `HeadMeta.jsonLd` as a script). Pages declare their SEO via `+data`.
+ * The managed `<head>` tags for a page: the mechanical/required tags (title, canonical, og:url,
+ * referrer, robots, og:site_name) plus the page-owned tags from `+data.ts` (`HeadMeta.meta` and
+ * `HeadMeta.jsonLd`). CSP is excluded — it's a parse-time, server-only concern. This single source
+ * of truth feeds both `buildHead` (server HTML) and `applyHead` (client DOM on navigation).
  */
-export const buildHead = (pageContext: PageContext): string => {
+export const collectHeadTags = (pageContext: PageContext): HeadTag[] => {
   const robots =
     typeof pageContext.config?.robots === 'string' ? pageContext.config.robots : 'index,follow'
   // Trailing slash matches GitHub Pages, which 301-redirects `/about` -> `/about/`.
   const path = pageContext.urlPathname || '/'
-  const url = escape(`${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`)
+  const url = `${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`
   const head = isHeadMeta(pageContext.data) ? pageContext.data : undefined
   // Canonical description from the page config, resolved the same way as the title
   // (article pages supply it via their +description hook). socialMeta owns og/twitter only.
   const description = pageDescription(pageContext)
 
-  const tags = [
-    `<title>${escape(documentTitle(pageContext))}</title>`,
+  const tags: HeadTag[] = [
+    { el: 'title', text: documentTitle(pageContext) },
+    { el: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' } },
+    { el: 'link', attrs: { rel: 'canonical', href: url } },
+    { el: 'meta', attrs: { property: 'og:url', content: url } },
+    { el: 'meta', attrs: { property: 'og:site_name', content: SITE_NAME } },
+    { el: 'meta', attrs: { name: 'robots', content: robots } },
+  ]
+  if (description) tags.push({ el: 'meta', attrs: { name: 'description', content: description } })
+  for (const tag of head?.meta ?? []) tags.push({ el: 'meta', attrs: metaAttrs(tag) })
+  if (head?.jsonLd) tags.push({ el: 'script', json: head.jsonLd })
+
+  return tags
+}
+
+/** Serializes a managed tag to an HTML string with the `data-mh` marker (server-side). */
+const serialize = (tag: HeadTag): string => {
+  if (tag.el === 'title') return `<title ${MARK}>${escape(tag.text)}</title>`
+  if (tag.el === 'script')
+    // < guards against a "</script>" sequence breaking out of the tag.
+    return `<script type="application/ld+json" ${MARK}>${JSON.stringify(tag.json).replace(/</g, '\\u003c')}</script>`
+  const attrs = Object.entries(tag.attrs)
+    .map(([key, value]) => `${key}="${escape(value)}"`)
+    .join(' ')
+  return `<${tag.el} ${attrs} ${MARK} />`
+}
+
+/**
+ * Builds the per-page `<head>` HTML: the server-only CSP meta (prod) plus the managed tags from
+ * `collectHeadTags`, each marked with `data-mh`. Injected by `+onRenderHtml`.
+ */
+export const buildHead = (pageContext: PageContext): string =>
+  [
     // Dev is skipped: Vite/React-refresh inject inline scripts that `script-src 'self'` would block.
     ...(import.meta.env.DEV
       ? []
       : [`<meta http-equiv="Content-Security-Policy" content="${CSP}" />`]),
-    `<meta name="referrer" content="strict-origin-when-cross-origin" />`,
-    `<link rel="canonical" href="${url}" />`,
-    `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:site_name" content="${SITE_NAME}" />`,
-    `<meta name="robots" content="${escape(robots)}" />`,
-    ...(description ? [`<meta name="description" content="${escape(description)}" />`] : []),
-    ...(head?.meta ?? []).map(metaTag),
-  ]
+    ...collectHeadTags(pageContext).map(serialize),
+  ].join('\n    ')
 
-  if (head?.jsonLd) tags.push(jsonLdScript(head.jsonLd))
+/** Creates the DOM node for a managed tag (client-side). DOM APIs escape values natively. */
+const createElement = (tag: HeadTag): HTMLElement => {
+  if (tag.el === 'title') {
+    const el = document.createElement('title')
+    el.textContent = tag.text
+    return el
+  }
+  if (tag.el === 'script') {
+    const el = document.createElement('script')
+    el.setAttribute('type', 'application/ld+json')
+    el.textContent = JSON.stringify(tag.json)
+    return el
+  }
+  const el = document.createElement(tag.el)
+  for (const [key, value] of Object.entries(tag.attrs)) el.setAttribute(key, value)
+  return el
+}
 
-  return tags.join('\n    ')
+/**
+ * Syncs the managed `<head>` tags with the current page on client-side navigation: removes the
+ * previous page's `[data-mh]` tags, then re-emits this page's set. Keeps `document.title`,
+ * description, canonical, og/twitter, robots, and JSON-LD in sync after a client route change.
+ */
+export const applyHead = (pageContext: PageContext): void => {
+  document.head.querySelectorAll(`[${MARK}]`).forEach((el) => el.remove())
+  for (const tag of collectHeadTags(pageContext)) {
+    const el = createElement(tag)
+    el.setAttribute(MARK, '')
+    document.head.appendChild(el)
+  }
 }
