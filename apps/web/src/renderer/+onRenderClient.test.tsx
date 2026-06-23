@@ -28,6 +28,7 @@ describe('+onRenderClient', () => {
 
   afterEach(() => {
     document.body.removeChild(container)
+    document.head.querySelectorAll('[data-mh]').forEach((el) => el.remove())
   })
 
   it('hydration: calls hydrateRoot and initMSW on first call', async () => {
@@ -42,9 +43,16 @@ describe('+onRenderClient', () => {
     expect(createRoot).toHaveBeenCalledWith(container)
   })
 
-  it('non-hydration: updates document.title from the page config', async () => {
-    await onRenderClient({ isHydration: false, config: { title: 'About' } } as never)
+  it('non-hydration: syncs the head tags from the page config', async () => {
+    await onRenderClient({
+      isHydration: false,
+      config: { title: 'About', description: 'Who I am.' },
+      urlPathname: '/about',
+    } as never)
     expect(document.title).toBe('About · SOROUSH.TECH')
+    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
+      'Who I am.'
+    )
   })
 
   it('non-hydration: skips createRoot and initMSW on subsequent CSR calls', async () => {

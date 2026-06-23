@@ -26,11 +26,19 @@ test('articles page lists the mocked gists and exposes its meta tags', async ({ 
 
 test('navigates from the articles list to an article via client routing', async ({ page }) => {
   await page.goto('/articles')
-  await waitForLoaded(page)
+  // Wait for hydration so Vike intercepts the click; the loader's `hidden` state alone can
+  // resolve before it ever mounts, letting the anchor do a full document navigation instead.
+  await page.waitForLoadState('networkidle')
+
+  // Tag the window so we can prove the navigation stayed client-side (no full reload).
+  await page.evaluate(() => ((window as Window & { __noReload?: boolean }).__noReload = true))
 
   await page.getByRole('link', { name: 'Mock Article Title' }).click()
 
   await expect(page).toHaveURL('/article/mock-gist-id')
+  expect(await page.evaluate(() => (window as Window & { __noReload?: boolean }).__noReload)).toBe(
+    true
+  )
   // Title is recomputed client-side on navigation (see +title / onRenderClient).
   await expect(page).toHaveTitle('Mock Article Title by Masoud Soroush · SOROUSH.TECH')
 })

@@ -2,7 +2,7 @@ import { createRoot, hydrateRoot, type Root } from 'react-dom/client'
 import type { OnRenderClientAsync } from 'vike/types'
 import { initMSW } from 'src/utils'
 import { Bootstrap } from 'src/common/Bootstrap'
-import { documentTitle } from './seo'
+import { applyHead } from './buildHead'
 
 let root: Root
 export const onRenderClient: OnRenderClientAsync = async (
@@ -20,8 +20,8 @@ export const onRenderClient: OnRenderClientAsync = async (
       root = createRoot(container)
     }
     root.render(page)
-    // SSR sets the title on first paint; update it on client-side navigation.
-    document.title = documentTitle(pageContext)
+    // SSR sets the head tags on first paint; sync them on client-side navigation.
+    applyHead(pageContext)
   } else {
     root = hydrateRoot(container, page)
   }
