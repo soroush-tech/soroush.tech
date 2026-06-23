@@ -9,7 +9,7 @@ description: How to write git commits in this repo that auto-close their GitHub 
 Every commit follows the [Conventional Commits](https://www.conventionalcommits.org)
 structure:
 
-```
+```text
 <type>[optional scope]: <description>
 
 [optional body]
@@ -49,17 +49,17 @@ Allowed on any type. May also be flagged with `!` before the colon:
 
 ### Examples
 
-```
+```text
 feat: allow provided config object to extend other configs
 
 BREAKING CHANGE: `extends` key in config file is now used for extending other config files
 ```
 
-```
+```text
 docs: correct spelling of CHANGELOG
 ```
 
-```
+```text
 chore(CI): gate lint, packages, and worker jobs behind the CI environment review
 ```
 
@@ -68,13 +68,13 @@ chore(CI): gate lint, packages, and worker jobs behind the CI environment review
 A commit that completes a GitHub task ends its **subject line** (the header — the
 first line) with the closing keyword and the task number:
 
-```
+```text
 <type>(<scope>): <summary> - close #<tasknumber>
 ```
 
 Example:
 
-```
+```text
 feat(schema): extract contact validation into shared @soroush.tech/schema - close #155
 ```
 
