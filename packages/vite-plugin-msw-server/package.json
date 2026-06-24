@@ -15,6 +15,7 @@
     "testing"
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
+  "license": "MIT",
   "homepage": "https://github.com/soroush-tech/soroush.tech/tree/main/packages/vite-plugin-msw-server#readme",
   "repository": {
     "type": "git",
