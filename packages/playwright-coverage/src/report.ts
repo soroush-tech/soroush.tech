@@ -10,15 +10,17 @@ export const defaultEntryFilter = (entry: { url: string }): boolean =>
 
 /** Default `sourcePath`: strip the absolute cwd prefix so paths are repo-relative (for Codecov). */
 export const defaultSourcePath = (filePath: string): string => {
-  const cwd = process.cwd().replace(/\\/g, '/')
-  return filePath.replace(/\\/g, '/').replace(`${cwd}/`, '')
+  const cwd = process.cwd().replaceAll('\\', '/')
+  return filePath.replaceAll('\\', '/').replace(`${cwd}/`, '')
 }
 
 export const resolveRawDir = (options: PlaywrightCoverageOptions): string =>
   options.rawDir ?? resolve(options.report.outputDir ?? '.', '.raw')
 
-export const toGlobs = (globs?: string | string[]): string[] =>
-  globs === undefined ? [] : Array.isArray(globs) ? globs : [globs]
+export const toGlobs = (globs?: string | string[]): string[] => {
+  if (globs === undefined) return []
+  return Array.isArray(globs) ? globs : [globs]
+}
 
 /**
  * Resolves the report's `sourceFilter`. `include`/`exclude` globs win when present; otherwise the
