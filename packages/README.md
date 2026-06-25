@@ -11,7 +11,8 @@ All packages are scoped **`@soroush.tech/*`**, and the directory name matches th
 | `@soroush.tech/eslint-config`          | private   | Shared, framework-agnostic ESLint base (`./base`) that every member extends.                            |
 | `@soroush.tech/vite-plugin-watch`      | private   | Dev-only Vite plugin: re-runs a codegen script on dev start and whenever a watched source file changes. |
 | `@soroush.tech/vite-plugin-sitemap`    | private   | Build-only Vite plugin: emits `sitemap.xml` from Vike's prerendered HTML.                               |
-| `@soroush.tech/vite-plugin-msw-server` | private   | Runs an `msw`/node mock server inside Vite for server-side rendering and SSG prerendering.              |
+| `@soroush.tech/vite-plugin-msw-server` | published | Runs an `msw`/node mock server inside Vite for server-side rendering and SSG prerendering.              |
+| `@soroush.tech/playwright-coverage`    | published | Collects per-test V8 coverage from Playwright e2e runs and aggregates it to lcov via monocart.          |
 
 ## Consuming a package
 
@@ -35,6 +36,6 @@ Internally, packages are consumed as **TypeScript source** (`exports` → `./src
 Two house rules to know up front:
 
 - **100% test coverage is mandatory** for every package — none ships or publishes below it.
-- **Licensing:** a publishable (non-`private`) package must declare a `license` and ship a `LICENSE` file before it is published. _Current state: every package is `private`, so none carries a license yet — a license will be added if and when a package is published._
+- **Licensing:** a publishable (non-`private`) package must declare a `license` and ship a `LICENSE` file before it is published. _Current state: the published packages above ship MIT; the remaining `private` packages carry no license until they are published._
 
 Full rules — folder structure, exports, publishing, testing, licensing, naming — live in [`packages.md`](./packages.md).
