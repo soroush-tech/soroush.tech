@@ -14,6 +14,7 @@ on:
         type: choice
         options:
           - vite-plugin-msw-server
+          - playwright-coverage
       notes:
         description: Release notes (markdown) for the GitHub Release — use \n for line breaks
         required: true
