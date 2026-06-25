@@ -28,6 +28,12 @@
     {
       "matchDepTypes": ["dependencies"],
       "groupName": "dependencies"
+    },
+    {
+      "matchFileNames": ["apps/web/package.json"],
+      "matchPackageNames": ["vite"],
+      "allowedVersions": "<8.1.0",
+      "description": "Hold apps/web Vite at 8.0.x: 8.1.x (Rolldown) drops top-level bindings in the Storybook production build, breaking Chromatic with 'ReferenceError: ... is not defined' (MSW checkGlobals). See https://github.com/storybookjs/storybook/issues/33789. Revisit when Storybook supports Vite 8/Rolldown."
     }
   ],
   "platformAutomerge": true
