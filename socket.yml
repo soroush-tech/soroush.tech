@@ -1,0 +1,11 @@
+# Socket security configuration — https://docs.socket.dev/docs/socket-yml
+version: 2
+
+# Disable the "obfuscated code" alert. The only packages it flags in this repo are
+# reputable build-tooling transitives that never ship in our published packages:
+#   - yargs            ← msw's CLI (msw is core; yargs only powers `msw init`)
+#   - @emnapi/runtime  ← vite/rolldown's wasm32-wasi binding
+# Neither is removable, and both are well-known. socket.yml has no per-package ignore,
+# so this is a repo-wide rule toggle (use the Socket dashboard for per-package triage).
+issueRules:
+  obfuscatedFile: false
