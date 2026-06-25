@@ -38,6 +38,8 @@ packages/
     LICENSE               ← publishable packages
 ```
 
+Keep the **public API in `index.ts`** (the single entry); extract internal helpers into sibling modules (`filters.ts`, `collector.ts`, …) with co-located `*.test.ts` only once the entry file grows unwieldy — don't pre-split a small, well-factored file. The app-level "one file per helper" rule (CLAUDE.md "Logic & data co-location") is scoped to `common`/`section`/`pages` components, not packages: a package's job is to present one clear entry, so internal structure is an optimization for size, not a default. When `index.ts` does re-export a sibling barrel-style, follow the `export *` rule in the `code-style` skill.
+
 ---
 
 ## Naming & scope
