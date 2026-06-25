@@ -80,28 +80,34 @@ jobs:
           cd "packages/$PKG"
           name=$(node -p "require('./package.json').name")
           version=$(node -p "require('./package.json').version")
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           if npm view "$name@$version" version >/dev/null 2>&1; then
-            echo "published=false" >> "$GITHUB_OUTPUT"
             echo "⏭️ \`$name@$version\` already on npm — skipped (bump the version to release)." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           pnpm publish --no-git-checks
-          echo "published=true" >> "$GITHUB_OUTPUT"
-          echo "name=$name" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "### 📦 Published \`$name@$version\`" >> "$GITHUB_STEP_SUMMARY"
           echo "https://www.npmjs.com/package/$name/v/$version" >> "$GITHUB_STEP_SUMMARY"
           echo "::notice title=Published::$name@$version"
 
-      # Release notes are the required `notes` dispatch input — no PR, changelog, or commit
-      # parsing. --notes-file avoids shell-escaping arbitrary markdown.
+      # Create the GitHub Release if it doesn't already exist — gated on the release's
+      # existence, not on whether npm was newly published, so a rerun can repair a missing
+      # release after a successful publish. Notes are the required `notes` input; context
+      # values go through env (never spliced into shell) and --notes-file avoids escaping
+      # arbitrary markdown.
       - name: Create GitHub Release for ${{ inputs.package }}
-        if: steps.publish.outputs.published == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           NOTES: ${{ inputs.notes }}
+          NAME: ${{ steps.publish.outputs.name }}
+          VERSION: ${{ steps.publish.outputs.version }}
         run: |
-          name="${{ steps.publish.outputs.name }}"
-          version="${{ steps.publish.outputs.version }}"
+          tag="$NAME@$VERSION"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "⏭️ GitHub Release \`$tag\` already exists — skipped." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           printf '%s' "$NOTES" > release-notes.md
-          gh release create "$name@$version" --title "$name@$version" --notes-file release-notes.md
+          gh release create "$tag" --title "$tag" --notes-file release-notes.md
+          echo "### 🏷️ Released \`$tag\`" >> "$GITHUB_STEP_SUMMARY"

@@ -58,16 +58,16 @@ permissions:
   contents: write # create the GitHub Release + tag
 ```
 
-| #   | Step                 | Detail                                                                                                                                                                                                                                      |
-| --- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Checkout             | `actions/checkout@v5`, no persisted creds                                                                                                                                                                                                   |
-| 2   | Validate package     | `inputs.package` (read via `$PKG` env, never spliced into shell) must exist under `packages/` and be non-`private`. The choice list is static YAML, so this catches drift and blocks a private dir.                                         |
-| 3   | Read Node.js version | `cat .nvmrc` → `$GITHUB_ENV` (`NODE_VERSION`)                                                                                                                                                                                               |
-| 4   | Setup pnpm           | `pnpm/action-setup@v5`                                                                                                                                                                                                                      |
-| 5   | Setup Node           | `actions/setup-node@v5`, `node-version: $NODE_VERSION`, `cache: pnpm` (deps cache), `registry-url: https://registry.npmjs.org`                                                                                                              |
-| 6   | Install              | `pnpm install --frozen-lockfile`                                                                                                                                                                                                            |
-| 7   | **Publish**          | `pnpm publish --no-git-checks`, guarded by an `npm view` check that skips a version already on the registry. Auth is the OIDC id-token; **`NODE_AUTH_TOKEN` is never set**. Sets `published`/`name`/`version` outputs + a job-summary line. |
-| 8   | **GitHub Release**   | `if: steps.publish.outputs.published == 'true'`. Writes the required `notes` input to a file and runs `gh release create "<name>@<version>" --notes-file …`. Skipped when the publish was a no-op.                                          |
+| #   | Step                 | Detail                                                                                                                                                                                                                                                                                                                       |
+| --- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Checkout             | `actions/checkout@v5`, no persisted creds                                                                                                                                                                                                                                                                                    |
+| 2   | Validate package     | `inputs.package` (read via `$PKG` env, never spliced into shell) must exist under `packages/` and be non-`private`. The choice list is static YAML, so this catches drift and blocks a private dir.                                                                                                                          |
+| 3   | Read Node.js version | `cat .nvmrc` → `$GITHUB_ENV` (`NODE_VERSION`)                                                                                                                                                                                                                                                                                |
+| 4   | Setup pnpm           | `pnpm/action-setup@v5`                                                                                                                                                                                                                                                                                                       |
+| 5   | Setup Node           | `actions/setup-node@v5`, `node-version: $NODE_VERSION`, `cache: pnpm` (deps cache), `registry-url: https://registry.npmjs.org`                                                                                                                                                                                               |
+| 6   | Install              | `pnpm install --frozen-lockfile`                                                                                                                                                                                                                                                                                             |
+| 7   | **Publish**          | `pnpm publish --no-git-checks`, guarded by an `npm view` check that skips a version already on the registry. Auth is the OIDC id-token; **`NODE_AUTH_TOKEN` is never set**. Always sets `name`/`version` outputs + a job-summary line.                                                                                       |
+| 8   | **GitHub Release**   | Creates the Release only if it doesn't already exist (`gh release view` check) — gated on the release's existence, not the npm-publish path, so a rerun can repair a missing release after a successful publish. Writes the required `notes` input to a file and runs `gh release create "<name>@<version>" --notes-file …`. |
 
 The dispatch is restricted to `main` (`github.ref`), so a release always comes off the
 CI-passed main branch, even though the dispatch UI lets you pick any ref.
@@ -85,8 +85,9 @@ publisher (repo `soroush-tech/soroush.tech`, workflow `cd-packages.yml`, environ
 - **One-time bootstrap:** a package must exist on npm before a trusted publisher can be
   configured for it, so the **first** publish of a new name is manual (`npm publish`),
   then OIDC takes over.
-- **pnpm version:** publish on **pnpm 10.x** — OIDC is currently broken on pnpm 11
-  ([pnpm#11513](https://github.com/pnpm/pnpm/issues/11513)). Node ≥ 22.14 / npm ≥ 11.5.1.
+- **pnpm version:** publish on **pnpm 10.x** (the repo pins `pnpm@10.13.1`) — OIDC is
+  currently broken on pnpm 11 ([pnpm#11513](https://github.com/pnpm/pnpm/issues/11513)).
+  Needs a modern Node runtime; the repo runs **Node 25** (`.nvmrc`).
 - **Never set `NODE_AUTH_TOKEN`:** an empty value makes pnpm attempt token auth instead
   of falling back to OIDC.
 - **Release = version bump:** the publish step skips versions already on the registry,
@@ -97,9 +98,10 @@ publisher (repo `soroush-tech/soroush.tech`, workflow `cd-packages.yml`, environ
 ## Release notes (required dispatch input)
 
 The GitHub Release notes are the **required `notes` input** typed at dispatch time — no
-PR, no changelog file, no commit parsing. After a successful publish the job creates a
-**GitHub Release** tagged `<package-name>@<version>` (package-scoped so multiple packages
-don't collide on a plain `v<version>`), with exactly the notes you provided:
+PR, no changelog file, no commit parsing. The job creates a **GitHub Release** tagged
+`<package-name>@<version>` (package-scoped so multiple packages don't collide on a plain
+`v<version>`) when one doesn't already exist — so a rerun can repair a missing release —
+with exactly the notes you provided:
 
 1. `printf '%s' "$NOTES" > release-notes.md` — file form avoids shell-escaping arbitrary
    markdown; `$NOTES` comes from `env`, never spliced into the command.
