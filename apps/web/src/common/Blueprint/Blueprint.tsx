@@ -3,7 +3,6 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex, type FlexProps } from 'src/theme/Flex'
 import { alpha } from 'src/theme/utils'
-import { View } from 'src/theme/View'
 
 export interface BlueprintProps extends FlexProps {
   /** Renders a fixed scanline sweep animation. Default: false. */
@@ -43,8 +42,9 @@ const ScanlineLine = styled('span', { label: 'ScanlineLine' })`
   animation: ${scanlineAnim} 8s linear infinite;
 `
 
-const Content = styled(View)`
+const Content = styled(Flex)`
   z-index: 1;
+  flex-grow: 1;
 `
 
 export function Blueprint({
