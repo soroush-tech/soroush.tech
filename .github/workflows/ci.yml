@@ -205,6 +205,15 @@ jobs:
       - name: Run Tests with Coverage
         run: ${{ needs.prepare.outputs.runner }} --filter ${{ matrix.filter }} test:coverage
 
+      # vitest writes lcov paths relative to the package (e.g. SF:src/index.ts), which is
+      # ambiguous across the monorepo — Codecov can't map a lone src/index.ts (five exist)
+      # and silently drops the flag's coverage. Prefix with the package dir so paths are
+      # repo-relative and unique. $DIR via env (never spliced into the shell).
+      - name: Make lcov paths repo-relative for Codecov
+        env:
+          DIR: ${{ matrix.dir }}
+        run: sed -i "s#^SF:#SF:packages/$DIR/#" "packages/$DIR/coverage/lcov.info"
+
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v7
         with:
