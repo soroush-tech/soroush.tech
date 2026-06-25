@@ -1,15 +1,16 @@
 # GitHub Actions workflows
 
 This directory holds the CI/CD pipeline for the `soroush.tech` monorepo. There is
-**one** CI workflow for the whole workspace and **three** deployment workflows (one a
-scaffold) that are gated on CI success — deploys never run off a raw `push`.
+**one** CI workflow for the whole workspace and **three** deployment workflows. The two
+deploys (`cd-web`, `cd-worker-api`) are gated on CI success and never run off a raw
+`push`; package publishing (`cd-packages`) is **manual `workflow_dispatch` only**.
 
-| File                                       | Name                              | Trigger                                                      |
-| ------------------------------------------ | --------------------------------- | ------------------------------------------------------------ |
-| [`ci.yml`](./ci.yml)                       | `Continuous Integration`          | `push` to `main`, every `pull_request`                       |
-| [`cd-web.yml`](./cd-web.yml)               | Pages deploy                      | `workflow_run` of CI (success, `main`) + `workflow_dispatch` |
-| [`cd-worker-api.yml`](./cd-worker-api.yml) | Cloudflare Worker deploy          | `workflow_run` of CI (success, `main`) + `workflow_dispatch` |
-| [`cd-packages.yml`](./cd-packages.yml)     | Publish Packages (npm) — scaffold | `workflow_run` of CI (success, `main`) + `workflow_dispatch` |
+| File                                       | Name                     | Trigger                                                      |
+| ------------------------------------------ | ------------------------ | ------------------------------------------------------------ |
+| [`ci.yml`](./ci.yml)                       | `Continuous Integration` | `push` to `main`, every `pull_request`                       |
+| [`cd-web.yml`](./cd-web.yml)               | Pages deploy             | `workflow_run` of CI (success, `main`) + `workflow_dispatch` |
+| [`cd-worker-api.yml`](./cd-worker-api.yml) | Cloudflare Worker deploy | `workflow_run` of CI (success, `main`) + `workflow_dispatch` |
+| [`cd-packages.yml`](./cd-packages.yml)     | Publish Packages (npm)   | manual `workflow_dispatch` only                              |
 
 **Per-workflow deep dives** (every step + caching):
 [`ci.md`](./ci.md) · [`cd-web.md`](./cd-web.md) · [`cd-worker-api.md`](./cd-worker-api.md) · [`cd-packages.md`](./cd-packages.md)
@@ -17,9 +18,10 @@ scaffold) that are gated on CI success — deploys never run off a raw `push`.
 ## How the pieces fit together
 
 CI runs on every push/PR. On a successful `main` run it uploads a single
-[`changes.json`](./ci.md#changesjson) artifact; the three CD workflows then start via
-`workflow_run`, download it, and each applies its **own condition** to decide whether
-to deploy/publish.
+[`changes.json`](./ci.md#changesjson) artifact; the **two deploy** workflows then start via
+`workflow_run`, download it, and each applies its **own condition** to decide whether to
+deploy. `cd-packages` is separate — it's triggered by hand, not by CI, so it reads no
+artifact.
 
 ```mermaid
 flowchart LR
@@ -28,21 +30,21 @@ flowchart LR
     ci -->|"uploads artifact"| art[("changes.json<br/>apps · worker · packages<br/>workflows · root")]
     ci -->|"workflow_run: completed + success on main"| cdweb["CD — Pages"]
     ci -->|"workflow_run: completed + success on main"| cdworker["CD — Worker API"]
-    ci -->|"workflow_run: completed + success on main"| cdpkg["CD — Packages (scaffold)"]
     art -.->|"download-artifact"| cdweb
     art -.->|"download-artifact"| cdworker
-    art -.->|"download-artifact"| cdpkg
     cdweb --> pages["GitHub Pages"]
     cdworker --> cf["Cloudflare Worker"]
+    disp["workflow_dispatch (manual)"] --> cdpkg["CD — Packages"]
     cdpkg --> npm["npm registry"]
 ```
 
-Why an artifact? A `workflow_run` event carries no diff base of its own, so the CD
+Why an artifact? A `workflow_run` event carries no diff base of its own, so the deploy
 workflows can't compute what changed. CI already computed it against
 `github.event.before..after`, records the answer in `changes.json`, and hands it off
-through the artifact. Each CD reads the file and applies its own condition (e.g. web
+through the artifact. Each deploy reads the file and applies its own condition (e.g. web
 deploys on `apps`/`packages`/`root`); the policy lives in CD, the facts in CI. If the
-artifact is missing (e.g. a manual `workflow_dispatch`), CD falls back to deploying.
+artifact is missing (e.g. a manual `workflow_dispatch`), the deploy falls back to
+deploying.
 
 ## `ci.yml` — Continuous Integration
 
@@ -171,19 +173,27 @@ flowchart TD
 `config:gen` renders `wrangler.json` from repo `vars` (worker name, D1, R2, honeypot);
 `wrangler deploy` authenticates with `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`.
 
-## `cd-packages.yml` — npm publish (scaffold)
+## `cd-packages.yml` — npm publish
+
+**Manual only** — unlike the other two CD workflows, this one is **not** gated on CI and
+never runs off a push, PR merge, or `workflow_run`. It publishes from `workflow_dispatch`,
+taking a `package` (choice) and **required** `notes` input.
 
 ```mermaid
 flowchart TD
-    trig["workflow_run success<br/>or workflow_dispatch"] --> changes["changes<br/>download changes.json →<br/>names = root ? all : packages"]
-    changes -->|"has_packages == true"| publish["publish (matrix per package)<br/>TODO: dry-run stub"]
-    changes -->|"has_packages == false"| skip["(skipped)"]
-    publish --> npm["npm registry"]
+    trig["workflow_dispatch<br/>package + notes (required)"] --> publish["publish (ref == main)<br/>OIDC publish + GitHub Release"]
+    publish -->|"version is new"| npm["npm registry"]
+    publish -->|"version already on npm"| skip["(skipped)"]
 ```
 
-**Scaffold** — the publish step is a dry-run TODO; real publishing is deferred (see
-[cd-packages.md](./cd-packages.md#going-live)). The trigger gating, changed-packages
-matrix, and npm auth setup are already in place.
+Publishes the chosen non-`private` package to npm via **Trusted Publishing (OIDC)** — no
+long-lived `NPM_TOKEN`; GitHub mints a short-lived id-token per run that npm verifies
+against the package's trusted publisher. The publish step skips a version already on the
+registry, so **a release is just bumping `package.json` `version` on `main`, then
+dispatching**. On a real publish it cuts a GitHub Release tagged `<pkg>@<version>` whose
+notes are the **required `notes` input** — no PR or changelog is read. Auto-publish on
+merge and required human-written notes can't coexist, so publishing is a deliberate,
+on-demand step. See [cd-packages.md](./cd-packages.md) for the full walkthrough.
 
 ## Conventions (see the `ci-cd` skill)
 

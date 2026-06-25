@@ -1,7 +1,6 @@
 {
   "name": "@soroush.tech/vite-plugin-msw-server",
-  "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vite plugin that runs an msw/node mock server during dev and SSG/SSR builds, so server-side data fetching and prerendering resolve against mocks.",
   "keywords": [
     "vite",
@@ -65,12 +64,12 @@
   },
   "devDependencies": {
     "@soroush.tech/eslint-config": "workspace:*",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^10.5.0",
-    "globals": "^17.6.0",
-    "tsdown": "^0.22.2",
+    "globals": "^17.7.0",
+    "tsdown": "^0.22.3",
     "typescript": "~6.0.3",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.8"
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
   }
 }

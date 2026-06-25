@@ -1,0 +1,107 @@
+name: Publish Packages (npm)
+
+# Publishes a single non-private package to npm via Trusted Publishing (OIDC):
+# manual dispatch only — never from a push, PR merge, or CI completion. A release is a
+# deliberate act with required, human-written notes; auth is a short-lived id-token
+# minted per run and verified against the npm trusted publisher (no long-lived token).
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        required: true
+        type: choice
+        options:
+          - vite-plugin-msw-server
+      notes:
+        description: Release notes (markdown) for the GitHub Release
+        required: true
+        type: string
+
+concurrency:
+  group: publish-packages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # main-only: a release always comes off the CI-passed main branch, even though the
+    # dispatch UI lets you pick any ref.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: cd-packages
+    timeout-minutes: 15
+    permissions:
+      id-token: write # OIDC token for npm Trusted Publishing (no NPM_TOKEN)
+      contents: write # create the GitHub Release + tag
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      # The choice list is static YAML and can drift from packages/, and only non-private
+      # packages may publish — so validate the pick rather than trust it. $PKG is read
+      # from env (never spliced into shell) to avoid injection.
+      - name: Validate package
+        env:
+          PKG: ${{ inputs.package }}
+        run: |
+          test -f "packages/$PKG/package.json" || { echo "::error::Unknown package: $PKG"; exit 1; }
+          node -e 'process.exit(require(`./packages/${process.env.PKG}/package.json`).private === true ? 1 : 0)' \
+            || { echo "::error::$PKG is private — not publishable"; exit 1; }
+
+      - name: Read Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Publish via npm Trusted Publishing (OIDC). Auth comes from the id-token minted
+      # above — there is no NPM_TOKEN, and NODE_AUTH_TOKEN must stay unset (even an empty
+      # value makes pnpm use token auth instead of falling back to OIDC). Skip a version
+      # already on the registry rather than fail trying to republish it; bump the package
+      # version on main to release.
+      - name: Publish ${{ inputs.package }}
+        id: publish
+        env:
+          PKG: ${{ inputs.package }}
+        run: |
+          cd "packages/$PKG"
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          if npm view "$name@$version" version >/dev/null 2>&1; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "⏭️ \`$name@$version\` already on npm — skipped (bump the version to release)." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          pnpm publish --no-git-checks
+          echo "published=true" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "### 📦 Published \`$name@$version\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://www.npmjs.com/package/$name/v/$version" >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice title=Published::$name@$version"
+
+      # Release notes are the required `notes` dispatch input — no PR, changelog, or commit
+      # parsing. --notes-file avoids shell-escaping arbitrary markdown.
+      - name: Create GitHub Release for ${{ inputs.package }}
+        if: steps.publish.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          name="${{ steps.publish.outputs.name }}"
+          version="${{ steps.publish.outputs.version }}"
+          printf '%s' "$NOTES" > release-notes.md
+          gh release create "$name@$version" --title "$name@$version" --notes-file release-notes.md
