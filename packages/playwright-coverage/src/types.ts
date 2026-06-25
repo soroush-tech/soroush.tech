@@ -38,7 +38,7 @@ export interface PlaywrightCoverageOptions {
   /** Where per-test raw V8 dumps are written before aggregation. Default: `${outputDir}/.raw`. */
   rawDir?: string
   /** Only this Playwright browser is instrumented — V8 coverage is Chromium-only. Default: `'chromium'`. */
-  browser?: string
+  browser?: 'chromium' | 'firefox' | 'webkit'
 }
 
 export interface PlaywrightCoverage {

@@ -91,7 +91,7 @@ describe('createGlobalTeardown', () => {
 
   it('is a no-op when the raw dir does not exist', async () => {
     const { Report, generate } = makeFakeReport()
-    const rawDir = join(tmpdir(), 'pwcov-absent-7c3f9e21')
+    const rawDir = join(tmp(), '.raw-does-not-exist')
 
     await createGlobalTeardown(
       { enabled: true, rawDir, report: { name: 'T', outputDir: '.' } },

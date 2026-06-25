@@ -96,8 +96,9 @@ jobs:
       # existence, not on whether npm was newly published, so a rerun can repair a missing
       # release after a successful publish. Notes are the required `notes` input; context
       # values go through env (never spliced into shell) and --notes-file avoids escaping
-      # arbitrary markdown. `printf '%b'` expands the `\n` escapes from the single-line
-      # dispatch input into real line breaks (workflow_dispatch has no multiline field).
+      # arbitrary markdown. Parameter expansion turns only the literal `\n` escapes from the
+      # single-line dispatch input into real line breaks (workflow_dispatch has no multiline
+      # field), leaving other backslash sequences (`\t`, paths, etc.) untouched.
       - name: Create GitHub Release for ${{ inputs.package }}
         env:
           GH_TOKEN: ${{ github.token }}
@@ -110,6 +111,7 @@ jobs:
             echo "⏭️ GitHub Release \`$tag\` already exists — skipped." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          printf '%b' "$NOTES" > release-notes.md
+          notes=${NOTES//'\n'/$'\n'}
+          printf '%s' "$notes" > release-notes.md
           gh release create "$tag" --title "$tag" --notes-file release-notes.md
           echo "### 🏷️ Released \`$tag\`" >> "$GITHUB_STEP_SUMMARY"
