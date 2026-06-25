@@ -91,7 +91,7 @@ test('sitemap.xml lists indexable pages and omits noindex ones', async ({ reques
   const xml = await res.text()
   expect(xml).toContain('<loc>https://soroush.tech/</loc>')
   expect(xml).toContain('<loc>https://soroush.tech/articles/</loc>')
+  expect(xml).toContain('<loc>https://soroush.tech/design/system/</loc>')
   // noindex pages must never be listed.
   expect(xml).not.toContain('/projects</loc>')
-  expect(xml).not.toContain('/design/system</loc>')
 })

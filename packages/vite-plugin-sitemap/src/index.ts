@@ -15,7 +15,7 @@ const meta = (html: string, name: string): string | undefined => {
 }
 
 // `about/index.html` -> `/about/`, `index.html` -> `/`, `article/x/index.html` -> `/article/x/`.
-// Trailing slashes match GitHub Pages, which 301-redirects `/about` -> `/about/`.
+// Trailing slashes match static hosts that 301-redirect `/about` -> `/about/`.
 const toPath = (relative: string): string =>
   `/${relative
     .split(sep)
@@ -54,10 +54,10 @@ const generate = (clientDir: string): number => {
 /**
  * Emits `sitemap.xml` from Vike's prerendered output. Runs after the bundle closes
  * (`order: 'post'`, once prerendering has written `build/client/**\/*.html`) and scans
- * the same HTML the deploy ships, so the sitemap matches the live pages — articles
- * included. A page is skipped when its `<meta name="robots">` contains `noindex`, so
- * /projects and /design/system drop out with no hardcoded list to maintain. The empty
- * scan that precedes prerender (e.g. the client-build pass) writes nothing.
+ * the same HTML that gets deployed, so the sitemap matches the live pages. A page is
+ * skipped when its `<meta name="robots">` contains `noindex`, with no hardcoded list to
+ * maintain. The empty scan that precedes prerender (e.g. the client-build pass) writes
+ * nothing.
  */
 export default function sitemap(): Plugin {
   let clientDir = ''

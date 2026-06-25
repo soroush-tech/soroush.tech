@@ -76,6 +76,7 @@
     "@emotion/server": "^11.11.0",
     "@playwright/test": "^1.61.1",
     "@soroush.tech/eslint-config": "workspace:*",
+    "@soroush.tech/playwright-coverage": "workspace:*",
     "@soroush.tech/vite-plugin-msw-server": "workspace:*",
     "@soroush.tech/vite-plugin-sitemap": "workspace:*",
     "@soroush.tech/vite-plugin-watch": "workspace:*",
