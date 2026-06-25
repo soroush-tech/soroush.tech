@@ -38,7 +38,9 @@ export default function mswServer({
   enable = true,
   onUnhandledRequest = 'bypass',
 }: MswServerOptions): Plugin {
-  if (!enable) return { name: NAME }
+  if (!enable) {
+    return { name: NAME }
+  }
 
   let started = false
   const start = async () => {
