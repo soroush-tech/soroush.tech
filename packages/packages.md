@@ -33,6 +33,7 @@ packages/
     package.json
     tsconfig.json         ← bundler resolution, noEmit; NOT in the root solution
     eslint.config.js      ← spreads @soroush.tech/eslint-config/base + env globals
+    vitest.config.ts      ← v8 coverage, reporter ['text', 'lcov'], 100% thresholds
     tsdown.config.ts      ← publishable packages only
     README.md             ← usage docs (publishable packages)
     LICENSE               ← publishable packages
@@ -100,6 +101,7 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
 **Every package must have 100% test coverage.** No package ships internally or publishes below 100% — this extends the repo-wide rule (CLAUDE.md §6) to the package layer.
 
 - Co-locate `index.test.ts` next to `src/index.ts`; vitest with v8 coverage.
+- Every package ships a `vitest.config.ts` with `coverage.reporter: ['text', 'lcov']` (v8 provider, `thresholds: { 100: true }`). The `lcov` reporter is **required** — CI reads each package's `coverage/lcov.info` to rewrite `SF:` paths and upload to Codecov, so a package without it (or relying on vitest's default reporters) breaks the coverage step.
 - Each package exposes `test` and `test:coverage` scripts; the root aggregates with `pnpm -r test:coverage`.
 - Plugin code that depends on the Vite/Rollup runtime is exercised by invoking the exported factory and asserting the returned plugin object's hooks; environment-dependent calls jsdom/node can't run are isolated behind injectable inputs (e.g. the msw server is passed in) so they stay unit-testable.
 
