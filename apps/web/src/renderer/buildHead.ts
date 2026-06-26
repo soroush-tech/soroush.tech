@@ -15,11 +15,11 @@ type HeadTag =
 /** Escapes a value for safe interpolation into HTML text and attribute contexts. */
 const escape = (value: string): string =>
   value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
 
 const isHeadMeta = (data: unknown): data is HeadMeta =>
   typeof data === 'object' && data !== null && ('meta' in data || 'jsonLd' in data)

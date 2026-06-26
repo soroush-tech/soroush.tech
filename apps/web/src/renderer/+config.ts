@@ -26,7 +26,7 @@ export const config = {
       env: { config: true },
       effect({ configDefinedAt, configValue }) {
         if (typeof configValue !== 'boolean') {
-          throw new Error(`${configDefinedAt} should be a boolean`)
+          throw new TypeError(`${configDefinedAt} should be a boolean`)
         }
         if (configValue) {
           return {

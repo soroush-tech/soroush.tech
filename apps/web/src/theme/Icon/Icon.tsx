@@ -40,7 +40,7 @@ const StyledIcon = styled('svg', { label: 'icon', shouldForwardProp })(
   colorSystem
 )
 
-export function Icon({ name, color = 'primary', size = '1.5rem', ...rest }: IconProps) {
+export function Icon({ name, color = 'primary', size = '1.5rem', ...rest }: Readonly<IconProps>) {
   return (
     <StyledIcon as={icons[name]} color={color} width={size} height={size} aria-hidden {...rest} />
   )

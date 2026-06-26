@@ -14,7 +14,14 @@ export interface FormHelperTextProps extends TypographyProps {
  * FormControl context and registers its presence so the control can point
  * `aria-describedby` at it only while it is rendered.
  */
-export function FormHelperText({ children, error, id, role, color, ...rest }: FormHelperTextProps) {
+export function FormHelperText({
+  children,
+  error,
+  id,
+  role,
+  color,
+  ...rest
+}: Readonly<FormHelperTextProps>) {
   const control = useContext(FormControlContext)
   const form = useContext(FormContext)
   const isError = error ?? control?.error ?? false

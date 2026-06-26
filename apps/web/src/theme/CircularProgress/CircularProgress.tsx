@@ -155,7 +155,7 @@ export function CircularProgress({
   easing = 'linear',
   showTrack = false,
   ...rest
-}: CircularProgressProps) {
+}: Readonly<CircularProgressProps>) {
   const r = (VIEWBOX - thickness * 2) / 2
   const circumference = 2 * Math.PI * r
   const normalizedValue = clamp(value ?? min, min, max)

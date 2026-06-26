@@ -115,6 +115,6 @@ export interface MarkdownProps {
 }
 
 /** Renders a markdown string with every element mapped to a design-system primitive. */
-export function Markdown({ children }: MarkdownProps) {
+export function Markdown({ children }: Readonly<MarkdownProps>) {
   return <ReactMarkdown components={components}>{children}</ReactMarkdown>
 }

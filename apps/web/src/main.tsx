@@ -3,13 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { initMSW } from 'src/utils'
 import { Providers } from './common/Providers'
 import App from './App'
-;(async () => {
-  await initMSW()
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <Providers>
-        <App />
-      </Providers>
-    </StrictMode>
-  )
-})()
+
+await initMSW()
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </StrictMode>
+)

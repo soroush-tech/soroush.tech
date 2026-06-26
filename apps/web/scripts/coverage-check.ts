@@ -45,13 +45,13 @@ try {
 }
 
 const sum = (block: string, key: string): number => {
-  const match = block.match(new RegExp(`^${key}:(\\d+)`, 'm'))
+  const match = new RegExp(String.raw`^${key}:(\d+)`, 'm').exec(block)
   return match ? Number(match[1]) : 0
 }
 
 const files: FileCoverage[] = []
 for (const block of raw.split('end_of_record')) {
-  const sf = block.match(/^SF:(.*)$/m)
+  const sf = /^SF:(.*)$/m.exec(block)
   if (!sf) continue
   files.push({
     file: sf[1].trim().replaceAll('\\', '/'),

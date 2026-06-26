@@ -32,6 +32,7 @@ export function ContactInquire() {
     containerRef,
     token: turnstileToken,
     reset: resetTurnstile,
+    error: turnstileError,
   } = useTurnstile(turnstileSitekey)
 
   const form = useContactInquire()
@@ -56,7 +57,7 @@ export function ContactInquire() {
     // Gate on the schema directly (same check as the submit button) rather than the form's
     // `canSubmit`, which can stay stale-false after autofill and silently block a valid send.
     if (!contact.schema.safeParse(values).success) {
-      void form.handleSubmit() // surface field errors; an invalid form never submits
+      form.handleSubmit() // surface field errors; an invalid form never submits
       return
     }
     // A filled honeypot means a bot — skip the request but show the success screen anyway.
@@ -108,7 +109,7 @@ export function ContactInquire() {
             variant="text"
             size="sm"
             startIcon={<Icon name="arrow_back" size="1.1rem" />}
-            onClick={() => window.history.back()}
+            onClick={() => globalThis.history.back()}
           >
             Back
           </Button>
@@ -188,7 +189,7 @@ export function ContactInquire() {
                     variant="contained"
                     size="lg"
                     startIcon={<Icon name="arrow_back" size="1.1rem" color="inherit" />}
-                    onClick={() => window.history.back()}
+                    onClick={() => globalThis.history.back()}
                   >
                     Back
                   </Button>
@@ -240,6 +241,11 @@ export function ContactInquire() {
             {turnstileSitekey && (
               <View mt={6}>
                 <div ref={containerRef} />
+                {turnstileError && (
+                  <Typography variant="overline" as="p" color="error" mt={2}>
+                    Verification couldn’t load. Disable any blockers and refresh to continue.
+                  </Typography>
+                )}
               </View>
             )}
 

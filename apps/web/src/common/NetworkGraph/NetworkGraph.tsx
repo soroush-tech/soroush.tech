@@ -18,7 +18,11 @@ export interface NetworkGraphProps {
 
 /** Generic, interactive D3 force-directed graph. Accepts a pre-built `data` graph
  *  and renders it with a consumer-supplied content component and zoom controls. */
-export function NetworkGraph({ data, heading, graphChildren: GraphChildren }: NetworkGraphProps) {
+export function NetworkGraph({
+  data,
+  heading,
+  graphChildren: GraphChildren,
+}: Readonly<NetworkGraphProps>) {
   const {
     activeNode,
     setActiveNode,

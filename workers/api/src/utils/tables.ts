@@ -8,7 +8,7 @@ import schemaTemplate from 'src/db/contacts.schema.sql'
  */
 
 /** A row read back from a `contacts_YYYY_MM` table (column → value). */
-export type ContactRow = Record<string, unknown>
+export type ContactRow = Record<string, string | number | null | undefined>
 
 /** `contacts_2026_06` for the month containing `when` (UTC). */
 export const monthTableName = (when: number | Date): string => {
@@ -43,10 +43,10 @@ export const isExpired = (name: string, now: number | Date, retentionMonths: num
 }
 
 /** SQL literal for a value in a dump: NULL, raw number, or single-quote-escaped string. */
-const sqlLiteral = (value: unknown): string => {
+const sqlLiteral = (value: string | number | null | undefined): string => {
   if (value === null || value === undefined) return 'NULL'
   if (typeof value === 'number') return String(value)
-  return `'${String(value).replace(/'/g, "''")}'`
+  return `'${String(value).replaceAll("'", "''")}'`
 }
 
 /**

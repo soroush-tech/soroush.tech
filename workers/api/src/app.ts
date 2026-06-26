@@ -22,7 +22,7 @@ const resolveOrigin = (origin: string, c: Context<{ Bindings: Env }>) =>
  * poll frequently) and the docs routes (opened by direct browser navigation, which also sends no
  * Origin; already gated by `DOCS_ENABLED`).
  */
-const GUARD_EXEMPT = ['/v1/health', '/v1/docs', '/v1/openapi.json']
+const GUARD_EXEMPT = new Set(['/v1/health', '/v1/docs', '/v1/openapi.json'])
 
 /** Origin of a `Referer` header, or `null` when it's absent or unparseable. */
 const refererOrigin = (referer: string | undefined): string | null => {
@@ -58,7 +58,7 @@ export const createApp = () => {
   // is noise reduction, not security — Turnstile is the real gate. `cors()` above already
   // short-circuits the OPTIONS preflight, so only real requests reach here.
   app.use('/*', async (c, next) => {
-    if (GUARD_EXEMPT.includes(c.req.path)) return next()
+    if (GUARD_EXEMPT.has(c.req.path)) return next()
     const allowed = c.env.ALLOW_ORIGIN ? [...ALLOWED_ORIGINS, c.env.ALLOW_ORIGIN] : ALLOWED_ORIGINS
     const origin = c.req.header('Origin')
     const allowedByOrigin = origin ? allowed.includes(origin) : false
@@ -72,7 +72,7 @@ export const createApp = () => {
   // Per-IP rate limit across all routes. `cf-connecting-ip` is always set behind Cloudflare; it's
   // absent only in local dev / direct access, where we skip rather than block.
   app.use('/*', async (c, next) => {
-    if (GUARD_EXEMPT.includes(c.req.path)) return next()
+    if (GUARD_EXEMPT.has(c.req.path)) return next()
     const ip = c.req.header('cf-connecting-ip')
     if (ip) {
       const { success } = await c.env.RATE_LIMITER.limit({ key: ip })

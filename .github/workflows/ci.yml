@@ -6,9 +6,6 @@ on:
       - 'main'
   pull_request:
 
-permissions:
-  contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,6 +15,8 @@ jobs:
   # expose everything as outputs the other jobs reuse via needs.prepare.outputs.*
   prepare:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     outputs:
       node_version: ${{ steps.node-version.outputs.version }}
@@ -31,7 +30,7 @@ jobs:
       changed_packages: ${{ steps.assemble.outputs.changed_packages }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
 
@@ -95,7 +94,7 @@ jobs:
           NODE
 
       - name: Detect changed entities
-        uses: dorny/paths-filter@v4
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
         id: filter
         with:
           filters: ${{ steps.discover.outputs.filters }} # JSON is valid YAML
@@ -134,7 +133,7 @@ jobs:
       # carry no diff base of their own and read this run's answer (computed against
       # github.event.before..after) to decide whether to deploy/publish.
       - name: Upload changes.json
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: changes
           path: changes.json
@@ -143,10 +142,12 @@ jobs:
   lint:
     needs: prepare
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
 
@@ -155,7 +156,7 @@ jobs:
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ needs.prepare.outputs.node_version }}
           cache: ${{ needs.prepare.outputs.manager }}
@@ -176,6 +177,8 @@ jobs:
     needs: [prepare, lint]
     if: needs.prepare.outputs.has_packages == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     environment: CI
     timeout-minutes: 15
     strategy:
@@ -183,7 +186,7 @@ jobs:
       matrix: ${{ fromJSON(needs.prepare.outputs.changed_packages) }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
 
@@ -192,7 +195,7 @@ jobs:
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ needs.prepare.outputs.node_version }}
           cache: ${{ needs.prepare.outputs.manager }}
@@ -215,7 +218,7 @@ jobs:
         run: sed -i "s#^SF:#SF:packages/$DIR/#" "packages/$DIR/coverage/lcov.info"
 
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.dir }}/coverage/lcov.info
@@ -228,11 +231,13 @@ jobs:
     needs: [prepare, lint]
     if: needs.prepare.outputs.worker == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     environment: CI
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
 
@@ -241,7 +246,7 @@ jobs:
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ needs.prepare.outputs.node_version }}
           cache: ${{ needs.prepare.outputs.manager }}
@@ -255,7 +260,7 @@ jobs:
         run: ${{ needs.prepare.outputs.runner }} --filter @soroush/api test:coverage
 
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./workers/api/coverage/lcov.info
@@ -268,6 +273,8 @@ jobs:
     needs: [prepare, lint]
     if: needs.prepare.outputs.web == 'true'
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     environment: CI
     timeout-minutes: 30
 
@@ -282,7 +289,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -292,13 +299,13 @@ jobs:
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ needs.prepare.outputs.node_version }}
           cache: ${{ needs.prepare.outputs.manager }}
 
       - name: Restore cache - Playwright binaries
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         id: playwright-cache
         with:
           path: ${{ github.workspace }}/ms-playwright
@@ -314,7 +321,7 @@ jobs:
 
       - name: Save cache - Playwright binaries
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: ${{ github.workspace }}/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
@@ -341,7 +348,7 @@ jobs:
 
       - name: Upload Unit Test Coverage
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -358,7 +365,7 @@ jobs:
 
       - name: Upload Browser Test Coverage
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -369,7 +376,7 @@ jobs:
       - name: Publish to Chromatic
         id: chromatic
         if: matrix.os == 'ubuntu-latest' && github.actor != 'renovate[bot]'
-        uses: chromaui/action@latest
+        uses: chromaui/action@c8eb1dde813a34d0e86b136d8c4faedd0a7351ab # v17.7.1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           buildScriptName: build:storybook
@@ -388,7 +395,7 @@ jobs:
 
       - name: Upload Coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/lcov.info
@@ -416,7 +423,7 @@ jobs:
 
       - name: Upload E2E Coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/web/coverage/e2e/lcov.info
@@ -431,6 +438,7 @@ jobs:
     if: always()
     needs: [prepare, lint, packages, worker, web]
     runs-on: ubuntu-latest
+    permissions: {}
     timeout-minutes: 5
     steps:
       - name: Require all jobs to pass

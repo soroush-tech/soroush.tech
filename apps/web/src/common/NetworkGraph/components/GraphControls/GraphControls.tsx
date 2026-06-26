@@ -25,7 +25,7 @@ const ControlButton = styled(Button)`
   }
 `
 
-export function GraphControls({ onZoomIn, onZoomOut, onReset }: GraphControlsProps) {
+export function GraphControls({ onZoomIn, onZoomOut, onReset }: Readonly<GraphControlsProps>) {
   return (
     <Flex flexDirection="row" position="absolute" bottom="2rem" left="2rem" zIndex={10}>
       <Flex>

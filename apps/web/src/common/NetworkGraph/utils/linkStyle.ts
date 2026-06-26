@@ -16,31 +16,22 @@ const isAreaEnd = (e: GraphLink['source']) => typeof e === 'object' && (e as Gra
 export const areaToArea = (d: GraphLink) => isAreaEnd(d.source) && isAreaEnd(d.target)
 
 /** Per-kind link distance — area↔area relations stretch widest, group hubs pull close. */
-export const linkDistance = (d: GraphLink) =>
-  d.kind === 'relation'
-    ? areaToArea(d)
-      ? AREA_RELATION_DISTANCE
-      : RELATION_DISTANCE
-    : d.kind === 'group'
-      ? GROUP_DISTANCE
-      : LINK_DISTANCE
+export const linkDistance = (d: GraphLink) => {
+  if (d.kind === 'relation') return areaToArea(d) ? AREA_RELATION_DISTANCE : RELATION_DISTANCE
+  if (d.kind === 'group') return GROUP_DISTANCE
+  return LINK_DISTANCE
+}
 
 /** Per-kind link stiffness — relations pull gently, group + containment hold firm. */
-export const linkStrength = (d: GraphLink) =>
-  d.kind === 'relation'
-    ? areaToArea(d)
-      ? AREA_RELATION_STRENGTH
-      : RELATION_STRENGTH
-    : d.kind === 'group'
-      ? GROUP_STRENGTH
-      : CONTAINMENT_STRENGTH
+export const linkStrength = (d: GraphLink) => {
+  if (d.kind === 'relation') return areaToArea(d) ? AREA_RELATION_STRENGTH : RELATION_STRENGTH
+  if (d.kind === 'group') return GROUP_STRENGTH
+  return CONTAINMENT_STRENGTH
+}
 
 /** Per-kind CSS class — area↔area relations get their own heavier "backbone" style. */
-export const linkClass = (d: GraphLink) =>
-  d.kind === 'relation'
-    ? areaToArea(d)
-      ? 'link is-area-relation'
-      : 'link is-relation'
-    : d.kind === 'group'
-      ? 'link is-group'
-      : 'link'
+export const linkClass = (d: GraphLink) => {
+  if (d.kind === 'relation') return areaToArea(d) ? 'link is-area-relation' : 'link is-relation'
+  if (d.kind === 'group') return 'link is-group'
+  return 'link'
+}

@@ -16,6 +16,16 @@ import {
   solarAmber,
 } from 'src/theme/colors'
 
+/** The semantic color keys of `theme.palette`. */
+export type PaletteColor =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'error'
+  | 'info'
+  | 'warning'
+
 export interface Theme {
   name: string
   space: {
@@ -94,10 +104,7 @@ export interface Theme {
     | 'black',
     number
   >
-  palette: Record<
-    'default' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
-    { main: string; light: string; dark: string; contrastText: string }
-  >
+  palette: Record<PaletteColor, { main: string; light: string; dark: string; contrastText: string }>
 }
 
 export type Light = typeof light

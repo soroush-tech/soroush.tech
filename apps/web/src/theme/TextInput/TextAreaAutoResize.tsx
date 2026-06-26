@@ -14,14 +14,14 @@ export interface TextAreaAutoResizeProps extends TextareaHTMLAttributes<HTMLText
 
 const adjust = (el: HTMLTextAreaElement, minRows?: number | string, maxRows?: number | string) => {
   const style = getComputedStyle(el)
-  const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.2
-  const paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom)
+  const lineHeight = Number.parseFloat(style.lineHeight) || Number.parseFloat(style.fontSize) * 1.2
+  const paddingY = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom)
 
   el.style.height = 'auto'
   const scrollHeight = el.scrollHeight
 
-  const min = minRows != null ? Number(minRows) * lineHeight + paddingY : 0
-  const max = maxRows != null ? Number(maxRows) * lineHeight + paddingY : Infinity
+  const min = minRows == null ? 0 : Number(minRows) * lineHeight + paddingY
+  const max = maxRows == null ? Infinity : Number(maxRows) * lineHeight + paddingY
 
   el.style.height = `${Math.min(max, Math.max(min, scrollHeight))}px`
   el.style.overflow = scrollHeight > max ? 'auto' : 'hidden'

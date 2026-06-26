@@ -18,7 +18,7 @@ export interface PageHeaderProps extends Omit<PaperProps, 'title'> {
   title?: ReactNode
 }
 
-export function PageHeader({ title, children, ...props }: PageHeaderProps) {
+export function PageHeader({ title, children, ...props }: Readonly<PageHeaderProps>) {
   return (
     <Paper
       bg="primary"

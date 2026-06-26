@@ -98,7 +98,7 @@ export function Avatar({
   ringColor = 'primary',
   ringWidth = 'thin',
   ...rest
-}: AvatarProps) {
+}: Readonly<AvatarProps>) {
   const [prevSrc, setPrevSrc] = useState(src)
   const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
   const [prevFallback, setPrevFallback] = useState(fallback)
@@ -128,7 +128,8 @@ export function Avatar({
   }
 
   // When only fallback is provided (no src/srcSet), pass it as src so a single error shows children.
-  const currentSrc = useFallback ? fallback : (src ?? (!srcSet ? fallback : undefined))
+  const srcFallback = srcSet ? undefined : fallback
+  const currentSrc = useFallback ? fallback : (src ?? srcFallback)
   const currentSrcSet = useFallback ? undefined : srcSet
 
   return (

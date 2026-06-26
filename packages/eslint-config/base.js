@@ -25,7 +25,7 @@ const config = tseslint.config(
       'no-restricted-syntax': [
         'error',
         {
-          selector: 'ImportDeclaration[source.value=/\\.tsx?$/]',
+          selector: String.raw`ImportDeclaration[source.value=/\.tsx?$/]`,
           message: 'Do not include .ts, .js, jsx, .tsx extensions in import paths.',
         },
       ],

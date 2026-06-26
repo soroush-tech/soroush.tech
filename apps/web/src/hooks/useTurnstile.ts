@@ -19,52 +19,64 @@ declare global {
   interface Window {
     turnstile?: TurnstileApi
   }
+
+  var turnstile: TurnstileApi | undefined
 }
 
-/** Inject the Turnstile script once, resolving as soon as `window.turnstile` is available. */
+/** Inject the Turnstile script once, resolving with the API when it loads — or `undefined` if
+ *  the script fails to load (CSP, network, blockers) or loads without exposing the global. The
+ *  promise always settles, so a failed load can never leave a caller waiting forever. */
 const loadTurnstile = (): Promise<TurnstileApi | undefined> =>
   new Promise((resolve) => {
-    if (window.turnstile) {
-      resolve(window.turnstile)
+    if (globalThis.turnstile) {
+      resolve(globalThis.turnstile)
       return
     }
     const script = document.createElement('script')
     script.src = SCRIPT_SRC
     script.async = true
-    script.addEventListener('load', () => resolve(window.turnstile))
+    script.addEventListener('load', () => resolve(globalThis.turnstile))
+    script.addEventListener('error', () => resolve(undefined))
     document.head.appendChild(script)
   })
 
 /**
  * Renders a Cloudflare Turnstile widget into the returned `containerRef` when a `sitekey` is
  * set, and exposes the latest verification `token`. With no sitekey (local/dev) nothing is
- * rendered and `token` stays empty. `reset` clears the token and the widget for a retry.
+ * rendered and `token` stays empty. `reset` clears the token and the widget for a retry. `error`
+ * is set when the script can't load, so the caller can surface feedback instead of blocking
+ * submission indefinitely.
  */
 export function useTurnstile(sitekey: string) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetId = useRef<string | undefined>(undefined)
   const [token, setToken] = useState('')
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const container = containerRef.current
     if (!sitekey || !container) return
 
     let active = true
+    setError(false)
     void loadTurnstile().then((api) => {
-      if (active && api) {
+      if (!active) return
+      if (api) {
         widgetId.current = api.render(container, {
           sitekey,
           callback: setToken,
           'expired-callback': () => setToken(''),
           'error-callback': () => setToken(''),
         })
+      } else {
+        setError(true)
       }
     })
 
     return () => {
       active = false
       if (widgetId.current) {
-        window.turnstile?.remove(widgetId.current)
+        globalThis.turnstile?.remove(widgetId.current)
         widgetId.current = undefined
       }
     }
@@ -72,8 +84,8 @@ export function useTurnstile(sitekey: string) {
 
   const reset = useCallback(() => {
     setToken('')
-    if (widgetId.current) window.turnstile?.reset(widgetId.current)
+    if (widgetId.current) globalThis.turnstile?.reset(widgetId.current)
   }, [])
 
-  return { containerRef, token, reset }
+  return { containerRef, token, reset, error }
 }

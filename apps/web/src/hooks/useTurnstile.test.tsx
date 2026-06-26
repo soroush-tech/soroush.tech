@@ -23,11 +23,12 @@ const lastOptions = (api: ReturnType<typeof mockTurnstile>): RenderOptions =>
 
 /** Harness that attaches the ref (the hook no-ops without a mounted container). */
 function Harness({ sitekey, attach = true }: { sitekey: string; attach?: boolean }) {
-  const { containerRef, token, reset } = useTurnstile(sitekey)
+  const { containerRef, token, reset, error } = useTurnstile(sitekey)
   return (
     <div>
       <div data-testid="widget" ref={attach ? containerRef : undefined} />
       <span data-testid="token">{token}</span>
+      <span data-testid="error">{String(error)}</span>
       <button onClick={reset}>reset</button>
     </div>
   )
@@ -85,6 +86,16 @@ describe('useTurnstile', () => {
       script!.dispatchEvent(new Event('load'))
     })
     expect(window.turnstile).toBeUndefined()
+  })
+
+  it('flags an error when the script fails to load', async () => {
+    render(<Harness sitekey="abc" />)
+    const script = document.querySelector<HTMLScriptElement>(`script[src="${SCRIPT_SRC}"]`)
+    expect(screen.getByTestId('error').textContent).toBe('false')
+    await act(async () => {
+      script!.dispatchEvent(new Event('error'))
+    })
+    expect(screen.getByTestId('error').textContent).toBe('true')
   })
 
   it('skips rendering when unmounted before the script loads', async () => {

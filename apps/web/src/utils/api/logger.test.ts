@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-vi.mock('fs', () => ({ default: { appendFileSync: vi.fn() } }))
+vi.mock('node:fs', () => ({ default: { appendFileSync: vi.fn() } }))
 
-import fs from 'fs'
+import fs from 'node:fs'
 import { log } from './logger'
 
 const FIXED_ISO = '2024-01-15T10:00:00.000Z'

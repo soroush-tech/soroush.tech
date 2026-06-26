@@ -15,14 +15,14 @@ export const onRenderClient: OnRenderClientAsync = async (
     await initMSW()
   }
   const container = document.getElementById('root')!
-  if (!pageContext.isHydration) {
+  if (pageContext.isHydration) {
+    root = hydrateRoot(container, page)
+  } else {
     if (!root) {
       root = createRoot(container)
     }
     root.render(page)
     // SSR sets the head tags on first paint; sync them on client-side navigation.
     applyHead(pageContext)
-  } else {
-    root = hydrateRoot(container, page)
   }
 }

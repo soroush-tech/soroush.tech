@@ -231,7 +231,7 @@ interface InputBaseProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'si
   inputComponent?: ElementType
 }
 
-function InputBase({ inputSize, inputComponent, ...props }: InputBaseProps) {
+function InputBase({ inputSize, inputComponent, ...props }: Readonly<InputBaseProps>) {
   const Component = inputComponent ?? 'input'
   return <Component {...({ ...props, size: inputSize } as ComponentProps<typeof Component>)} />
 }
@@ -311,7 +311,7 @@ export function TextInput({
   className,
   'data-testid': dataTestid,
   ...spaceProps
-}: TextInputProps) {
+}: Readonly<TextInputProps>) {
   // Resolve form-field props through context (Form → FormControl → explicit). Explicit
   // props win; `color` keeps TextInput's own default since its domain is palette-only.
   const fc = useFormControl({
@@ -370,11 +370,7 @@ export function TextInput({
       {...spaceProps}
     >
       {isTextarea && isAutoResize ? (
-        <StyledAutoResizeTextarea
-          {...inputElProps}
-          minRows={minRows ?? (rows !== undefined ? rows : undefined)}
-          maxRows={maxRows}
-        />
+        <StyledAutoResizeTextarea {...inputElProps} minRows={minRows ?? rows} maxRows={maxRows} />
       ) : isTextarea ? (
         <StyledTextarea {...inputElProps} />
       ) : (

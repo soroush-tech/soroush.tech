@@ -38,7 +38,7 @@ export function Form({
   className,
   noValidate,
   'data-testid': dataTestid,
-}: FormProps) {
+}: Readonly<FormProps>) {
   const value = useMemo(
     () => ({ size, color, textColor, disabled, fullWidth }),
     [size, color, textColor, disabled, fullWidth]

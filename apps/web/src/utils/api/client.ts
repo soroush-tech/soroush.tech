@@ -37,7 +37,7 @@ export class Client {
     if (this.fetch) {
       return this.fetch(args).then(transformResult)
     }
-    return Promise.reject(new Error('request fetch is null'))
+    throw new Error('request fetch is null')
   }
 
   create(option: Option = {}): void {

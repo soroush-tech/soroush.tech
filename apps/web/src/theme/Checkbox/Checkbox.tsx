@@ -3,13 +3,14 @@ import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
+  type PaletteColor,
   createShouldForwardProp,
   props,
   space,
   type SpaceProps,
 } from 'src/theme'
 
-export type CheckboxColor = 'default' | keyof Theme['palette']
+export type CheckboxColor = PaletteColor
 export type CheckboxSize = 'sm' | 'md' | 'lg'
 
 export interface CheckboxProps extends SpaceProps<Theme> {
@@ -189,7 +190,7 @@ export function Checkbox({
   'aria-describedby': ariaDescribedby,
   'data-testid': dataTestid,
   ...spaceProps
-}: CheckboxProps) {
+}: Readonly<CheckboxProps>) {
   // Resolve form-field props through context (Form → FormControl → explicit). `color` is
   // resolved separately to keep Checkbox's own `'default'` domain; `error` has no visual here.
   const fc = useFormControl({

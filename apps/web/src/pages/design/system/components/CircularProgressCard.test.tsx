@@ -80,7 +80,7 @@ describe('CircularProgressCard', () => {
       renderWithTheme(<CircularProgressCard />)
       const before = rafCallbacks.length
       tick(0)
-      expect(rafCallbacks.length).toBe(before + 1)
+      expect(rafCallbacks).toHaveLength(before + 1)
     })
 
     it('cancels the animation frame on unmount', () => {

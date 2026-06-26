@@ -102,20 +102,22 @@ export function Field<
   size,
   fullWidth,
   children,
-}: FieldProps<
-  TFormData,
-  TOnMount,
-  TOnChange,
-  TOnChangeAsync,
-  TOnBlur,
-  TOnBlurAsync,
-  TOnSubmit,
-  TOnSubmitAsync,
-  TOnDynamic,
-  TOnDynamicAsync,
-  TOnServer,
-  TSubmitMeta,
-  TName
+}: Readonly<
+  FieldProps<
+    TFormData,
+    TOnMount,
+    TOnChange,
+    TOnChangeAsync,
+    TOnBlur,
+    TOnBlurAsync,
+    TOnSubmit,
+    TOnSubmitAsync,
+    TOnDynamic,
+    TOnDynamicAsync,
+    TOnServer,
+    TSubmitMeta,
+    TName
+  >
 >) {
   return (
     <form.Field name={name}>
@@ -139,9 +141,9 @@ export function Field<
         return (
           <FormControl error={hasError} required={required} size={size} fullWidth={fullWidth}>
             <Flex flexDirection="column" gap={2}>
-              {label != null ? <FormLabel {...labelProps}>{label}</FormLabel> : null}
+              {label == null ? null : <FormLabel {...labelProps}>{label}</FormLabel>}
               {control}
-              {helper != null ? <FormHelperText>{helper}</FormHelperText> : null}
+              {helper == null ? null : <FormHelperText>{helper}</FormHelperText>}
             </Flex>
           </FormControl>
         )

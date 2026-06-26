@@ -56,7 +56,7 @@ export function Link({
   target,
   rel,
   ...rest
-}: LinkProps) {
+}: Readonly<LinkProps>) {
   const resolvedRel = target === '_blank' && rel === undefined ? 'noopener noreferrer' : rel
   return (
     <LinkBase

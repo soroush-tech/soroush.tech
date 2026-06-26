@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 const logFile = './build-log.txt'
 
 export function log(...msg: unknown[]) {

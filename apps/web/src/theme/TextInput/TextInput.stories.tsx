@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState, type ChangeEvent } from 'react'
+import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { m, p, width, minWidth, maxWidth } from 'src/theme/utils/test/storiesArgs'
 import {
   textInputColorTokens,
@@ -329,21 +329,34 @@ export const Types: Story = {
   ),
 }
 
-export const Controlled: Story = {
-  render: () => {
-    const [value, setValue] = useState('')
-    return (
-      <Flex flexDirection="column" gap={2} maxWidth="360px">
-        <TextInput
-          fullWidth
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type something…"
-        />
-        <Typography variant="caption" color="secondary" m={0}>
-          Value: {value || '(empty)'}
-        </Typography>
-      </Flex>
-    )
-  },
+interface ControlledArgs {
+  value: string
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+}
+
+// Owns the input value state in a decorator and injects value + onChange via args.
+const WithValueState: Decorator = (Story, ctx) => {
+  const [value, setValue] = useState('')
+  return (
+    <Story
+      args={{
+        ...ctx.args,
+        value,
+        onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+          setValue(e.target.value),
+      }}
+    />
+  )
+}
+
+export const Controlled: StoryObj<ControlledArgs> = {
+  decorators: [WithValueState],
+  render: ({ value, onChange }) => (
+    <Flex flexDirection="column" gap={2} maxWidth="360px">
+      <TextInput fullWidth value={value} onChange={onChange} placeholder="Type something…" />
+      <Typography variant="caption" color="secondary" m={0}>
+        Value: {value || '(empty)'}
+      </Typography>
+    </Flex>
+  ),
 }

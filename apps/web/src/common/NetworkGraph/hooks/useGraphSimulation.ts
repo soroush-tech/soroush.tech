@@ -262,7 +262,9 @@ export function useGraphSimulation({
       .enter()
       .append('g')
       .attr('class', (d) => {
-        const role = d.id === data.rootId ? ' is-root' : topLevelSet.has(d.id) ? ' is-area' : ''
+        let role = ''
+        if (d.id === data.rootId) role = ' is-root'
+        else if (topLevelSet.has(d.id)) role = ' is-area'
         const category = data.branchIds.has(d.id) ? ' is-category' : ''
         const group = groupNodeIds.has(d.id) ? ' is-group-node' : ''
         return `node-group${role}${category}${group}`

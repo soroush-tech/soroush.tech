@@ -19,7 +19,7 @@ export function Navbar({
   letterSpacing,
   underline = 'hover',
   'aria-label': ariaLabel,
-}: NavbarProps) {
+}: Readonly<NavbarProps>) {
   return (
     <Flex
       as="nav"

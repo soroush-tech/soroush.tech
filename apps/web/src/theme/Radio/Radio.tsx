@@ -3,13 +3,14 @@ import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
+  type PaletteColor,
   createShouldForwardProp,
   props,
   space,
   type SpaceProps,
 } from 'src/theme'
 
-export type RadioColor = 'default' | keyof Theme['palette']
+export type RadioColor = PaletteColor
 export type RadioSize = 'sm' | 'md' | 'lg'
 
 export interface RadioProps extends SpaceProps<Theme> {
@@ -149,7 +150,7 @@ export function Radio({
   className,
   'data-testid': dataTestid,
   ...spaceProps
-}: RadioProps) {
+}: Readonly<RadioProps>) {
   // Resolve form-field props through context (Form → FormControl → explicit). `color` is
   // resolved separately to keep Radio's own `'default'` domain; `error` has no visual here.
   const fc = useFormControl({

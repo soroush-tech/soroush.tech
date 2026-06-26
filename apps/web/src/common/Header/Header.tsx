@@ -21,7 +21,7 @@ const NAV_ITEMS = [
   { href: '/articles', label: 'Articles' },
 ]
 
-export function Header({ position = 'fixed' }: HeaderProps) {
+export function Header({ position = 'fixed' }: Readonly<HeaderProps>) {
   const theme = useTheme()
   const { isDark, toggleTheme } = useThemeMode()
 

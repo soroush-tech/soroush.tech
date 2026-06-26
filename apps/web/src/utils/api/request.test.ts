@@ -155,88 +155,39 @@ describe('interceptors', () => {
 })
 
 describe('errorHandler', () => {
-  it('handles network errors', async () => {
-    // Get the error handler function from the axios interceptors
+  const getErrorHandler = () => {
     const request = createRequest()
     const errorHandler = vi.mocked(request.interceptors.response.use).mock.calls[0][1]
+    expect(errorHandler).toBeDefined()
+    return errorHandler!
+  }
 
-    if (errorHandler) {
-      try {
-        await errorHandler(new Error('Network Error'))
-        // Should not reach here
-        expect(true).toBe(false)
-      } catch (error) {
-        expect(error).toEqual({
-          code: 520,
-          message: 'Network Error',
-          details: expect.any(Error),
-        })
-      }
-    } else {
-      throw new Error('errorHandler is undefined')
-    }
+  it('handles network errors', async () => {
+    await expect(getErrorHandler()(new Error('Network Error'))).rejects.toMatchObject({
+      code: 520,
+      message: 'Network Error',
+      details: expect.any(Error),
+    })
   })
 
   it('handles timeout errors', async () => {
-    // Get the error handler function from the axios interceptors
-    const request = createRequest()
-    const errorHandler = vi.mocked(request.interceptors.response.use).mock.calls[0][1]
-
-    if (errorHandler) {
-      try {
-        await errorHandler(new Error('timeout of 5000ms exceeded'))
-        // Should not reach here
-        expect(true).toBe(false)
-      } catch (error) {
-        expect(error).toEqual({
-          code: 504,
-          message: 'Time out',
-          details: expect.any(Error),
-        })
-      }
-    } else {
-      throw new Error('errorHandler is undefined')
-    }
+    await expect(getErrorHandler()(new Error('timeout of 5000ms exceeded'))).rejects.toMatchObject({
+      code: 504,
+      message: 'Time out',
+      details: expect.any(Error),
+    })
   })
 
   it('handles cancel errors', async () => {
-    // Get the error handler function from the axios interceptors
-    const request = createRequest()
-    const errorHandler = vi.mocked(request.interceptors.response.use).mock.calls[0][1]
-
-    if (errorHandler) {
-      try {
-        await errorHandler(new Error('Cancel'))
-        // Should not reach here
-        expect(true).toBe(false)
-      } catch (error) {
-        expect(error).toEqual({
-          code: 504,
-          message: 'Time out',
-          details: expect.any(Error),
-        })
-      }
-    } else {
-      throw new Error('errorHandler is undefined')
-    }
+    await expect(getErrorHandler()(new Error('Cancel'))).rejects.toMatchObject({
+      code: 504,
+      message: 'Time out',
+      details: expect.any(Error),
+    })
   })
 
   it('passes through other errors', async () => {
-    // Get the error handler function from the axios interceptors
-    const request = createRequest()
-    const errorHandler = vi.mocked(request.interceptors.response.use).mock.calls[0][1]
-
-    if (errorHandler) {
-      const originalError = new Error('Some other error')
-      try {
-        await errorHandler(originalError)
-        // Should not reach here
-        expect(true).toBe(false)
-      } catch (error) {
-        expect(error).toBe(originalError)
-      }
-    } else {
-      throw new Error('errorHandler is undefined')
-    }
+    const originalError = new Error('Some other error')
+    await expect(getErrorHandler()(originalError)).rejects.toBe(originalError)
   })
 })

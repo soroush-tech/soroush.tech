@@ -9,18 +9,10 @@ import { REQUEST_TIMEOUT } from 'src/config'
 
 const errorHandler = (error: Error) => {
   if (error.message.includes('Network Error')) {
-    return Promise.reject({
-      code: 520,
-      message: 'Network Error',
-      details: error,
-    })
+    return Promise.reject(Object.assign(new Error('Network Error'), { code: 520, details: error }))
   }
   if (error.message.includes('timeout') || error.message.includes('Cancel')) {
-    return Promise.reject({
-      code: 504,
-      message: 'Time out',
-      details: error,
-    })
+    return Promise.reject(Object.assign(new Error('Time out'), { code: 504, details: error }))
   }
 
   return Promise.reject(error)
@@ -31,7 +23,7 @@ export const createRequest = (defaultOptions: AxiosRequestConfig = {}): AxiosIns
     Accept: 'application/json',
     'Content-Type': 'application/json',
     authorization: '',
-    ...(defaultOptions.headers || {}),
+    ...defaultOptions.headers,
   }
 
   const options: AxiosRequestConfig = {

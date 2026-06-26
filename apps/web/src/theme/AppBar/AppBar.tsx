@@ -24,9 +24,6 @@ export type AppBarColor = keyof Theme['background']
 
 export type AppBarPosition = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky'
 
-/** Index into theme.shadows (0–24). Default: 4. */
-export type AppBarElevation = number
-
 /** Padding preset from theme.sizes. Default: 'md'. */
 export type AppBarSize = keyof Theme['sizes']
 
@@ -35,8 +32,8 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
   color?: AppBarColor
   /** CSS position value for layout placement. Default: browser default (static). */
   position?: AppBarPosition
-  /** Box-shadow elevation — resolves from theme.shadows. Omit for no shadow. */
-  elevation?: AppBarElevation
+  /** Box-shadow elevation (index into theme.shadows, 0–24). Default: `4`; use `0` for no shadow. */
+  elevation?: number
   /** Padding preset from theme.sizes. Default: 'md'. */
   size?: AppBarSize
   /** Applies backdrop-filter: blur(theme.blur) + webkit prefix for frosted-glass effect. */
@@ -45,7 +42,7 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
 
 type AppBarBaseProps = Omit<AppBarProps, 'size' | 'elevation'> & {
   size: AppBarSize
-  elevation: AppBarElevation
+  elevation: number
 }
 
 const shouldForwardProp = createShouldForwardProp([...props, 'elevation', 'size', 'blur'])
@@ -96,6 +93,6 @@ const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarBa
   position
 )
 
-export function AppBar({ elevation = 4, size = 'md', ...rest }: AppBarProps) {
+export function AppBar({ elevation = 4, size = 'md', ...rest }: Readonly<AppBarProps>) {
   return <AppBarBase as="header" elevation={elevation} size={size} {...rest} />
 }

@@ -72,6 +72,6 @@ export function Paper({
   bg = 'paper',
   borderRadius = 'sq',
   ...rest
-}: PaperProps) {
+}: Readonly<PaperProps>) {
   return <PaperRoot elevation={elevation} p={p} bg={bg} borderRadius={borderRadius} {...rest} />
 }

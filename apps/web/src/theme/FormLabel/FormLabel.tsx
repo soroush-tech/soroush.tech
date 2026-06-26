@@ -20,7 +20,13 @@ export interface FormLabelProps extends TypographyProps {
  * `required` flag from FormControl context. All Typography props pass through,
  * so callers can restyle freely while keeping the wiring automatic.
  */
-export function FormLabel({ children, required, htmlFor, color, ...rest }: FormLabelProps) {
+export function FormLabel({
+  children,
+  required,
+  htmlFor,
+  color,
+  ...rest
+}: Readonly<FormLabelProps>) {
   const control = useContext(FormControlContext)
   const form = useContext(FormContext)
   const isRequired = required ?? control?.required ?? false
