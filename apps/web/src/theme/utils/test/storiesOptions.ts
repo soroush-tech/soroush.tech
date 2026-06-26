@@ -20,6 +20,7 @@ import type { FormControlProps } from 'src/theme/FormControl'
 import type { AppBarSize } from 'src/theme/AppBar'
 import type { LinkUnderline } from 'src/theme/Link'
 import type { CardVariant } from 'src/theme/Card'
+import type { ModalScroll } from 'src/theme/Modal'
 import {
   dark,
   radii,
@@ -278,3 +279,5 @@ export const gridJustifyItemsTokens = [
   'center',
   'stretch',
 ] satisfies CSSObject['justifyItems']
+
+export const modalScrollTokens = ['paper', 'body'] satisfies ModalScroll[]
