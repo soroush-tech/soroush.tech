@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import type { Context } from 'hono'
 import { contact } from '@soroush.tech/schema'
 import type { Env } from 'src/env'
 import { notify } from 'src/services/email'
@@ -9,6 +10,40 @@ import { formatRequestId } from 'src/utils/requestId'
 
 /** Reject bodies larger than this many bytes before parsing — a cheap abuse guard. */
 const MAX_BODY_BYTES = 16 * 1024
+
+/** Honeypot: a filled hidden field (named by env, never in the repo) means a bot. */
+const isBot = (record: Record<string, unknown>, field: string | undefined): boolean => {
+  const trap = field ? record[field] : undefined
+  return typeof trap === 'string' && trap !== ''
+}
+
+/** Verify the Turnstile token when a secret is configured. True when no captcha is required. */
+const passedCaptcha = async (
+  c: Context<{ Bindings: Env }>,
+  record: Record<string, unknown>
+): Promise<boolean> => {
+  if (!c.env.TURNSTILE_SECRET) return true
+  const token = record.turnstileToken
+  if (typeof token !== 'string') return false
+  const ip = c.req.header('cf-connecting-ip')
+  const hostnames = (c.env.TURNSTILE_HOSTNAME ?? '')
+    .split(',')
+    .map((h) => h.trim())
+    .filter(Boolean)
+  return verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip, hostnames)
+}
+
+/** First error message per field, keyed by the top-level path segment. */
+const fieldErrors = (
+  issues: readonly { path: PropertyKey[]; message: string }[]
+): Record<string, string> => {
+  const errors: Record<string, string> = {}
+  for (const issue of issues) {
+    const key = String(issue.path[0] ?? '')
+    if (key) errors[key] = issue.message
+  }
+  return errors
+}
 
 export const contactRoute = new Hono<{ Bindings: Env }>()
 
@@ -26,39 +61,19 @@ contactRoute.post('/contact', async (c) => {
 
   const record = body && typeof body === 'object' ? (body as Record<string, unknown>) : {}
 
-  // Honeypot: a filled hidden field (named by env, never in the repo) means a bot.
-  // Return success so the bot learns nothing, but do no work.
-  const field = c.env.VITE_CONTACT_HONEYPOT
-  const trap = field ? record[field] : undefined
-  if (typeof trap === 'string' && trap !== '') {
+  // Honeypot trip → return success so the bot learns nothing, but do no work.
+  if (isBot(record, c.env.VITE_CONTACT_HONEYPOT)) {
     return c.json({ ok: true })
   }
 
   // Turnstile captcha: when a secret is configured, the token must verify before we proceed.
-  if (c.env.TURNSTILE_SECRET) {
-    const token = record.turnstileToken
-    let passed = false
-    if (typeof token === 'string') {
-      const ip = c.req.header('cf-connecting-ip')
-      const hostnames = (c.env.TURNSTILE_HOSTNAME ?? '')
-        .split(',')
-        .map((h) => h.trim())
-        .filter(Boolean)
-      passed = await verifyTurnstile(c.env.TURNSTILE_SECRET, token, ip, hostnames)
-    }
-    if (!passed) {
-      return c.json({ ok: false, error: 'Captcha verification failed' }, 403)
-    }
+  if (!(await passedCaptcha(c, record))) {
+    return c.json({ ok: false, error: 'Captcha verification failed' }, 403)
   }
 
   const result = contact.schema.safeParse(body)
   if (!result.success) {
-    const errors: Record<string, string> = {}
-    for (const issue of result.error.issues) {
-      const key = String(issue.path[0] ?? '')
-      if (key) errors[key] = issue.message
-    }
-    return c.json({ ok: false, errors }, 400)
+    return c.json({ ok: false, errors: fieldErrors(result.error.issues) }, 400)
   }
 
   // Strip control characters from the validated values before storing/emailing (HTML is escaped
