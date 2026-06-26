@@ -1,8 +1,9 @@
 import { z } from 'zod'
 
-// Optional phone, but if provided must match a 3-3-(4–6) digit pattern with optional
-// `+`, parentheses, and `-` / `.` / space separators. Empty is allowed (field is optional).
-const phonePattern = /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/
+// Optional phone, but if provided must hold 7–15 digits (the E.164 range) with an optional
+// leading `+` and spaces, `-`, `.`, or parentheses as separators — so international forms like
+// `+49 176 8011 2233` are accepted. Empty is allowed (field is optional).
+const phonePattern = /^\+?(?=(?:\D*\d){7,15}\D*$)[\d\s().-]+$/
 
 // One zod rule per field. These keys are the source of truth for the value shape;
 // the frontend derives its field-name union from them.

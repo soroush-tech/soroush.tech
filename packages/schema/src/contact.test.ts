@@ -26,12 +26,16 @@ describe('contact.schema', () => {
     ).toBe(true)
   })
 
-  it.each([['415-555-1234'], ['(415) 555-1234'], ['415.555.1234'], ['+4155551234'], ['']])(
-    'accepts the phone number %j',
-    (phone) => {
-      expect(contact.schema.safeParse({ ...valid, phone }).success).toBe(true)
-    }
-  )
+  it.each([
+    ['415-555-1234'],
+    ['(415) 555-1234'],
+    ['415.555.1234'],
+    ['+4155551234'],
+    ['+49 176 8011 2233'],
+    [''],
+  ])('accepts the phone number %j', (phone) => {
+    expect(contact.schema.safeParse({ ...valid, phone }).success).toBe(true)
+  })
 
   it.each([['https://example.com'], ['']])('accepts the website %j', (website) => {
     expect(contact.schema.safeParse({ ...valid, website }).success).toBe(true)
