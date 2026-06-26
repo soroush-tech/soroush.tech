@@ -31,7 +31,6 @@ export function Header({ position = 'fixed' }: Readonly<HeaderProps>) {
       position={position}
       top={0}
       left={0}
-      zIndex={50}
       height="64px"
       px={6}
       flexDirection="row"

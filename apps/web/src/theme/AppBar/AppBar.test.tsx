@@ -217,6 +217,20 @@ describe('AppBar', () => {
     })
   })
 
+  // ─── zOrder ───────────────────────────────────────────────────────────────────
+
+  describe('zOrder', () => {
+    it('defaults zIndex to theme.zOrder.appBar', () => {
+      renderWithTheme(<AppBar data-testid="bar" />)
+      expect(screen.getByTestId('bar')).toHaveStyle({ zIndex: dark.zOrder.appBar })
+    })
+
+    it('allows an explicit zIndex prop to override the default', () => {
+      renderWithTheme(<AppBar zIndex={5} data-testid="bar" />)
+      expect(screen.getByTestId('bar')).toHaveStyle({ zIndex: 5 })
+    })
+  })
+
   // ─── flex props ─────────────────────────────────────────────────────────────
 
   describe('flex props', () => {

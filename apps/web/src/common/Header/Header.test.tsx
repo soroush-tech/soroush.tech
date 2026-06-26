@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { renderWithTheme } from 'src/test/utils/wrapper'
+import { dark } from 'src/theme/themes'
 
 vi.mock('src/common/NavLink', () => ({
   NavLink: ({ href, children }: { href: string; children: React.ReactNode }) => (
@@ -96,6 +97,11 @@ describe('Header', () => {
     it('renders as a header element', () => {
       renderWithTheme(<Header />)
       expect(screen.getByRole('banner')).toBeInTheDocument()
+    })
+
+    it('layers the header at theme.zOrder.appBar', () => {
+      renderWithTheme(<Header />)
+      expect(screen.getByRole('banner')).toHaveStyle({ zIndex: dark.zOrder.appBar })
     })
   })
 
