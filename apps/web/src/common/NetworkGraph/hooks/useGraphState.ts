@@ -3,6 +3,26 @@ import type { GraphData } from '../NetworkGraph.types'
 import { computeVisibleIds } from '../utils/computeVisibleIds'
 import { toggleSet } from '../utils/toggleSet'
 
+/**
+ * Group and relation-anchored (floating) nodes sit outside the expand tree, so
+ * `computeVisibleIds` never reaches them. A group node rides along whenever a member it
+ * links to is visible; a relation-anchored node rides along whenever a node it relates to
+ * is visible — so their group/relation edge then renders. Mutates `visible` in place.
+ */
+function addOutsideTreeNodes(visible: Set<string>, data: GraphData): void {
+  for (const link of data.links) {
+    if (link.kind === 'group' && visible.has(link.target)) visible.add(link.source)
+  }
+  if (data.relationAnchoredIds.size === 0) return
+  for (const link of data.links) {
+    if (link.kind !== 'relation') continue
+    if (data.relationAnchoredIds.has(link.source) && visible.has(link.target))
+      visible.add(link.source)
+    else if (data.relationAnchoredIds.has(link.target) && visible.has(link.source))
+      visible.add(link.target)
+  }
+}
+
 /** Owns the graph's interactive UI state: the active (hovered) node and the
  *  expand/collapse set, plus the visible-node set derived from it. */
 export function useGraphState(data: GraphData) {
@@ -24,21 +44,7 @@ export function useGraphState(data: GraphData) {
       hiddenIds,
       data.areasByNode
     )
-    // Group nodes sit outside the tree: a group rides along whenever a member it
-    // links to is visible (its group→member edge then renders).
-    for (const link of data.links) {
-      if (link.kind === 'group' && visible.has(link.target)) visible.add(link.source)
-    }
-    // Relation-anchored (floating) nodes likewise sit outside the tree: one rides along
-    // whenever a node it relates to is visible, so its dashed relation edge then renders.
-    if (data.relationAnchoredIds.size > 0)
-      for (const link of data.links) {
-        if (link.kind !== 'relation') continue
-        if (data.relationAnchoredIds.has(link.source) && visible.has(link.target))
-          visible.add(link.source)
-        else if (data.relationAnchoredIds.has(link.target) && visible.has(link.source))
-          visible.add(link.target)
-      }
+    addOutsideTreeNodes(visible, data)
     return visible
   }, [expandedNodes, showOptional, data])
 

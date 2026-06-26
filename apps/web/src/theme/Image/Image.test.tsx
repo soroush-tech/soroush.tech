@@ -148,6 +148,7 @@ describe('Image', () => {
       fireEvent.error(screen.getByRole('img'))
       fireEvent.error(await screen.findByRole('img'))
       // reaching here covers the onError?.() no-op branch inside phase === 'fallback'
+      expect(screen.getByRole('img')).toBeInTheDocument()
     })
 
     it('srcSet-only with no fallback calls onError on the first error', () => {

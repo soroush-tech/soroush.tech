@@ -56,7 +56,7 @@ export function ContactInquire() {
     // Gate on the schema directly (same check as the submit button) rather than the form's
     // `canSubmit`, which can stay stale-false after autofill and silently block a valid send.
     if (!contact.schema.safeParse(values).success) {
-      void form.handleSubmit() // surface field errors; an invalid form never submits
+      form.handleSubmit() // surface field errors; an invalid form never submits
       return
     }
     // A filled honeypot means a bot — skip the request but show the success screen anyway.

@@ -1,3 +1,28 @@
+/**
+ * Breadth-first descent from `seeds`: shift a node, descend only if it is expanded, and add
+ * each of its not-yet-included, non-hidden children that `shouldInclude` accepts (enqueuing
+ * them so their own subtree is walked). Mutates `ids` in place.
+ */
+function expandFrom(
+  seeds: string[],
+  ids: Set<string>,
+  expandedNodes: Set<string>,
+  adjacency: Map<string, string[]>,
+  hiddenIds: Set<string>,
+  shouldInclude: (child: string) => boolean
+): void {
+  const queue = [...seeds]
+  while (queue.length > 0) {
+    const nodeId = queue.shift()!
+    if (!expandedNodes.has(nodeId)) continue // descend only into expanded nodes
+    for (const child of adjacency.get(nodeId) ?? []) {
+      if (ids.has(child) || hiddenIds.has(child) || !shouldInclude(child)) continue
+      ids.add(child)
+      queue.push(child)
+    }
+  }
+}
+
 /** Which nodes are visible given the toggled areas / expanded branches.
  *
  *  Two modes:
@@ -28,33 +53,15 @@ export function computeVisibleIds(
     if (adjacency.has(rootId)) ids.add(rootId) // central root, when the data has one
     const onAreas = roots.filter((id) => expandedNodes.has(id) && !hiddenIds.has(id))
     const active = new Set(onAreas)
-    const queue = [...onAreas]
-    while (queue.length > 0) {
-      const nodeId = queue.shift()!
-      if (!expandedNodes.has(nodeId)) continue // descend only into expanded nodes
-      for (const child of adjacency.get(nodeId) ?? []) {
-        if (ids.has(child) || hiddenIds.has(child)) continue
-        const gate = areasByNode.get(child)
-        if (gate?.some((a) => active.has(a))) {
-          ids.add(child)
-          queue.push(child)
-        }
-      }
-    }
+    // Keep a child only when its area gate intersects the active areas.
+    expandFrom(onAreas, ids, expandedNodes, adjacency, hiddenIds, (child) =>
+      Boolean(areasByNode.get(child)?.some((a) => active.has(a)))
+    )
     return ids
   }
 
-  // Default mode: root + areas shown; expand each branch individually.
+  // Default mode: root + areas shown; expand each branch individually (every child rides along).
   const ids = new Set<string>([rootId, ...roots.filter((id) => !hiddenIds.has(id))])
-  const queue = [...ids]
-  while (queue.length > 0) {
-    const nodeId = queue.shift()!
-    if (!expandedNodes.has(nodeId)) continue
-    for (const child of adjacency.get(nodeId) ?? []) {
-      if (ids.has(child) || hiddenIds.has(child)) continue
-      ids.add(child)
-      queue.push(child)
-    }
-  }
+  expandFrom([...ids], ids, expandedNodes, adjacency, hiddenIds, () => true)
   return ids
 }

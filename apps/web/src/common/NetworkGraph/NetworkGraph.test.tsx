@@ -96,7 +96,7 @@ describe('NetworkGraph', () => {
       const before = container.querySelectorAll('.node-group').length
 
       fireEvent.click(leaf)
-      expect(container.querySelectorAll('.node-group').length).toBe(before)
+      expect(container.querySelectorAll('.node-group')).toHaveLength(before)
     })
   })
 })
