@@ -253,7 +253,10 @@ function materialize(
     if (droppedGroupIds.has(n.id)) continue // single-member group — not drawn
     const title = n.title ?? n.id
     const isTop = topLevel.has(n.id)
-    const size = n.size ?? (isTop ? 25 : n.kind === 'group' ? 18 : 10)
+    let defaultSize = 10
+    if (isTop) defaultSize = 25
+    else if (n.kind === 'group') defaultSize = 18
+    const size = n.size ?? defaultSize
     const group = isTop ? topLevelIds.indexOf(n.id) + 1 : 0
     nodes.push({ id: n.id, title, group, size })
     titleById.set(n.id, title)

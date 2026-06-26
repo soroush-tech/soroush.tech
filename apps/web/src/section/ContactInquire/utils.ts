@@ -4,4 +4,4 @@
  * real reference is formatted server-side; see the Worker's `formatRequestId`).
  */
 export const makeDecoyId = (): string =>
-  `res_${String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0')}`
+  `res_${String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000_000).padStart(9, '0')}`
