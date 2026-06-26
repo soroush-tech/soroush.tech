@@ -1,7 +1,6 @@
 // <reference types="vitest/config" />
 import { defineConfig } from 'vitest/config'
-import { resolve } from 'path'
-import path from 'node:path'
+import path, { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import storybookTest from '@storybook/addon-vitest/vitest-plugin'
 import { playwright } from '@vitest/browser-playwright'

@@ -18,7 +18,7 @@ const Title = styled(Typography)`
   text-transform: uppercase;
 `
 
-export function GraphHeader({ activeNode, heading }: GraphHeaderProps) {
+export function GraphHeader({ activeNode, heading }: Readonly<GraphHeaderProps>) {
   return (
     <View position="absolute" top="2rem" left="2rem" zIndex={10} style={{ pointerEvents: 'none' }}>
       <Card variant="bracketBox" elevation={0} bg="transparent" p={2} mb={1}>

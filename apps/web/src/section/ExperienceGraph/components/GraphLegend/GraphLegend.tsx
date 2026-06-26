@@ -156,7 +156,7 @@ function LegendChild({
   expandedNodes,
   onToggle,
   childrenOf,
-}: LegendChildProps) {
+}: Readonly<LegendChildProps>) {
   const children = childrenOf(id, areaId)
   const animationDelay = `${index * STAGGER_MS}ms`
 
@@ -224,7 +224,7 @@ export function GraphLegend({
   hasOptional,
   showOptional,
   onToggleOptional,
-}: GraphChildProps) {
+}: Readonly<GraphChildProps>) {
   const theme = useTheme()
 
   // A node's children under a given area: legacy items drop while the switch is off, and

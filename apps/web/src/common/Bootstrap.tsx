@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { CacheProvider } from 'src/theme'
-import type { PageContext as PageContext } from 'vike/types'
+import type { PageContext } from 'vike/types'
 import styleCache from 'src/theme/utils/styleCache'
 import { Routes } from 'src/common/Routes'
 import { Providers } from 'src/common/Providers'
-export function Bootstrap({ pageContext }: { pageContext: PageContext }) {
+export function Bootstrap({ pageContext }: Readonly<{ pageContext: PageContext }>) {
   return (
     <StrictMode>
       <CacheProvider value={styleCache}>

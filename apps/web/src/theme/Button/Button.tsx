@@ -234,7 +234,7 @@ export function Button({
   disabled,
   href,
   ...rest
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   const indicator = loadingIndicator ?? <CircularProgress size={16} color="inherit" />
   const isCenter = loading && loadingPosition === 'center'
   const start = loading && loadingPosition === 'start' ? indicator : startIcon

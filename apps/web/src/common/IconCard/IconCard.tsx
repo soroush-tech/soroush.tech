@@ -18,7 +18,7 @@ export interface IconCardProps {
  * @description Shared icon + title + body card used across the about-page sections.
  * Built on `Card`'s `interactive` variant with a fixed look.
  */
-export function IconCard({ icon, title, body, children }: IconCardProps) {
+export function IconCard({ icon, title, body, children }: Readonly<IconCardProps>) {
   return (
     <Card
       variant="interactive"

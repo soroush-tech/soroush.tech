@@ -40,7 +40,7 @@ const CookieNoticeRoot = styled(View, { label: 'CookieNoticeRoot' })`
  * Pins to the viewport bottom while scrolling, then docks into place at the end of the page.
  * No persistence — re-shows on every page load; the X removes it for the session view.
  */
-export function CookieNotice({ message = DEFAULT_MESSAGE }: CookieNoticeProps) {
+export function CookieNotice({ message = DEFAULT_MESSAGE }: Readonly<CookieNoticeProps>) {
   const [dismissed, setDismissed] = useState(false)
   const dismiss = () => setDismissed(true)
 

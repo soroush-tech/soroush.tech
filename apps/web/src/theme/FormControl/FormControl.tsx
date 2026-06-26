@@ -32,7 +32,7 @@ export function FormControl({
   color,
   textColor,
   ...viewProps
-}: FormControlProps) {
+}: Readonly<FormControlProps>) {
   const generatedId = useId()
   const resolvedId = id ?? generatedId
   const helperId = `${resolvedId}-helper`

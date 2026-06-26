@@ -108,7 +108,7 @@ export function ContactInquire() {
             variant="text"
             size="sm"
             startIcon={<Icon name="arrow_back" size="1.1rem" />}
-            onClick={() => window.history.back()}
+            onClick={() => globalThis.history.back()}
           >
             Back
           </Button>
@@ -188,7 +188,7 @@ export function ContactInquire() {
                     variant="contained"
                     size="lg"
                     startIcon={<Icon name="arrow_back" size="1.1rem" color="inherit" />}
-                    onClick={() => window.history.back()}
+                    onClick={() => globalThis.history.back()}
                   >
                     Back
                   </Button>

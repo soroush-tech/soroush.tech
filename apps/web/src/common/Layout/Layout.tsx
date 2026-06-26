@@ -27,7 +27,7 @@ export function Layout({
   header = <Header />,
   footer = <Footer />,
   blueprintProps,
-}: LayoutProps) {
+}: Readonly<LayoutProps>) {
   const fallback = loading === true ? centeredLoader : loading
   return (
     <Flex flexDirection="column" minHeight="100vh">

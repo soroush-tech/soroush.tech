@@ -3,7 +3,7 @@ import { Link, type LinkProps } from 'src/theme/Link'
 
 export type NavLinkProps = LinkProps
 
-export function NavLink({ href, color, ...rest }: NavLinkProps) {
+export function NavLink({ href, color, ...rest }: Readonly<NavLinkProps>) {
   const { urlPathname } = usePageContext()
   const isActive =
     href === '/' ? urlPathname === href : href !== undefined && urlPathname?.startsWith(href)

@@ -31,7 +31,7 @@ export const createRequest = (defaultOptions: AxiosRequestConfig = {}): AxiosIns
     Accept: 'application/json',
     'Content-Type': 'application/json',
     authorization: '',
-    ...(defaultOptions.headers || {}),
+    ...defaultOptions.headers,
   }
 
   const options: AxiosRequestConfig = {

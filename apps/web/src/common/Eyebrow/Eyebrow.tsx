@@ -15,7 +15,7 @@ export interface EyebrowProps extends FlexProps {
   typographyProps?: TypographyProps
 }
 
-export function Eyebrow({ children, typographyProps = {}, ...props }: EyebrowProps) {
+export function Eyebrow({ children, typographyProps = {}, ...props }: Readonly<EyebrowProps>) {
   return (
     <Flex flexDirection="row" alignItems="center" gap={2} {...props}>
       <EyebrowRule />

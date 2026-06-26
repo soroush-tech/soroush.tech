@@ -18,7 +18,7 @@ export function CircularProgressCard() {
     let raf: number
 
     const step = (timestamp: number) => {
-      if (start === null) start = timestamp
+      start ??= timestamp
       const elapsed = (timestamp - start) % duration
       setValue(Math.round((elapsed / duration) * 100))
       raf = requestAnimationFrame(step)

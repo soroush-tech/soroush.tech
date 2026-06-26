@@ -317,7 +317,7 @@ export function Switch({
   'aria-describedby': ariaDescribedby,
   'data-testid': dataTestid,
   ...spaceProps
-}: SwitchProps) {
+}: Readonly<SwitchProps>) {
   // outside + marked: inject default SVG mark icons unless the caller overrides them.
   const effectiveIcon = icon ?? (marked && variant === 'outside' ? <XMarkIcon /> : null)
   const effectiveCheckedIcon =

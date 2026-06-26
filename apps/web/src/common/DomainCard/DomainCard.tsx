@@ -66,7 +66,7 @@ export function DomainCard({
   featured = false,
   style,
   className,
-}: DomainCardProps) {
+}: Readonly<DomainCardProps>) {
   const badge = `#${String(index).padStart(2, '0')}`
   // Featured image is full-width when the card is stacked, then a fixed box once it
   // switches to a row at 52em — keep this in sync with the layout props below.

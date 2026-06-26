@@ -98,7 +98,7 @@ export function Avatar({
   ringColor = 'primary',
   ringWidth = 'thin',
   ...rest
-}: AvatarProps) {
+}: Readonly<AvatarProps>) {
   const [prevSrc, setPrevSrc] = useState(src)
   const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
   const [prevFallback, setPrevFallback] = useState(fallback)

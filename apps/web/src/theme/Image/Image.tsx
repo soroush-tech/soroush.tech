@@ -54,7 +54,7 @@ const StyledImg = styled('img', { label: 'image', shouldForwardProp })(
   objectSystem
 ) as ComponentType<Omit<ImageProps, 'onError'> & { onError?: () => void }>
 
-export function Image({ src, srcSet, fallback, alt, onError, ...rest }: ImageProps) {
+export function Image({ src, srcSet, fallback, alt, onError, ...rest }: Readonly<ImageProps>) {
   const [prevSrc, setPrevSrc] = useState(src)
   const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
   const [prevFallback, setPrevFallback] = useState(fallback)

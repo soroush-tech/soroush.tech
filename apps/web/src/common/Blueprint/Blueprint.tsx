@@ -54,7 +54,7 @@ export function Blueprint({
   overflow = 'hidden',
   children,
   ...rest
-}: BlueprintProps) {
+}: Readonly<BlueprintProps>) {
   return (
     <BlueprintRoot height={height} overflow={overflow} variant={variant} {...rest}>
       {scanline && <ScanlineLine />}

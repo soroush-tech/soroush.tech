@@ -189,7 +189,7 @@ export function Checkbox({
   'aria-describedby': ariaDescribedby,
   'data-testid': dataTestid,
   ...spaceProps
-}: CheckboxProps) {
+}: Readonly<CheckboxProps>) {
   // Resolve form-field props through context (Form → FormControl → explicit). `color` is
   // resolved separately to keep Checkbox's own `'default'` domain; `error` has no visual here.
   const fc = useFormControl({

@@ -149,7 +149,7 @@ export function Radio({
   className,
   'data-testid': dataTestid,
   ...spaceProps
-}: RadioProps) {
+}: Readonly<RadioProps>) {
   // Resolve form-field props through context (Form → FormControl → explicit). `color` is
   // resolved separately to keep Radio's own `'default'` domain; `error` has no visual here.
   const fc = useFormControl({

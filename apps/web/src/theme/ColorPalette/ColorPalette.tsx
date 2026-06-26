@@ -9,7 +9,7 @@ interface ColorPaletteProps {
   palette: Record<string | number, string>
 }
 
-export function ColorPalette({ name, palette }: ColorPaletteProps) {
+export function ColorPalette({ name, palette }: Readonly<ColorPaletteProps>) {
   const contrastText = luminance(palette.base) > 0.5 ? '#000000' : '#ffffff'
 
   return (

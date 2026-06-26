@@ -15,7 +15,11 @@ interface ThemeProviderProps {
 
 export const GlobalStyles = () => <Global styles={globalStyles} />
 
-export function ThemeProvider({ children, themes, theme: themeProp }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  themes,
+  theme: themeProp,
+}: Readonly<ThemeProviderProps>) {
   const [isDark, setIsDark] = useState(true)
   const toggleTheme = () => setIsDark((prev) => !prev)
   const themeSet = themes ?? { dark, light }

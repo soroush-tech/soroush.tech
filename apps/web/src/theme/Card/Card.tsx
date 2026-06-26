@@ -54,7 +54,7 @@ export function Card({
   flexDirection = 'column',
   children,
   ...rest
-}: CardProps) {
+}: Readonly<CardProps>) {
   return (
     <CardSurface variant={variant} flexDirection={flexDirection} {...rest}>
       {icon !== undefined && <Icon name={icon} {...iconProps} />}

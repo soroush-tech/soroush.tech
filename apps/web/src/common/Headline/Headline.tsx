@@ -14,7 +14,7 @@ export interface HeadlineProps {
   title: string
 }
 
-export function Headline({ title }: HeadlineProps) {
+export function Headline({ title }: Readonly<HeadlineProps>) {
   return (
     <Flex flexDirection="row" alignItems="center" gap={3} mb={5}>
       <Typography variant="h3" as="h2" letterSpacing="tighter" color="initial">

@@ -19,19 +19,21 @@ declare global {
   interface Window {
     turnstile?: TurnstileApi
   }
+
+  var turnstile: TurnstileApi | undefined
 }
 
-/** Inject the Turnstile script once, resolving as soon as `window.turnstile` is available. */
+/** Inject the Turnstile script once, resolving as soon as `globalThis.turnstile` is available. */
 const loadTurnstile = (): Promise<TurnstileApi | undefined> =>
   new Promise((resolve) => {
-    if (window.turnstile) {
-      resolve(window.turnstile)
+    if (globalThis.turnstile) {
+      resolve(globalThis.turnstile)
       return
     }
     const script = document.createElement('script')
     script.src = SCRIPT_SRC
     script.async = true
-    script.addEventListener('load', () => resolve(window.turnstile))
+    script.addEventListener('load', () => resolve(globalThis.turnstile))
     document.head.appendChild(script)
   })
 
@@ -64,7 +66,7 @@ export function useTurnstile(sitekey: string) {
     return () => {
       active = false
       if (widgetId.current) {
-        window.turnstile?.remove(widgetId.current)
+        globalThis.turnstile?.remove(widgetId.current)
         widgetId.current = undefined
       }
     }
@@ -72,7 +74,7 @@ export function useTurnstile(sitekey: string) {
 
   const reset = useCallback(() => {
     setToken('')
-    if (widgetId.current) window.turnstile?.reset(widgetId.current)
+    if (widgetId.current) globalThis.turnstile?.reset(widgetId.current)
   }, [])
 
   return { containerRef, token, reset }

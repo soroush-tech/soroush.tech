@@ -35,7 +35,7 @@ export function computeVisibleIds(
       for (const child of adjacency.get(nodeId) ?? []) {
         if (ids.has(child) || hiddenIds.has(child)) continue
         const gate = areasByNode.get(child)
-        if (gate && gate.some((a) => active.has(a))) {
+        if (gate?.some((a) => active.has(a))) {
           ids.add(child)
           queue.push(child)
         }

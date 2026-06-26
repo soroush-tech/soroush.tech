@@ -15,6 +15,6 @@ const LogoImg = styled('img', { label: 'Logo' })`
   }
 `
 
-export function Logo({ size = 48, alt = 'Soroush logo' }: LogoProps) {
+export function Logo({ size = 48, alt = 'Soroush logo' }: Readonly<LogoProps>) {
   return <LogoImg src={LogoSvg} alt={alt} width={size} height={size} />
 }

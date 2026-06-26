@@ -9,7 +9,7 @@ export interface CardTitleProps {
   storybookHref?: string
 }
 
-export function CardTitle({ title, storybookHref }: CardTitleProps) {
+export function CardTitle({ title, storybookHref }: Readonly<CardTitleProps>) {
   return (
     <View mb={1}>
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">

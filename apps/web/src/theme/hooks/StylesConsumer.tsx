@@ -8,7 +8,7 @@ type StylesConsumerProps = {
   children: (styles: CSSObject) => ReactNode
 }
 
-export function StylesConsumer({ style, children }: StylesConsumerProps) {
+export function StylesConsumer({ style, children }: Readonly<StylesConsumerProps>) {
   return (
     <EmotionThemeContext.Consumer>
       {(theme) => children(style.getStyles(theme as Theme))}

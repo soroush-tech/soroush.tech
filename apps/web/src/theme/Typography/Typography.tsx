@@ -111,7 +111,7 @@ const TypographyBase = styled('p', { shouldForwardProp })<TypographyProps>(
     noWrap ? { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } : {}
 )
 
-export function Typography({ variant = 'body1', as, ...rest }: TypographyProps) {
+export function Typography({ variant = 'body1', as, ...rest }: Readonly<TypographyProps>) {
   const theme = useTheme()
   const element = as ?? theme.typography[variant].element
   return <TypographyBase as={element} variant={variant} {...rest} />

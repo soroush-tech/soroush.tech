@@ -96,6 +96,6 @@ const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarBa
   position
 )
 
-export function AppBar({ elevation = 4, size = 'md', ...rest }: AppBarProps) {
+export function AppBar({ elevation = 4, size = 'md', ...rest }: Readonly<AppBarProps>) {
   return <AppBarBase as="header" elevation={elevation} size={size} {...rest} />
 }

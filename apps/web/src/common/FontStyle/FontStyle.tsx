@@ -21,7 +21,7 @@ function extractFontName(fontFamily: string): string {
   return fontFamily.split(',')[0].replace(/['"]/g, '').trim()
 }
 
-export function FontStyle({ variant = 'body', text = 'Aa' }: FontStyleProps) {
+export function FontStyle({ variant = 'body', text = 'Aa' }: Readonly<FontStyleProps>) {
   const theme = useTheme()
   const displayName = extractFontName(theme.fonts[variant])
 
