@@ -8,11 +8,11 @@ const RESEND_ENDPOINT = 'https://api.resend.com/emails'
 /** Escape HTML-significant characters so submitted text can't inject markup into the email. */
 const escapeHtml = (value: string): string =>
   value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
 
 /**
  * Notify the owner of a new contact submission via the Resend HTTP API. `reply_to` is set to the
@@ -45,7 +45,7 @@ export const notify = async (env: Env, values: contact.Values): Promise<void> =>
       to: [TO],
       reply_to: values.email,
       // Collapse CR/LF so a crafted subject can't inject extra email headers.
-      subject: `New inquiry: ${values.subject}`.replace(/[\r\n]+/g, ' '),
+      subject: `New inquiry: ${values.subject}`.replaceAll(/[\r\n]+/g, ' '),
       text,
       html: `<pre>${escapeHtml(text)}</pre>`,
     }),

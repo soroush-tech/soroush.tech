@@ -9,7 +9,7 @@ const isControl = (code: number): boolean => code <= 0x1f || code === 0x7f
 /** Drop the chars failing `keep` from `value`. */
 const filterChars = (value: string, keep: (code: number) => boolean): string =>
   Array.from(value)
-    .filter((ch) => keep(ch.charCodeAt(0)))
+    .filter((ch) => keep(ch.codePointAt(0)!))
     .join('')
 
 /** Strip every control char — single-line fields keep no whitespace control chars. */
