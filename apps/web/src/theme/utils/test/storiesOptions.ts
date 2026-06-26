@@ -20,6 +20,7 @@ import type { FormControlProps } from 'src/theme/FormControl'
 import type { AppBarSize } from 'src/theme/AppBar'
 import type { LinkUnderline } from 'src/theme/Link'
 import type { CardVariant } from 'src/theme/Card'
+import type { DrawerAnchor } from 'src/theme/Drawer'
 import type { ModalScroll } from 'src/theme/Modal'
 import {
   dark,
@@ -280,4 +281,5 @@ export const gridJustifyItemsTokens = [
   'stretch',
 ] satisfies CSSObject['justifyItems']
 
+export const anchorTokens = ['left', 'right', 'top', 'bottom'] satisfies DrawerAnchor[]
 export const modalScrollTokens = ['paper', 'body'] satisfies ModalScroll[]
