@@ -32,7 +32,7 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
   color?: AppBarColor
   /** CSS position value for layout placement. Default: browser default (static). */
   position?: AppBarPosition
-  /** Box-shadow elevation (index into theme.shadows, 0–24). Omit for no shadow. */
+  /** Box-shadow elevation (index into theme.shadows, 0–24). Default: `4`; use `0` for no shadow. */
   elevation?: number
   /** Padding preset from theme.sizes. Default: 'md'. */
   size?: AppBarSize

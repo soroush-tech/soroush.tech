@@ -13,6 +13,6 @@ export {
 } from '@emotion/react'
 export { ThemeContext as EmotionThemeContext } from '@emotion/react'
 export type { Theme, CSSObject } from '@emotion/react'
-export type { PaletteColor } from './themes'
+export type { PaletteColor } from 'src/theme/themes'
 export * from 'styled-system'
 export { createShouldForwardProp, props } from '@styled-system/should-forward-prop'
