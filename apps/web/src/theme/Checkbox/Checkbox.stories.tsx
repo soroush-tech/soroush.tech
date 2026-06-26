@@ -1,7 +1,12 @@
-import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { m } from 'src/theme/utils/test/storiesArgs'
 import { checkboxColorTokens, checkboxSizeTokens } from 'src/theme/utils/test/storiesOptions'
+import {
+  ColorSwatchRows,
+  WithCheckedState,
+  type ControlledArgs,
+} from 'src/theme/utils/test/storiesToggle'
 import { Flex } from 'src/theme/Flex'
 import { Typography } from 'src/theme/Typography'
 import { Checkbox } from './Checkbox'
@@ -119,20 +124,15 @@ export const States: Story = {
 
 export const Colors: Story = {
   render: () => (
-    <Flex flexDirection="column" gap={2}>
-      {(['default', 'primary', 'secondary', 'success', 'error', 'info', 'warning'] as const).map(
-        (color) => (
-          <Flex key={color} flexDirection="row" alignItems="center" gap={3}>
-            <Typography variant="caption" color="secondary" width="6rem" flexShrink={0} m={0}>
-              {color}
-            </Typography>
-            <Checkbox color={color} aria-label={`${color} unchecked`} />
-            <Checkbox color={color} checked onChange={() => {}} aria-label={`${color} checked`} />
-            <Checkbox color={color} indeterminate aria-label={`${color} indeterminate`} />
-          </Flex>
-        )
+    <ColorSwatchRows
+      controls={(color) => (
+        <>
+          <Checkbox color={color} aria-label={`${color} unchecked`} />
+          <Checkbox color={color} checked onChange={() => {}} aria-label={`${color} checked`} />
+          <Checkbox color={color} indeterminate aria-label={`${color} indeterminate`} />
+        </>
       )}
-    </Flex>
+    />
   ),
 }
 
@@ -233,24 +233,6 @@ export const SelectAll: StoryObj<SelectAllArgs> = {
       </Flex>
     )
   },
-}
-
-interface ControlledArgs {
-  checked: boolean
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
-}
-
-const WithCheckedState: Decorator = (Story, ctx) => {
-  const [checked, setChecked] = useState(false)
-  return (
-    <Story
-      args={{
-        ...ctx.args,
-        checked,
-        onChange: (e: ChangeEvent<HTMLInputElement>) => setChecked(e.target.checked),
-      }}
-    />
-  )
 }
 
 export const Controlled: StoryObj<ControlledArgs> = {
