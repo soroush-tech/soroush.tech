@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Optional phone, but if provided must match a 3-3-(4–6) digit pattern with optional
 // `+`, parentheses, and `-` / `.` / space separators. Empty is allowed (field is optional).
-const phonePattern = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/
+const phonePattern = /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/
 
 // One zod rule per field. These keys are the source of truth for the value shape;
 // the frontend derives its field-name union from them.

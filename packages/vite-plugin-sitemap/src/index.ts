@@ -10,7 +10,7 @@ const meta = (html: string, name: string): string | undefined => {
     `<meta[^>]*(?:name|property)="${name}"[^>]*content="([^"]*)"|<meta[^>]*content="([^"]*)"[^>]*(?:name|property)="${name}"`,
     'i'
   )
-  const match = html.match(pattern)
+  const match = pattern.exec(html)
   return match ? (match[1] ?? match[2]) : undefined
 }
 
