@@ -39,6 +39,9 @@ beforeEach(() => {
 afterEach(() => {
   vi.unstubAllEnvs()
   delete window.turnstile
+  document
+    .querySelectorAll('script[src^="https://challenges.cloudflare.com/turnstile"]')
+    .forEach((node) => node.remove())
 })
 
 describe('ContactInquire', () => {
@@ -326,6 +329,18 @@ describe('ContactInquire', () => {
 
       expect(await screen.findByRole('status')).toHaveTextContent('TRANSMISSION RECEIVED')
       expect(posted?.turnstileToken).toBe('tok-123')
+    })
+
+    it('surfaces a message when the Turnstile script fails to load', async () => {
+      vi.stubEnv('VITE_TURNSTILE_SITEKEY', 'site-key')
+      renderWithApp(<ContactInquire />)
+      const script = document.querySelector<HTMLScriptElement>(
+        'script[src^="https://challenges.cloudflare.com/turnstile"]'
+      )
+      await act(async () => {
+        script!.dispatchEvent(new Event('error'))
+      })
+      expect(await screen.findByText(/Verification couldn/i)).toBeInTheDocument()
     })
   })
 })

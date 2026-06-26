@@ -32,6 +32,7 @@ export function ContactInquire() {
     containerRef,
     token: turnstileToken,
     reset: resetTurnstile,
+    error: turnstileError,
   } = useTurnstile(turnstileSitekey)
 
   const form = useContactInquire()
@@ -240,6 +241,11 @@ export function ContactInquire() {
             {turnstileSitekey && (
               <View mt={6}>
                 <div ref={containerRef} />
+                {turnstileError && (
+                  <Typography variant="overline" as="p" color="error" mt={2}>
+                    Verification couldn’t load. Disable any blockers and refresh to continue.
+                  </Typography>
+                )}
               </View>
             )}
 
