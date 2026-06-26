@@ -1,5 +1,4 @@
 import type { GraphNode, LinkKind, RawLink } from 'src/common/NetworkGraph'
-import { resolveSize } from './resolveSize'
 
 /** Structural shape the builder consumes. The authored `TechNode` — whose fields are
  *  narrowed to the id enums to guard against typos — is a strict subtype of this. */
@@ -232,6 +231,15 @@ interface MaterializedNodes {
   optionalIds: Set<string>
   featuredIds: Set<string>
   areasByNode: Map<string, string[]>
+}
+
+/** Drawn size: an explicit `size` wins; otherwise areas (top level) are largest, groups
+ *  medium, and tech nodes smallest. */
+function resolveSize(n: GraphInputNode, isTop: boolean): number {
+  if (n.size !== undefined) return n.size
+  if (isTop) return 25
+  if (n.kind === 'group') return 18
+  return 10
 }
 
 // Materialize drawn nodes: optional root + areas + groups + tech nodes. The root exists only
