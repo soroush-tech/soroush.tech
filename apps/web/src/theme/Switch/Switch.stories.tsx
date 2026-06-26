@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState, type ChangeEvent } from 'react'
+import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { m } from 'src/theme/utils/test/storiesArgs'
 import {
   backgroundTokens,
@@ -198,20 +198,37 @@ export const Disabled: Story = {
   ),
 }
 
-export const Controlled: Story = {
-  render: () => {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Flex flexDirection="column" gap={2}>
-        <Switch color="primary" checked={checked} onChange={(e) => setChecked(e.target.checked)}>
-          {checked ? 'On' : 'Off'} — click to toggle
-        </Switch>
-        <Typography variant="caption" color="secondary" m={0}>
-          State: {String(checked)}
-        </Typography>
-      </Flex>
-    )
-  },
+interface ControlledArgs {
+  checked: boolean
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+// Owns the checked state in a decorator and injects checked + onChange via args.
+const WithSwitchState: Decorator = (Story, ctx) => {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Story
+      args={{
+        ...ctx.args,
+        checked,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setChecked(e.target.checked),
+      }}
+    />
+  )
+}
+
+export const Controlled: StoryObj<ControlledArgs> = {
+  decorators: [WithSwitchState],
+  render: ({ checked, onChange }) => (
+    <Flex flexDirection="column" gap={2}>
+      <Switch color="primary" checked={checked} onChange={onChange}>
+        {checked ? 'On' : 'Off'} — click to toggle
+      </Switch>
+      <Typography variant="caption" color="secondary" m={0}>
+        State: {String(checked)}
+      </Typography>
+    </Flex>
+  ),
 }
 
 export const WithLabel: Story = {
@@ -264,42 +281,40 @@ export const Marked: Story = {
 }
 
 export const WithIcons: Story = {
-  render: (props) => {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Paper p={2}>
-        <Flex flexDirection="column" gap={3}>
-          {(['sm', 'md', 'lg'] as const).map((size) => (
-            <Flex key={size} flexDirection="row" alignItems="center" gap={3}>
-              <Typography variant="caption" color="secondary" width="3rem" flexShrink={0} m={0}>
-                {size}
-              </Typography>
-              <Switch
-                size={size}
-                variant="outside"
-                color="primary"
-                {...props}
-                checked={checked}
-                onChange={(e) => setChecked(e.target.checked)}
-                icon={<MoonIcon />}
-                checkedIcon={<SunIcon />}
-                aria-label={`outside ${size} theme toggle`}
-              />
-              <Switch
-                variant="inside"
-                size={size}
-                color="primary"
-                {...props}
-                checked={checked}
-                onChange={(e) => setChecked(e.target.checked)}
-                icon={<MoonIcon />}
-                checkedIcon={<SunIcon />}
-                aria-label={`inside ${size} theme toggle`}
-              />
-            </Flex>
-          ))}
-        </Flex>
-      </Paper>
-    )
-  },
+  decorators: [WithSwitchState],
+  render: ({ checked, onChange, ...props }) => (
+    <Paper p={2}>
+      <Flex flexDirection="column" gap={3}>
+        {(['sm', 'md', 'lg'] as const).map((size) => (
+          <Flex key={size} flexDirection="row" alignItems="center" gap={3}>
+            <Typography variant="caption" color="secondary" width="3rem" flexShrink={0} m={0}>
+              {size}
+            </Typography>
+            <Switch
+              size={size}
+              variant="outside"
+              color="primary"
+              {...props}
+              checked={checked}
+              onChange={onChange}
+              icon={<MoonIcon />}
+              checkedIcon={<SunIcon />}
+              aria-label={`outside ${size} theme toggle`}
+            />
+            <Switch
+              variant="inside"
+              size={size}
+              color="primary"
+              {...props}
+              checked={checked}
+              onChange={onChange}
+              icon={<MoonIcon />}
+              checkedIcon={<SunIcon />}
+              aria-label={`inside ${size} theme toggle`}
+            />
+          </Flex>
+        ))}
+      </Flex>
+    </Paper>
+  ),
 }

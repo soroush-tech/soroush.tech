@@ -52,11 +52,8 @@ export function buildNodes(
           (l.source === n.id || l.target === n.id) &&
           positions.has((l.source === n.id ? l.target : l.source) as string)
       )
-      const relationNeighbor = relation
-        ? relation.source === n.id
-          ? relation.target
-          : relation.source
-        : undefined
+      const relationNeighbor =
+        relation && (relation.source === n.id ? relation.target : relation.source)
       const anchorId = parent ? parent.source : (member?.target ?? relationNeighbor)
       const anchorPos = anchorId ? positions.get(anchorId as string) : undefined
       return { ...n, x: anchorPos?.x ?? CENTER, y: anchorPos?.y ?? CENTER }

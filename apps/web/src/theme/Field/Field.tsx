@@ -141,9 +141,9 @@ export function Field<
         return (
           <FormControl error={hasError} required={required} size={size} fullWidth={fullWidth}>
             <Flex flexDirection="column" gap={2}>
-              {label != null ? <FormLabel {...labelProps}>{label}</FormLabel> : null}
+              {label == null ? null : <FormLabel {...labelProps}>{label}</FormLabel>}
               {control}
-              {helper != null ? <FormHelperText>{helper}</FormHelperText> : null}
+              {helper == null ? null : <FormHelperText>{helper}</FormHelperText>}
             </Flex>
           </FormControl>
         )

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { border, m, p, position } from 'src/theme/utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from 'src/theme/utils/test/storiesOptions'
 import { ThemeProvider } from 'src/theme/ThemeProvider'
@@ -243,59 +243,71 @@ export const Frosted: Story = {
   ),
 }
 
-export const DarkMode: Story = {
+interface DarkModeArgs {
+  isDark: boolean
+  onToggle: () => void
+}
+
+// Owns the theme-mode state and ThemeProvider in a decorator, injecting `isDark` and
+// `onToggle` into the story so the toggle Switch can stay inside the AppBar content.
+const WithThemeToggle: Decorator = (Story, ctx) => {
+  const [isDark, setIsDark] = useState(false)
+  return (
+    <ThemeProvider theme={isDark ? dark : light}>
+      <Story args={{ ...ctx.args, isDark, onToggle: () => setIsDark((value) => !value) }} />
+    </ThemeProvider>
+  )
+}
+
+export const DarkMode: StoryObj<DarkModeArgs> = {
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },
   },
-  render: () => {
-    const [isDark, setIsDark] = useState(false)
-    return (
-      <ThemeProvider theme={isDark ? dark : light}>
-        <AppBar
-          color="secondary"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-          px={3}
-          elevation={4}
-          minHeight={64}
-        >
-          <Flex flexDirection="row" alignItems="center" gap={2}>
-            <Avatar variant="square" size="sm" src={Logo} alt="Masoud Soroush">
-              <Typography variant="caption" color="primary" m={0}>
-                M
-              </Typography>
-            </Avatar>
-            <Typography variant="h6" color="secondary" m={0} fontFamily="monospace">
-              Masoud Soroush
-            </Typography>
-          </Flex>
+  decorators: [WithThemeToggle],
+  render: ({ isDark, onToggle }) => (
+    <AppBar
+      color="secondary"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      px={3}
+      elevation={4}
+      minHeight={64}
+    >
+      <Flex flexDirection="row" alignItems="center" gap={2}>
+        <Avatar variant="square" size="sm" src={Logo} alt="Masoud Soroush">
+          <Typography variant="caption" color="primary" m={0}>
+            M
+          </Typography>
+        </Avatar>
+        <Typography variant="h6" color="secondary" m={0} fontFamily="monospace">
+          Masoud Soroush
+        </Typography>
+      </Flex>
 
-          <Flex flexDirection="row" alignItems="center" gap={3}>
-            {NAV_LINKS.map((label, i) => (
-              <Link
-                key={label}
-                underline="hover"
-                color={i === 0 ? 'secondary' : 'initial'}
-                m={0}
-                fontFamily="monospace"
-              >
-                {label}
-              </Link>
-            ))}
-          </Flex>
+      <Flex flexDirection="row" alignItems="center" gap={3}>
+        {NAV_LINKS.map((label, i) => (
+          <Link
+            key={label}
+            underline="hover"
+            color={i === 0 ? 'secondary' : 'initial'}
+            m={0}
+            fontFamily="monospace"
+          >
+            {label}
+          </Link>
+        ))}
+      </Flex>
 
-          <Switch
-            checked={isDark}
-            color="default"
-            onChange={(e) => setIsDark(e.target.checked)}
-            icon={<SunIcon aria-hidden="true" width={14} height={14} />}
-            checkedIcon={<MoonIcon aria-hidden="true" width={14} height={14} />}
-            aria-label="Toggle dark mode"
-          />
-        </AppBar>
-      </ThemeProvider>
-    )
-  },
+      <Switch
+        checked={isDark}
+        color="default"
+        onChange={onToggle}
+        icon={<SunIcon aria-hidden="true" width={14} height={14} />}
+        checkedIcon={<MoonIcon aria-hidden="true" width={14} height={14} />}
+        aria-label="Toggle dark mode"
+      />
+    </AppBar>
+  ),
 }

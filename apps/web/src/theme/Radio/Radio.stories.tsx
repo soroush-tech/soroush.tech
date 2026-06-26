@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState, type ChangeEvent } from 'react'
+import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { m } from 'src/theme/utils/test/storiesArgs'
 import { radioColorTokens, radioSizeTokens } from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
@@ -146,43 +146,68 @@ export const CustomIcons: Story = {
   ),
 }
 
-export const Group: Story = {
-  render: () => {
-    const [selected, setSelected] = useState('b')
-    return (
-      <Flex flexDirection="column" gap={1}>
-        {(['a', 'b', 'c'] as const).map((v) => (
-          <Radio
-            key={v}
-            color="primary"
-            name="demo"
-            value={v}
-            checked={selected === v}
-            onChange={() => setSelected(v)}
-          >
-            Option {v.toUpperCase()}
-          </Radio>
-        ))}
-        <Typography variant="caption" color="secondary" mt={1} mb={0}>
-          Selected: {selected}
-        </Typography>
-      </Flex>
-    )
-  },
+interface GroupArgs {
+  selected: string
+  setSelected: (value: string) => void
 }
 
-export const Controlled: Story = {
-  render: () => {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Flex flexDirection="column" gap={2}>
-        <Radio color="primary" checked={checked} onChange={(e) => setChecked(e.target.checked)}>
-          {checked ? 'Selected' : 'Unselected'} — click to toggle
+// Owns the selected-value state in a decorator and injects it (plus its setter) via args.
+const WithRadioGroupState: Decorator = (Story, ctx) => {
+  const [selected, setSelected] = useState('b')
+  return <Story args={{ ...ctx.args, selected, setSelected }} />
+}
+
+export const Group: StoryObj<GroupArgs> = {
+  decorators: [WithRadioGroupState],
+  render: ({ selected, setSelected }) => (
+    <Flex flexDirection="column" gap={1}>
+      {(['a', 'b', 'c'] as const).map((v) => (
+        <Radio
+          key={v}
+          color="primary"
+          name="demo"
+          value={v}
+          checked={selected === v}
+          onChange={() => setSelected(v)}
+        >
+          Option {v.toUpperCase()}
         </Radio>
-        <Typography variant="caption" color="secondary" m={0}>
-          State: {String(checked)}
-        </Typography>
-      </Flex>
-    )
-  },
+      ))}
+      <Typography variant="caption" color="secondary" mt={1} mb={0}>
+        Selected: {selected}
+      </Typography>
+    </Flex>
+  ),
+}
+
+interface ControlledArgs {
+  checked: boolean
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+const WithCheckedState: Decorator = (Story, ctx) => {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Story
+      args={{
+        ...ctx.args,
+        checked,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setChecked(e.target.checked),
+      }}
+    />
+  )
+}
+
+export const Controlled: StoryObj<ControlledArgs> = {
+  decorators: [WithCheckedState],
+  render: ({ checked, onChange }) => (
+    <Flex flexDirection="column" gap={2}>
+      <Radio color="primary" checked={checked} onChange={onChange}>
+        {checked ? 'Selected' : 'Unselected'} — click to toggle
+      </Radio>
+      <Typography variant="caption" color="secondary" m={0}>
+        State: {String(checked)}
+      </Typography>
+    </Flex>
+  ),
 }

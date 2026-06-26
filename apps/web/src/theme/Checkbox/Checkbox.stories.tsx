@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react'
+import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { m } from 'src/theme/utils/test/storiesArgs'
 import { checkboxColorTokens, checkboxSizeTokens } from 'src/theme/utils/test/storiesOptions'
 import { Flex } from 'src/theme/Flex'
@@ -176,12 +176,22 @@ export const CustomIcons: Story = {
 
 const FRUITS = ['Apple', 'Banana', 'Cherry', 'Mango', 'Strawberry']
 
-export const SelectAll: Story = {
-  render: () => {
-    const [checked, setChecked] = useState<Record<string, boolean>>(
-      Object.fromEntries(FRUITS.map((f, i) => [f, i < 2]))
-    )
+interface SelectAllArgs {
+  checked: Record<string, boolean>
+  setChecked: Dispatch<SetStateAction<Record<string, boolean>>>
+}
 
+// Owns the per-item checked map in a decorator and injects it (plus its setter) via args.
+const WithSelectAllState: Decorator = (Story, ctx) => {
+  const [checked, setChecked] = useState<Record<string, boolean>>(
+    Object.fromEntries(FRUITS.map((f, i) => [f, i < 2]))
+  )
+  return <Story args={{ ...ctx.args, checked, setChecked }} />
+}
+
+export const SelectAll: StoryObj<SelectAllArgs> = {
+  decorators: [WithSelectAllState],
+  render: ({ checked, setChecked }) => {
     const checkedCount = Object.values(checked).filter(Boolean).length
     const allChecked = checkedCount === FRUITS.length
     const someChecked = checkedCount > 0 && !allChecked
@@ -225,18 +235,34 @@ export const SelectAll: Story = {
   },
 }
 
-export const Controlled: Story = {
-  render: () => {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Flex flexDirection="column" gap={2}>
-        <Checkbox color="primary" checked={checked} onChange={(e) => setChecked(e.target.checked)}>
-          {checked ? 'Checked' : 'Unchecked'} — click to toggle
-        </Checkbox>
-        <Typography variant="caption" color="secondary" m={0}>
-          State: {String(checked)}
-        </Typography>
-      </Flex>
-    )
-  },
+interface ControlledArgs {
+  checked: boolean
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+const WithCheckedState: Decorator = (Story, ctx) => {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Story
+      args={{
+        ...ctx.args,
+        checked,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setChecked(e.target.checked),
+      }}
+    />
+  )
+}
+
+export const Controlled: StoryObj<ControlledArgs> = {
+  decorators: [WithCheckedState],
+  render: ({ checked, onChange }) => (
+    <Flex flexDirection="column" gap={2}>
+      <Checkbox color="primary" checked={checked} onChange={onChange}>
+        {checked ? 'Checked' : 'Unchecked'} — click to toggle
+      </Checkbox>
+      <Typography variant="caption" color="secondary" m={0}>
+        State: {String(checked)}
+      </Typography>
+    </Flex>
+  ),
 }

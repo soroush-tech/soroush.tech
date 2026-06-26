@@ -3,6 +3,7 @@ import { CircularProgress } from 'src/theme/CircularProgress'
 import {
   styled,
   type Theme,
+  type PaletteColor,
   createShouldForwardProp,
   props,
   space,
@@ -18,7 +19,7 @@ import {
 } from 'src/theme'
 import { alpha } from 'src/theme/utils'
 export type ButtonVariant = 'contained' | 'outlined' | 'text'
-export type ButtonColor = keyof Theme['palette']
+export type ButtonColor = PaletteColor
 export type ButtonSize = keyof Theme['sizes']
 export type ButtonShape = 'square' | 'rounded' | 'pill'
 export type ButtonLoadingPosition = 'start' | 'end' | 'center'
@@ -242,7 +243,7 @@ export function Button({
 
   return (
     <ButtonRoot
-      as={href != null ? 'a' : undefined}
+      as={href == null ? undefined : 'a'}
       href={href}
       variant={variant}
       color={color}

@@ -3,13 +3,14 @@ import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
+  type PaletteColor,
   createShouldForwardProp,
   props,
   space,
   type SpaceProps,
 } from 'src/theme'
 
-export type RadioColor = 'default' | keyof Theme['palette']
+export type RadioColor = PaletteColor
 export type RadioSize = 'sm' | 'md' | 'lg'
 
 export interface RadioProps extends SpaceProps<Theme> {

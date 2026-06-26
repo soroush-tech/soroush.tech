@@ -3,13 +3,14 @@ import { useFormControl } from 'src/theme/FormControl'
 import {
   styled,
   type Theme,
+  type PaletteColor,
   createShouldForwardProp,
   props,
   space,
   type SpaceProps,
 } from 'src/theme'
 
-export type CheckboxColor = 'default' | keyof Theme['palette']
+export type CheckboxColor = PaletteColor
 export type CheckboxSize = 'sm' | 'md' | 'lg'
 
 export interface CheckboxProps extends SpaceProps<Theme> {
