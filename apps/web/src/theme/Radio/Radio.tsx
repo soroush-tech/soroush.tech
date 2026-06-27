@@ -86,7 +86,9 @@ const RadioIconWrapper = styled('span', {
   justifyContent: 'center',
   flexShrink: 0,
   fontSize: ICON_SIZE[size],
-  lineHeight: 1,
+  // 0 (not 1) so the inline SVG's line box can't inflate the wrapper height —
+  // keeps it square so the focus outline sits evenly on all sides.
+  lineHeight: 0,
   transition: 'color 0.15s ease',
 }))
 
@@ -113,7 +115,7 @@ const baseStyle = ({ disabled, theme }: RadioRootProps & { theme: Theme }) => ({
   '& input:not(:checked) ~ span > .rb-checked': { display: 'none' },
   '& input:checked ~ span > .rb-unchecked': { display: 'none' },
   '&:has(input:focus-visible) > span:first-of-type': {
-    outline: '2px solid currentColor',
+    outline: `2px solid ${theme.palette.primary.main}`,
     outlineOffset: '2px',
     borderRadius: '50%',
   },

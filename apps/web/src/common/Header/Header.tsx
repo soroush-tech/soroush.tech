@@ -11,6 +11,7 @@ import { Switch } from 'src/theme/Switch'
 import { Button } from 'src/theme/Button'
 import { Icon } from 'src/theme/Icon'
 import { Drawer } from 'src/theme/Drawer'
+import { Link } from 'src/theme/Link'
 import { Logo } from 'src/common/Logo'
 import { Navbar } from 'src/common/Navbar'
 import { useThemeMode } from 'src/theme/hooks/useThemeMode'
@@ -65,9 +66,9 @@ export function Header({ position = 'fixed' }: Readonly<HeaderProps>) {
       borderBottom={`1px solid ${alpha(theme.border.primary, 0.2)}`}
     >
       <Flex flexDirection="row" alignItems="center" gap={2}>
-        <a href="https://soroush.tech">
+        <Link href="https://soroush.tech" underline="none" display="inline-flex">
           <Logo size={48} />
-        </a>
+        </Link>
         <Typography
           as="span"
           fontSize={2}

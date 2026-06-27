@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ReactNode } from 'react'
+import { type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react'
 import {
   styled,
   type Theme,
@@ -229,7 +229,7 @@ const baseStyle = ({
       ? {
           '& input:checked ~ .sw-track::before': { backgroundColor: theme?.palette[color].dark },
           '&:has(input:focus-visible) .sw-track::before': {
-            outline: '2px solid currentColor',
+            outline: `2px solid ${theme?.palette.primary.main}`,
             outlineOffset: '2px',
             borderRadius: '999px',
           },
@@ -237,7 +237,7 @@ const baseStyle = ({
       : {
           '& input:checked ~ .sw-track': { backgroundColor: theme?.palette[color].dark },
           '&:has(input:focus-visible) .sw-track': {
-            outline: '2px solid currentColor',
+            outline: `2px solid ${theme?.palette.primary.main}`,
             outlineOffset: '2px',
             borderRadius: '999px',
           },
@@ -323,6 +323,13 @@ export function Switch({
   const effectiveCheckedIcon =
     checkedIcon ?? (marked && variant === 'outside' ? <CheckMarkIcon /> : null)
 
+  // The native checkbox already toggles on Space; add Enter for ARIA switch parity.
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    event.currentTarget.click()
+  }
+
   return (
     <SwitchRoot
       color={color}
@@ -343,6 +350,7 @@ export function Switch({
         id={id}
         required={required}
         onChange={onChange}
+        onKeyDown={handleKeyDown}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         aria-describedby={ariaDescribedby}

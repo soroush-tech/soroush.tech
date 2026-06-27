@@ -194,6 +194,15 @@ const shapeVariants = variant({
 
 const fullWidthStyles = ({ fullWidth }: ButtonProps) => (fullWidth ? { width: '100%' } : {})
 
+// Keyboard-only focus ring in the brand primary color. `outline: none` stays the
+// resting base (above), so pointer clicks show no ring.
+const focusVisibleStyles = ({ theme }: { theme: Theme }) => ({
+  '&:focus-visible': {
+    outline: `2px solid ${theme.palette.primary.main}`,
+    outlineOffset: '2px',
+  },
+})
+
 // layout's built-in `size` shorthand maps to width+height — strip it so Button's
 // own `size` prop (sm/md/lg) doesn't bleed into layout CSS.
 const safeLayout = (props: ButtonProps & { theme?: Theme }) => layout({ ...props, size: undefined })
@@ -208,6 +217,7 @@ const ButtonRoot = styled('button', { shouldForwardProp })<ButtonRootProps>(
   variantStyles,
   shapeVariants,
   fullWidthStyles,
+  focusVisibleStyles,
   space,
   safeLayout,
   buttonBaseSystem,

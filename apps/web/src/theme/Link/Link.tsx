@@ -45,6 +45,11 @@ const LinkBase = styled(Typography as ComponentType<LinkProps & { as?: ElementTy
   ({ underline = 'always' }) => underlineStyles[underline],
   ({ theme }: { theme: Theme }) => ({
     '&:hover': { color: theme.palette.primary.main },
+    '&:focus-visible': {
+      outline: `2px solid ${theme.palette.primary.main}`,
+      outlineOffset: '4px',
+      borderRadius: theme.radii.sm,
+    },
   }),
   linkGapSystem
 )
