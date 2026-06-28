@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { anchorTokens } from 'src/theme/utils/test/storiesOptions'
 import { Button } from 'src/theme/Button'
@@ -43,6 +43,28 @@ const meta: Meta<typeof Drawer> = {
 
 export default meta
 type Story = StoryObj<typeof Drawer>
+type DrawerArgs = Partial<ComponentProps<typeof Drawer>>
+
+const DrawerDemo = (args: DrawerArgs) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const isHorizontal = args.anchor === 'top' || args.anchor === 'bottom'
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open drawer</Button>
+      <Drawer {...args} isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Flex flexDirection="column" gap={3} p={4} width={isHorizontal ? '100%' : '260px'}>
+          <Typography variant="h6" m={0}>
+            Drawer
+          </Typography>
+          <Typography variant="body2" color="secondary" m={0}>
+            Slides in from the “{args.anchor}” edge. Press Escape or click the backdrop to close.
+          </Typography>
+          <Button onClick={() => setIsOpen(false)}>Close</Button>
+        </Flex>
+      </Drawer>
+    </>
+  )
+}
 
 export const Default: Story = {
   args: {
@@ -51,24 +73,5 @@ export const Default: Story = {
     hasBackdrop: true,
     transitionDuration: 225,
   },
-  render: (args) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const isHorizontal = args.anchor === 'top' || args.anchor === 'bottom'
-    return (
-      <>
-        <Button onClick={() => setIsOpen(true)}>Open drawer</Button>
-        <Drawer {...args} isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <Flex flexDirection="column" gap={3} p={4} width={isHorizontal ? '100%' : '260px'}>
-            <Typography variant="h6" m={0}>
-              Drawer
-            </Typography>
-            <Typography variant="body2" color="secondary" m={0}>
-              Slides in from the “{args.anchor}” edge. Press Escape or click the backdrop to close.
-            </Typography>
-            <Button onClick={() => setIsOpen(false)}>Close</Button>
-          </Flex>
-        </Drawer>
-      </>
-    )
-  },
+  render: (args) => <DrawerDemo {...args} />,
 }

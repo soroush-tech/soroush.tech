@@ -1,4 +1,4 @@
-import { useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 export interface FocusTrapProps {
   /** The content whose focusable descendants are trapped. */
@@ -70,38 +70,39 @@ export function FocusTrap({
       doc.addEventListener('focusin', handleFocusIn)
     }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!shouldTrapFocus || event.key !== 'Tab') {
+        return
+      }
+      const focusable = getFocusable(node)
+      if (focusable.length === 0) {
+        event.preventDefault()
+        return
+      }
+      const first = focusable[0]
+      const last = focusable.at(-1)!
+      const active = doc.activeElement
+      if (event.shiftKey && active === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    node.addEventListener('keydown', handleKeyDown)
+
     return () => {
       doc.removeEventListener('focusin', handleFocusIn)
+      node.removeEventListener('keydown', handleKeyDown)
       if (shouldRestoreFocus) {
         previouslyFocused.current!.focus()
       }
     }
-  }, [isEnabled, shouldAutoFocus, shouldEnforceFocus, shouldRestoreFocus])
-
-  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (!isEnabled || !shouldTrapFocus || event.key !== 'Tab') {
-      return
-    }
-    const node = rootRef.current!
-    const focusable = getFocusable(node)
-    if (focusable.length === 0) {
-      event.preventDefault()
-      return
-    }
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    const active = node.ownerDocument.activeElement
-    if (event.shiftKey && active === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault()
-      first.focus()
-    }
-  }
+  }, [isEnabled, shouldAutoFocus, shouldEnforceFocus, shouldRestoreFocus, shouldTrapFocus])
 
   return (
-    <div ref={rootRef} tabIndex={-1} onKeyDown={handleKeyDown} style={{ outline: 'none' }}>
+    <div ref={rootRef} tabIndex={-1} style={{ outline: 'none' }}>
       {children}
     </div>
   )

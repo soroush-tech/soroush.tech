@@ -61,9 +61,9 @@ function ariaHiddenSiblings(
   hiddenSiblings: Element[],
   hide: boolean
 ): void {
-  const exclude = [mountElement, currentElement, ...hiddenSiblings]
+  const exclude = new Set([mountElement, currentElement, ...hiddenSiblings])
   Array.from(container.children).forEach((element) => {
-    if (!exclude.includes(element) && !isAriaHiddenForbidden(element)) {
+    if (!exclude.has(element) && !isAriaHiddenForbidden(element)) {
       ariaHidden(element, hide)
     }
   })
@@ -81,7 +81,7 @@ function isOverflowing(container: Element): boolean {
 }
 
 function getPaddingRight(element: Element): number {
-  return parseFloat(ownerWindow(element).getComputedStyle(element).paddingRight) || 0
+  return Number.parseFloat(ownerWindow(element).getComputedStyle(element).paddingRight) || 0
 }
 
 /**
@@ -119,8 +119,8 @@ function lockScroll(container: HTMLElement): () => void {
  * on background siblings so assistive tech only sees the active modal.
  */
 export class ModalManager {
-  private modals: ManagedModal[] = []
-  private containers: ContainerState[] = []
+  private readonly modals: ManagedModal[] = []
+  private readonly containers: ContainerState[] = []
 
   add(modal: ManagedModal, container: HTMLElement): number {
     const existingIndex = this.modals.indexOf(modal)
@@ -149,11 +149,9 @@ export class ModalManager {
 
   mount(modal: ManagedModal, props: ManagedModalProps): void {
     const containerState = this.containers.find((item) => item.modals.includes(modal))!
-    if (!containerState.restore) {
-      containerState.restore = props.disableScrollLock
-        ? () => {}
-        : lockScroll(containerState.container)
-    }
+    containerState.restore ??= props.disableScrollLock
+      ? () => {}
+      : lockScroll(containerState.container)
   }
 
   remove(modal: ManagedModal, ariaHiddenState = true): number {
@@ -181,7 +179,7 @@ export class ModalManager {
       this.containers.splice(this.containers.indexOf(containerState), 1)
     } else {
       // Reveal the next modal down the stack to assistive tech.
-      const nextTop = containerState.modals[containerState.modals.length - 1]
+      const nextTop = containerState.modals.at(-1)!
       ariaHidden(nextTop.modalRef, false)
     }
 
@@ -189,6 +187,6 @@ export class ModalManager {
   }
 
   isTopModal(modal: ManagedModal): boolean {
-    return this.modals.length > 0 && this.modals[this.modals.length - 1] === modal
+    return this.modals.at(-1) === modal
   }
 }

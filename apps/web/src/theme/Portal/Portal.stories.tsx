@@ -31,48 +31,50 @@ const meta: Meta<PortalStoryArgs> = {
 export default meta
 type Story = StoryObj<PortalStoryArgs>
 
+const PortalDemo = ({ target }: PortalStoryArgs) => {
+  const [container, setContainer] = useState<HTMLElement | null>(null)
+  return (
+    <Flex flexDirection="column" gap={3} width="360px">
+      <Typography variant="body2" color="secondary" m={0}>
+        Switch the target control to move the portaled banner between the document body and the
+        bordered box below.
+      </Typography>
+      <View
+        ref={setContainer}
+        p={3}
+        minHeight="64px"
+        borderWidth="thin"
+        borderStyle="solid"
+        borderColor="primary"
+        borderRadius="md"
+      >
+        <Typography variant="caption" color="secondary" m={0}>
+          Custom container
+        </Typography>
+      </View>
+      {/* For the container target, wait for the ref to attach before portaling. */}
+      {(target === 'body' || container) && (
+        <Portal container={target === 'container' ? container : undefined}>
+          <Paper
+            p={3}
+            mt={2}
+            style={
+              target === 'body'
+                ? { position: 'fixed', top: 16, left: 16, right: 16, zIndex: 1 }
+                : undefined
+            }
+          >
+            <Typography color="info" variant="body2" m={0}>
+              Portaled to {target === 'body' ? 'document.body' : 'the custom container'}
+            </Typography>
+          </Paper>
+        </Portal>
+      )}
+    </Flex>
+  )
+}
+
 export const Default: Story = {
   args: { target: 'container' },
-  render: ({ target }) => {
-    const [container, setContainer] = useState<HTMLElement | null>(null)
-    return (
-      <Flex flexDirection="column" gap={3} width="360px">
-        <Typography variant="body2" color="secondary" m={0}>
-          Switch the target control to move the portaled banner between the document body and the
-          bordered box below.
-        </Typography>
-        <View
-          ref={setContainer}
-          p={3}
-          minHeight="64px"
-          borderWidth="thin"
-          borderStyle="solid"
-          borderColor="primary"
-          borderRadius="md"
-        >
-          <Typography variant="caption" color="secondary" m={0}>
-            Custom container
-          </Typography>
-        </View>
-        {/* For the container target, wait for the ref to attach before portaling. */}
-        {(target === 'body' || container) && (
-          <Portal container={target === 'container' ? container : undefined}>
-            <Paper
-              p={3}
-              mt={2}
-              style={
-                target === 'body'
-                  ? { position: 'fixed', top: 16, left: 16, right: 16, zIndex: 1 }
-                  : undefined
-              }
-            >
-              <Typography color="info" variant="body2" m={0}>
-                Portaled to {target === 'body' ? 'document.body' : 'the custom container'}
-              </Typography>
-            </Paper>
-          </Portal>
-        )}
-      </Flex>
-    )
-  },
+  render: (args) => <PortalDemo {...args} />,
 }
