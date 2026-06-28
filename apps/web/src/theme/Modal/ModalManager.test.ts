@@ -10,6 +10,7 @@ beforeEach(() => {
 
 afterEach(() => {
   container.remove()
+  document.body.removeAttribute('style')
   // Reset any viewport overrides applied by scroll-lock tests.
   Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true })
 })
@@ -122,17 +123,56 @@ describe('ModalManager — aria-hidden siblings', () => {
     manager.remove(modal, true)
     expect(modal.modalRef.getAttribute('aria-hidden')).toBe('true')
   })
+
+  it('re-hides the removed modal and reveals the next when a modal remains', () => {
+    const manager = new ModalManager()
+    const lower = makeModal()
+    const upper = makeModal()
+    manager.add(lower, container)
+    manager.add(upper, container)
+
+    manager.remove(upper)
+    // The removed modal is hidden (it may linger via shouldKeepMounted)…
+    expect(upper.modalRef.getAttribute('aria-hidden')).toBe('true')
+    // …and the modal below is revealed to assistive tech.
+    expect(lower.modalRef.hasAttribute('aria-hidden')).toBe(false)
+  })
 })
 
 describe('ModalManager — scroll lock', () => {
-  it('locks scroll and pads for the scrollbar, then restores on removal', () => {
+  it('pads the document body by the window scrollbar width, then restores', () => {
+    // A window scrollbar: viewport wider than the document client area.
+    Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true })
+    Object.defineProperty(document.documentElement, 'clientWidth', {
+      value: 1009,
+      configurable: true,
+    })
+    const manager = new ModalManager()
+    const modal = makeModal(document.body)
+    manager.add(modal, document.body)
+    manager.mount(modal, {})
+
+    expect(document.body.style.overflow).toBe('hidden')
+    expect(document.body.style.paddingRight).toBe('15px') // 1024 - 1009
+
+    manager.remove(modal)
+    expect(document.body.style.overflow).toBe('')
+    expect(document.body.style.paddingRight).toBe('')
+  })
+
+  it('pads a custom scrollable container by its own scrollbar gutter', () => {
+    // jsdom does no layout, so fake the element metrics a real browser would report.
+    Object.defineProperty(container, 'scrollHeight', { value: 1000, configurable: true })
+    Object.defineProperty(container, 'clientHeight', { value: 500, configurable: true })
+    Object.defineProperty(container, 'offsetWidth', { value: 515, configurable: true })
+    Object.defineProperty(container, 'clientWidth', { value: 500, configurable: true })
     const manager = new ModalManager()
     const modal = makeModal()
     manager.add(modal, container)
     manager.mount(modal, {})
 
     expect(container.style.overflow).toBe('hidden')
-    expect(container.style.paddingRight).not.toBe('')
+    expect(container.style.paddingRight).toBe('15px') // offsetWidth - clientWidth
 
     manager.remove(modal)
     expect(container.style.overflow).toBe('')

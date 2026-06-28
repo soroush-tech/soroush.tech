@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { ownerWindow } from 'src/theme/Modal/utils/ownerWindow'
+import { ownerWindow } from 'src/utils/ownerWindow'
 
 describe('ownerWindow', () => {
   afterEach(() => {

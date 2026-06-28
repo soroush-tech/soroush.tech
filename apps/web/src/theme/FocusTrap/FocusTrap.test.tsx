@@ -181,7 +181,23 @@ describe('FocusTrap — tab cycling', () => {
       </FocusTrap>
     )
     const container = screen.getByTestId('text').parentElement as HTMLElement
-    fireEvent.keyDown(container, { key: 'Tab' })
+    // fireEvent returns false when the handler called preventDefault().
+    const notPrevented = fireEvent.keyDown(container, { key: 'Tab' })
+    expect(notPrevented).toBe(false)
     expect(container).toHaveFocus()
+  })
+
+  it('skips tabindex="-1" elements when moving focus', () => {
+    render(
+      <FocusTrap>
+        <div>
+          <button tabIndex={-1} data-testid="skip">
+            skip
+          </button>
+          <button data-testid="real">real</button>
+        </div>
+      </FocusTrap>
+    )
+    expect(screen.getByTestId('real')).toHaveFocus()
   })
 })

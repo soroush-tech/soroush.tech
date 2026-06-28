@@ -1,5 +1,5 @@
-import { ownerWindow } from 'src/theme/Modal/utils/ownerWindow'
-import { ownerDocument } from 'src/theme/Modal/utils/ownerDocument'
+import { ownerWindow } from 'src/utils/ownerWindow'
+import { ownerDocument } from 'src/utils/ownerDocument'
 import { getScrollbarSize } from 'src/theme/Modal/utils/getScrollbarSize'
 
 /** A modal tracked by the manager: its portal mount node and its root element. */
@@ -75,9 +75,14 @@ function getHiddenSiblings(container: Element): Element[] {
   )
 }
 
-function isOverflowing(container: Element): boolean {
+function isOverflowing(container: HTMLElement): boolean {
   const doc = ownerDocument(container)
-  return ownerWindow(container).innerWidth > doc.documentElement.clientWidth
+  // The document/body scrolls the viewport, so compare against the window; a custom
+  // scrollable container is measured by its own content vs. visible height.
+  if (container === doc.body) {
+    return ownerWindow(container).innerWidth > doc.documentElement.clientWidth
+  }
+  return container.scrollHeight > container.clientHeight
 }
 
 function getPaddingRight(element: Element): number {
@@ -105,7 +110,11 @@ function lockScroll(container: HTMLElement): () => void {
   }
 
   if (isOverflowing(container)) {
-    const scrollbarSize = getScrollbarSize(ownerWindow(container))
+    // Body hides the window scrollbar; a custom container hides its own gutter.
+    const scrollbarSize =
+      container === ownerDocument(container).body
+        ? getScrollbarSize(ownerWindow(container))
+        : container.offsetWidth - container.clientWidth
     setStyle('padding-right', `${getPaddingRight(container) + scrollbarSize}px`)
   }
   setStyle('overflow', 'hidden')
@@ -178,8 +187,11 @@ export class ModalManager {
       )
       this.containers.splice(this.containers.indexOf(containerState), 1)
     } else {
-      // Reveal the next modal down the stack to assistive tech.
+      // Re-hide the modal being removed (it may linger via `shouldKeepMounted`) and
+      // reveal the next modal down the stack to assistive tech. The modal roots are
+      // portaled directly into the container, so revealing the sibling below is enough.
       const nextTop = containerState.modals.at(-1)!
+      ariaHidden(modal.modalRef, ariaHiddenState)
       ariaHidden(nextTop.modalRef, false)
     }
 

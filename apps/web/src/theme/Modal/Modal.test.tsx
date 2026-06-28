@@ -58,16 +58,28 @@ describe('Modal', () => {
     expect(getBackdrop()).toBeNull()
   })
 
-  it('closes on backdrop click', () => {
+  it('closes when the dimmed area (root) is clicked', () => {
     const onClose = vi.fn()
     renderWithTheme(
       <Modal isOpen onClose={onClose}>
         <div>x</div>
       </Modal>
     )
-    fireEvent.click(getBackdrop()!)
+    // The backdrop is pointer-events:none, so the scrim click lands on the root.
+    fireEvent.click(getRoot())
     expect(onClose).toHaveBeenCalledTimes(1)
     expect(onClose.mock.calls[0][1]).toBe('backdropClick')
+  })
+
+  it('does not close when the content is clicked', () => {
+    const onClose = vi.fn()
+    renderWithTheme(
+      <Modal isOpen onClose={onClose}>
+        <div data-testid="content">x</div>
+      </Modal>
+    )
+    fireEvent.click(screen.getByTestId('content'))
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('closes on Escape', () => {
@@ -98,6 +110,44 @@ describe('Modal', () => {
       </Modal>
     )
     expect(getRoot()).toHaveStyle({ zIndex: dark.zOrder.modal })
+  })
+
+  it('layers the root at a custom theme.zOrder layer', () => {
+    renderWithTheme(
+      <Modal isOpen layer="drawer">
+        <div>x</div>
+      </Modal>
+    )
+    expect(getRoot()).toHaveStyle({ zIndex: dark.zOrder.drawer })
+  })
+
+  it('does not throw when a stacked modal unmounts while another stays open', () => {
+    const { rerender } = renderWithTheme(
+      <>
+        <Modal isOpen>
+          <div data-testid="lower">lower</div>
+        </Modal>
+        <Modal isOpen>
+          <div data-testid="upper">upper</div>
+        </Modal>
+      </>
+    )
+    // Closing the top modal unmounts it while the lower one is still registered —
+    // the stacked-removal path must not dereference a null portal mount node.
+    expect(() =>
+      rerender(
+        <>
+          <Modal isOpen>
+            <div data-testid="lower">lower</div>
+          </Modal>
+          <Modal isOpen={false}>
+            <div data-testid="upper">upper</div>
+          </Modal>
+        </>
+      )
+    ).not.toThrow()
+    expect(screen.getByTestId('lower')).toBeInTheDocument()
+    expect(screen.queryByTestId('upper')).toBeNull()
   })
 
   it('centres its content in the viewport', () => {

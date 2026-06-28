@@ -3,12 +3,14 @@ import { View, type ViewProps } from 'src/theme/View'
 
 export type BackdropProps = ViewProps
 
-// Full-viewport scrim. Sits behind the modal content (z-index -1 relative to the
-// modal root) so clicks on the empty area land on the backdrop, not the content.
+// Full-viewport scrim. Sits behind the modal content (z-index -1) and is purely
+// visual: `pointer-events: none` lets wheel and click pass through to the modal
+// root, so the root (the scroll container in `scroll="body"`) handles both.
 const BackdropRoot = styled(View, { label: 'Backdrop' })`
   position: fixed;
   inset: 0;
   z-index: -1;
+  pointer-events: none;
 `
 
 /**

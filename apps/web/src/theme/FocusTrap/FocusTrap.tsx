@@ -25,7 +25,11 @@ const FOCUSABLE_SELECTOR = [
 ].join(',')
 
 function getFocusable(node: HTMLElement): HTMLElement[] {
-  return Array.from(node.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+  // A node can match the selector yet be untabbable (e.g. `<button tabindex="-1">`),
+  // so drop anything pulled out of the sequential tab order.
+  return Array.from(node.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) => element.tabIndex >= 0
+  )
 }
 
 /** Move focus to the first focusable descendant, or the node itself when there is none. */

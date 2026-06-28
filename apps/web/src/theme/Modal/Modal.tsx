@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { styled, createShouldForwardProp } from 'src/theme'
+import { styled, createShouldForwardProp, type Theme } from 'src/theme'
 import { View } from 'src/theme/View'
 import { Portal } from 'src/theme/Portal'
 import { Backdrop } from 'src/theme/Backdrop'
@@ -35,30 +35,33 @@ export interface ModalProps {
   shouldRestoreFocus?: boolean
   /** How long content scrolls: within the content (`'paper'`) or the whole root (`'body'`). Default: 'paper'. */
   scroll?: ModalScroll
+  /** Stacking layer from `theme.zOrder`. Default: 'modal'. */
+  layer?: keyof Theme['zOrder']
 }
 
-const shouldForwardProp = createShouldForwardProp(['scroll'])
+const shouldForwardProp = createShouldForwardProp(['scroll', 'layer'])
 
-const ModalRoot = styled(View, { label: 'Modal', shouldForwardProp })<{ scroll: ModalScroll }>(
-  ({ theme, scroll }) => ({
-    position: 'fixed',
-    inset: 0,
-    zIndex: theme.zOrder.modal,
-    display: 'flex',
-    // The Backdrop is `position: fixed`, so it stays a full-viewport scrim and is
-    // unaffected by this flex layout regardless of scroll mode.
-    ...(scroll === 'paper'
-      ? // Centre the content; it scrolls within the consumer's surface.
-        { alignItems: 'center', justifyContent: 'center' }
-      : // The root itself scrolls. `margin: auto` centres short content but collapses
-        // instead of clipping when the content is taller than the viewport.
-        {
-          flexDirection: 'column',
-          overflowY: 'auto',
-          '& > :not([aria-hidden="true"])': { margin: 'auto' },
-        }),
-  })
-)
+const ModalRoot = styled(View, { label: 'Modal', shouldForwardProp })<{
+  scroll: ModalScroll
+  layer: keyof Theme['zOrder']
+}>(({ theme, scroll, layer }) => ({
+  position: 'fixed',
+  inset: 0,
+  zIndex: theme.zOrder[layer],
+  display: 'flex',
+  // The Backdrop is `position: fixed`, so it stays a full-viewport scrim and is
+  // unaffected by this flex layout regardless of scroll mode.
+  ...(scroll === 'paper'
+    ? // Centre the content; it scrolls within the consumer's surface.
+      { alignItems: 'center', justifyContent: 'center' }
+    : // The root itself scrolls. `margin: auto` centres short content but collapses
+      // instead of clipping when the content is taller than the viewport.
+      {
+        flexDirection: 'column',
+        overflowY: 'auto',
+        '& > :not([aria-hidden="true"])': { margin: 'auto' },
+      }),
+}))
 
 /**
  * @description Accessible overlay primitive: portals its content, dims the page,
@@ -79,6 +82,7 @@ export function Modal({
   shouldEnforceFocus = true,
   shouldRestoreFocus = true,
   scroll = 'paper',
+  layer = 'modal',
 }: Readonly<ModalProps>) {
   const { getRootProps, getBackdropProps } = useModal({
     isOpen,
@@ -95,7 +99,7 @@ export function Modal({
   const { open: _open, ...backdropProps } = getBackdropProps()
 
   const content = (
-    <ModalRoot scroll={scroll} {...getRootProps()}>
+    <ModalRoot scroll={scroll} layer={layer} {...getRootProps()}>
       {hasBackdrop ? <Backdrop {...backdropProps} /> : null}
       <FocusTrap
         isEnabled={isOpen}

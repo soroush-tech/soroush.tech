@@ -2,7 +2,7 @@
 
 A low-level, accessible overlay primitive. Portals its content, dims the page with a `Backdrop`, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click. Higher-level overlays — such as `Drawer` — are built on top of it.
 
-Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-hidden` are coordinated by a shared modal manager, so multiple overlays behave correctly. The root layers at `theme.zOrder.modal`.
+Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-hidden` are coordinated by a shared modal manager, so multiple overlays behave correctly. The root layers at `theme.zOrder.modal` by default, configurable via the `layer` prop (e.g. `Drawer` renders on the lower `drawer` layer).
 
 ---
 
@@ -23,6 +23,7 @@ Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-
 | `shouldEnforceFocus` | `boolean`                                                 | `true`  | Pull focus back into the modal whenever it escapes. |
 | `shouldRestoreFocus` | `boolean`                                                 | `true`  | Restore focus to the trigger on close.              |
 | `scroll`             | `'paper' \| 'body'`                                       | `paper` | Where long content scrolls. See below.              |
+| `layer`              | `'appBar' \| 'drawer' \| 'modal'`                         | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
 
 The content element should carry its own dialog semantics (`role="dialog"`, `aria-modal`, a label). Modal's root is `role="presentation"`.
 

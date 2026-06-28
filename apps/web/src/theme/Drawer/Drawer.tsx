@@ -74,7 +74,7 @@ export function Drawer({
   ...modalProps
 }: Readonly<DrawerProps>) {
   return (
-    <Modal {...modalProps}>
+    <Modal {...modalProps} layer="drawer">
       <DrawerPanel anchor={anchor} duration={transitionDuration} elevation={elevation}>
         {children}
       </DrawerPanel>

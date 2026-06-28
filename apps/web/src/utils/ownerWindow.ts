@@ -1,4 +1,4 @@
-import { ownerDocument } from 'src/theme/Modal/utils/ownerDocument'
+import { ownerDocument } from 'src/utils/ownerDocument'
 
 /**
  * Returns the `Window` that owns the given node, falling back to the global

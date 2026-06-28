@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ownerDocument } from 'src/theme/Modal/utils/ownerDocument'
+import { ownerDocument } from 'src/utils/ownerDocument'
 
 describe('ownerDocument', () => {
   it('returns the global document when the node is null', () => {

@@ -8,7 +8,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { ModalManager, type ManagedModal } from 'src/theme/Modal/ModalManager'
-import { ownerDocument } from 'src/theme/Modal/utils/ownerDocument'
+import { ownerDocument } from 'src/utils/ownerDocument'
 import { useEventCallback } from 'src/theme/Modal/hooks/useEventCallback'
 import { useMergedRefs } from 'src/theme/Modal/hooks/useMergedRefs'
 
@@ -76,16 +76,16 @@ export function useModal(parameters: UseModalParameters): UseModalReturnValue {
     modalManager.remove(modal.current)
   })
 
-  // Restore scroll-lock / aria state if the modal unmounts while open.
-  useEffect(() => () => handleClose(), [handleClose])
-
+  // Register the modal while open and re-register when the container or scroll-lock
+  // option changes; the cleanup deregisters it on close, on those changes, and on
+  // unmount, so scroll-lock / aria state always tracks the current target.
   useEffect(() => {
-    if (isOpen) {
-      handleOpen()
-    } else {
-      handleClose()
+    if (!isOpen) {
+      return
     }
-  }, [isOpen, handleOpen, handleClose])
+    handleOpen()
+    return () => handleClose()
+  }, [isOpen, container, disableScrollLock, handleOpen, handleClose])
 
   const createHandleKeyDown =
     (otherHandlers: EventHandlers) => (event: ReactKeyboardEvent<Element>) => {
@@ -101,7 +101,10 @@ export function useModal(parameters: UseModalParameters): UseModalReturnValue {
       onClose?.(event, 'escapeKey')
     }
 
-  const createHandleBackdropClick =
+  // The backdrop is `pointer-events: none`, so a click on the dimmed area lands on
+  // the root itself. Closing only when target === currentTarget keeps clicks on the
+  // content (a descendant) from dismissing the modal.
+  const createHandleRootClick =
     (otherHandlers: EventHandlers) => (event: ReactMouseEvent<Element>) => {
       otherHandlers.onClick?.(event)
 
@@ -118,6 +121,7 @@ export function useModal(parameters: UseModalParameters): UseModalReturnValue {
       role: 'presentation',
       ...otherHandlers,
       onKeyDown: createHandleKeyDown(otherHandlers),
+      onClick: createHandleRootClick(otherHandlers),
       ref: handleRef,
     }
   }
@@ -126,7 +130,6 @@ export function useModal(parameters: UseModalParameters): UseModalReturnValue {
     return {
       'aria-hidden': true,
       ...otherHandlers,
-      onClick: createHandleBackdropClick(otherHandlers),
       open: isOpen,
     }
   }

@@ -7,15 +7,18 @@ interface TestModalProps extends Omit<UseModalParameters, 'rootRef'> {
   name?: string
   rootRef?: Ref<Element>
   onRootKeyDown?: () => void
-  onBackdropClick?: () => void
+  onRootClick?: () => void
 }
 
-function TestModal({ name = 'a', onRootKeyDown, onBackdropClick, ...params }: TestModalProps) {
+function TestModal({ name = 'a', onRootKeyDown, onRootClick, ...params }: TestModalProps) {
   const { getRootProps, getBackdropProps, portalRef } = useModal(params)
   return (
     <div ref={portalRef} data-testid={`portal-${name}`}>
-      <div {...getRootProps({ onKeyDown: onRootKeyDown })} data-testid={`root-${name}`}>
-        <div {...getBackdropProps({ onClick: onBackdropClick })} data-testid={`backdrop-${name}`}>
+      <div
+        {...getRootProps({ onKeyDown: onRootKeyDown, onClick: onRootClick })}
+        data-testid={`root-${name}`}
+      >
+        <div {...getBackdropProps()} data-testid={`backdrop-${name}`}>
           <button data-testid={`inner-${name}`}>x</button>
         </div>
       </div>
@@ -67,24 +70,43 @@ describe('useModal — scroll lock', () => {
     render(<TestModal isOpen container={() => target} />)
     expect(target.style.overflow).toBe('hidden')
   })
+
+  it('re-registers on the new container when it changes while open', () => {
+    const first = document.createElement('div')
+    const second = document.createElement('div')
+    document.body.append(first, second)
+    const { rerender } = render(<TestModal isOpen container={first} />)
+    expect(first.style.overflow).toBe('hidden')
+
+    rerender(<TestModal isOpen container={second} />)
+    // Lock moves to the new container; the old one is restored.
+    expect(first.style.overflow).toBe('')
+    expect(second.style.overflow).toBe('hidden')
+
+    first.remove()
+    second.remove()
+  })
+
+  it('releases the scroll lock when disableScrollLock flips on while open', () => {
+    const target = mountHost()
+    const { rerender } = render(<TestModal isOpen container={target} />)
+    expect(target.style.overflow).toBe('hidden')
+
+    rerender(<TestModal isOpen disableScrollLock container={target} />)
+    expect(target.style.overflow).toBe('')
+  })
 })
 
 describe('useModal — backdrop click', () => {
-  it('calls onClose with reason "backdropClick" when the backdrop itself is clicked', () => {
+  it('calls onClose with reason "backdropClick" and forwards the handler on a root click', () => {
     const onClose = vi.fn()
-    const onBackdropClick = vi.fn()
-    render(
-      <TestModal
-        isOpen
-        container={mountHost()}
-        onClose={onClose}
-        onBackdropClick={onBackdropClick}
-      />
-    )
+    const onRootClick = vi.fn()
+    render(<TestModal isOpen container={mountHost()} onClose={onClose} onRootClick={onRootClick} />)
 
-    fireEvent.click(screen.getByTestId('backdrop-a'))
+    // The backdrop is pointer-events:none, so a scrim click resolves to the root.
+    fireEvent.click(screen.getByTestId('root-a'))
 
-    expect(onBackdropClick).toHaveBeenCalledOnce()
+    expect(onRootClick).toHaveBeenCalledOnce()
     expect(onClose).toHaveBeenCalledTimes(1)
     expect(onClose.mock.calls[0][1]).toBe<ModalCloseReason>('backdropClick')
   })
@@ -145,8 +167,13 @@ describe('useModal — escape key', () => {
       </>
     )
 
+    // The lower modal is not on top, so its Escape is ignored.
     fireEvent.keyDown(screen.getByTestId('root-lower'), { key: 'Escape' })
+    expect(onCloseLower).not.toHaveBeenCalled()
 
+    // The top (upper) modal does close on Escape.
+    fireEvent.keyDown(screen.getByTestId('root-upper'), { key: 'Escape' })
+    expect(onCloseUpper).toHaveBeenCalledTimes(1)
     expect(onCloseLower).not.toHaveBeenCalled()
   })
 

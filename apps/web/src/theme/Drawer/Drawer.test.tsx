@@ -34,6 +34,11 @@ describe('Drawer', () => {
     expect(getPanel()).toHaveStyle({ position: 'fixed' })
   })
 
+  it('layers the root on the drawer stacking layer (below modals)', () => {
+    renderDrawer()
+    expect(getRoot()).toHaveStyle({ zIndex: dark.zOrder.drawer })
+  })
+
   it('anchors to the left edge by default (full height)', () => {
     renderDrawer()
     expect(getPanel()).toHaveStyle({ left: '0px', height: '100%' })
