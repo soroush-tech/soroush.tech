@@ -18,6 +18,7 @@ import GroupsIcon from 'src/assets/icons/groups.svg?react'
 import HubIcon from 'src/assets/icons/hub.svg?react'
 import LanguageIcon from 'src/assets/icons/language.svg?react'
 import LockIcon from 'src/assets/icons/lock.svg?react'
+import MenuIcon from 'src/assets/icons/menu.svg?react'
 import NeurologyIcon from 'src/assets/icons/neurology.svg?react'
 import PsychologyIcon from 'src/assets/icons/psychology.svg?react'
 import RebaseEditIcon from 'src/assets/icons/rebase_edit.svg?react'
@@ -54,6 +55,7 @@ export const icons = {
   hub: HubIcon,
   language: LanguageIcon,
   lock: LockIcon,
+  menu: MenuIcon,
   neurology: NeurologyIcon,
   psychology: PsychologyIcon,
   rebase_edit: RebaseEditIcon,

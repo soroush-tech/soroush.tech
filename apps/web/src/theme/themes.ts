@@ -105,6 +105,12 @@ export interface Theme {
     number
   >
   palette: Record<PaletteColor, { main: string; light: string; dark: string; contrastText: string }>
+  /** Stacking order for layered UI — ascending: appBar < drawer < modal. */
+  zOrder: {
+    appBar: number
+    drawer: number
+    modal: number
+  }
 }
 
 export type Light = typeof light
@@ -129,6 +135,13 @@ export const borderWidths = {
   thin: '1px',
   base: '2px',
   thick: '4px',
+}
+
+// Stacking order for layered UI. Ascending so overlays sit above the sticky header.
+export const zOrder = {
+  appBar: 1100,
+  drawer: 1200,
+  modal: 1300,
 }
 
 export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
@@ -241,6 +254,7 @@ const baseTheme = {
   avatar,
   sizes,
   space,
+  zOrder,
   blur: '12px',
   // get space() {
   //   return new Proxy(

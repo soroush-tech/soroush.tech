@@ -170,6 +170,16 @@ const colorBorder = ({
   borderColor: error ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.light`),
 })
 
+// Keyboard-only focus ring on the wrapper (the inner input keeps `outline: none`).
+// Covers every variant, including the borderless `default` / `text` that the
+// `:focus-within` border-color change alone can't show.
+const focusVisibleRing = ({ theme }: TextInputRootProps & { theme?: Theme }) => ({
+  '&:has(:focus-visible)': {
+    outline: `2px solid ${get(theme, 'palette.primary.main')}`,
+    outlineOffset: '2px',
+  },
+})
+
 const focusWithinColor = ({
   color = 'primary',
   error,
@@ -257,6 +267,7 @@ const TextInputRoot = styled('div', { label: 'TextInput', shouldForwardProp })<T
   borderRadiusStyle,
   colorBorder,
   focusWithinColor,
+  focusVisibleRing,
   backgroundStyle,
   layoutStyles,
   space,

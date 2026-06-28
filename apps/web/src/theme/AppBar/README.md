@@ -62,7 +62,7 @@ Controls CSS layout positioning.
 | `"fixed"`    | Fixed to the viewport; does not scroll with the page       |
 | `"sticky"`   | Sticks to its nearest scroll ancestor at a given offset    |
 
-For `"fixed"` and `"sticky"`, combine with `top`, `left`, `right`, `zIndex` from the position styled-system group.
+For `"fixed"` and `"sticky"`, combine with `top`, `left`, `right` from the position styled-system group. AppBar already applies a default `zIndex` of `theme.zOrder.appBar` so it layers above page content; pass the `zIndex` prop to override it.
 
 ---
 
@@ -104,15 +104,16 @@ Combine with `color="backdrop"`, which resolves to the theme's pre-composited fr
 
 ## Default styles
 
-| Property                       | Value                           |
-| ------------------------------ | ------------------------------- |
-| `display`                      | `flex`                          |
-| `flexDirection`                | `column`                        |
-| `flexShrink`                   | `0`                             |
-| `width`                        | `100%`                          |
-| `boxShadow`                    | none (set via `elevation` prop) |
-| `paddingLeft` / `paddingRight` | `theme.space[2]` (16px, `md`)   |
-| `paddingTop` / `paddingBottom` | `theme.space[1]` (8px, `md`)    |
+| Property                       | Value                                                          |
+| ------------------------------ | -------------------------------------------------------------- |
+| `display`                      | `flex`                                                         |
+| `flexDirection`                | `column`                                                       |
+| `flexShrink`                   | `0`                                                            |
+| `width`                        | `100%`                                                         |
+| `boxShadow`                    | none (set via `elevation` prop)                                |
+| `paddingLeft` / `paddingRight` | `theme.space[2]` (16px, `md`)                                  |
+| `paddingTop` / `paddingBottom` | `theme.space[1]` (8px, `md`)                                   |
+| `zIndex`                       | `theme.zOrder.appBar` (1100) — override with the `zIndex` prop |
 
 ---
 

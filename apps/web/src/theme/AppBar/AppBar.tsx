@@ -62,6 +62,12 @@ const blurSystem = ({ blur, theme }: AppBarBaseProps & { theme: Theme }) =>
     ? { backdropFilter: `blur(${theme.blur})`, WebkitBackdropFilter: `blur(${theme.blur})` }
     : undefined
 
+// Default stacking order so the bar layers above page content. Applied before the
+// `position` group below, so an explicit `zIndex` prop still wins.
+const zOrderDefault = ({ theme }: AppBarBaseProps & { theme: Theme }) => ({
+  zIndex: theme.zOrder.appBar,
+})
+
 const sizeVariants = ({ theme, size }: AppBarBaseProps & { theme: Theme }) => {
   const s = theme.sizes[size]
   return {
@@ -90,6 +96,7 @@ const AppBarBase = styled(Flex, { label: 'AppBar', shouldForwardProp })<AppBarBa
   flexbox,
   space,
   layout,
+  zOrderDefault,
   position
 )
 

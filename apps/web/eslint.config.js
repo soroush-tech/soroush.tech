@@ -7,7 +7,7 @@ import base from '@soroush.tech/eslint-config/base'
 
 export default [
   ...base,
-  { ignores: ['public', '.claude'] },
+  { ignores: ['public', '.claude', 'storybook-static'] },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {

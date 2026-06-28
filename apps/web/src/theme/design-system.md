@@ -83,7 +83,7 @@ type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | 
 - Always use `controls.include` whitelist — never rely on autodiscovery
 - Every prop in `controls.include` **must** have a matching `argType` entry — missing argTypes cause the control to silently disappear or leak raw props to the DOM. Verify the lists match before finishing a story.
 - Do NOT use top-level `name:` in argTypes (breaks `controls.include` matching)
-- Always add `table.category` — use: Content · Typography · Layout · Visual · Spacing — make sure it matches the category; if unsure, suggest a name and verify before implementing.
+- Always add `table.category` — use: Content · Typography · Layout · Visual · Spacing · Behavior · Focus — make sure it matches the category; if unsure, suggest a name and verify before implementing.
 
 **No hardcoded hex values** anywhere in `src/theme/` — all colors reference palette constants from `src/theme/colors/`. Rgba opacity uses hex suffix pattern: `${kineticSurface[100]}B3`.
 
@@ -219,13 +219,15 @@ import {
 
 ArgType categories — use exactly these names for consistency across all components:
 
-| Category       | What goes here                                                                                |
-| -------------- | --------------------------------------------------------------------------------------------- |
-| **Content**    | `children` and content-related props                                                          |
-| **Typography** | `variant`, `fontFamily`, `fontSize`, `fontWeight`, `fontStyle`, `lineHeight`, `letterSpacing` |
-| **Layout**     | `align`, `gutterBottom`, `noWrap`, `as`, `display`, `overflow`                                |
-| **Color**      | `color`, `bg`, `opacity`                                                                      |
-| **Spacing**    | `m`, `p` (and directional variants if exposed)                                                |
+| Category       | What goes here                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Content**    | `children` and content-related props                                                                                                |
+| **Typography** | `variant`, `fontFamily`, `fontSize`, `fontWeight`, `fontStyle`, `lineHeight`, `letterSpacing`                                       |
+| **Layout**     | `align`, `gutterBottom`, `noWrap`, `as`, `display`, `overflow`                                                                      |
+| **Color**      | `color`, `bg`, `opacity`                                                                                                            |
+| **Spacing**    | `m`, `p` (and directional variants if exposed)                                                                                      |
+| **Behavior**   | Mount/scroll-lock/portal toggles and targets — `shouldKeepMounted`, `shouldLockScroll`, `shouldUsePortal`, `isEnabled`, `container` |
+| **Focus**      | Focus-management toggles — `shouldAutoFocus`, `shouldTrapFocus`, `shouldEnforceFocus`, `shouldRestoreFocus`                         |
 
 Rules:
 

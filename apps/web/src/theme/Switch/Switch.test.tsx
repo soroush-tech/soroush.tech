@@ -105,6 +105,32 @@ describe('Switch', () => {
     })
   })
 
+  // ─── keyboard ─────────────────────────────────────────────────────────────────
+
+  describe('keyboard', () => {
+    it('toggles on Enter', () => {
+      renderWithTheme(<Switch />)
+      const input = screen.getByRole('switch')
+      input.focus()
+      fireEvent.keyDown(input, { key: 'Enter' })
+      expect(input).toBeChecked()
+    })
+
+    it('calls onChange on Enter', () => {
+      const onChange = vi.fn()
+      renderWithTheme(<Switch checked onChange={onChange} />)
+      fireEvent.keyDown(screen.getByRole('switch'), { key: 'Enter' })
+      expect(onChange).toHaveBeenCalledTimes(1)
+    })
+
+    it('ignores other keys', () => {
+      renderWithTheme(<Switch />)
+      const input = screen.getByRole('switch')
+      fireEvent.keyDown(input, { key: 'a' })
+      expect(input).not.toBeChecked()
+    })
+  })
+
   // ─── color ────────────────────────────────────────────────────────────────────
 
   describe('color', () => {

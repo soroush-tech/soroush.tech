@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { screen, fireEvent, within } from '@testing-library/react'
 import { renderWithTheme } from 'src/test/utils/wrapper'
+import { dark } from 'src/theme/themes'
 
 vi.mock('src/common/NavLink', () => ({
   NavLink: ({ href, children }: { href: string; children: React.ReactNode }) => (
@@ -23,6 +24,10 @@ describe('Header', () => {
   beforeEach(() => {
     mockToggleTheme.mockReset()
     mockUseThemeMode.mockReturnValue({ isDark: true, toggleTheme: mockToggleTheme })
+  })
+
+  afterEach(() => {
+    document.body.removeAttribute('style')
   })
 
   describe('logo', () => {
@@ -97,6 +102,11 @@ describe('Header', () => {
       renderWithTheme(<Header />)
       expect(screen.getByRole('banner')).toBeInTheDocument()
     })
+
+    it('layers the header at theme.zOrder.appBar', () => {
+      renderWithTheme(<Header />)
+      expect(screen.getByRole('banner')).toHaveStyle({ zIndex: dark.zOrder.appBar })
+    })
   })
 
   describe('position prop', () => {
@@ -108,6 +118,47 @@ describe('Header', () => {
     it('forwards position to AppBar', () => {
       renderWithTheme(<Header position="static" />)
       expect(screen.getByRole('banner')).toHaveStyle({ position: 'static' })
+    })
+  })
+
+  describe('mobile menu', () => {
+    // The hamburger lives in a mobile-only (display:none on desktop) wrapper; jsdom
+    // does not apply the mobile media query, so query it with `hidden: true`.
+    const getHamburger = () => screen.getByRole('button', { name: 'Open menu', hidden: true })
+    const openMenu = () => fireEvent.click(getHamburger())
+
+    it('renders a hamburger button labelled "Open menu", collapsed by default', () => {
+      renderWithTheme(<Header />)
+      expect(getHamburger()).toHaveAttribute('aria-expanded', 'false')
+    })
+
+    it('does not render the mobile nav until the menu is opened', () => {
+      renderWithTheme(<Header />)
+      expect(screen.queryByRole('navigation', { name: 'Mobile' })).toBeNull()
+    })
+
+    it('opens the drawer with the nav when the hamburger is clicked', () => {
+      renderWithTheme(<Header />)
+      openMenu()
+      expect(screen.getByRole('navigation', { name: 'Mobile' })).toBeInTheDocument()
+      expect(getHamburger()).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    it('closes the drawer when a mobile nav link is selected', () => {
+      renderWithTheme(<Header />)
+      openMenu()
+      const mobileNav = screen.getByRole('navigation', { name: 'Mobile' })
+      fireEvent.click(within(mobileNav).getByRole('link', { name: 'About' }))
+      expect(screen.queryByRole('navigation', { name: 'Mobile' })).toBeNull()
+    })
+
+    it('closes the drawer on Escape', () => {
+      renderWithTheme(<Header />)
+      openMenu()
+      fireEvent.keyDown(document.querySelector('[role="presentation"]') as HTMLElement, {
+        key: 'Escape',
+      })
+      expect(screen.queryByRole('navigation', { name: 'Mobile' })).toBeNull()
     })
   })
 })
