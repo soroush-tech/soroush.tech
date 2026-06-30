@@ -67,7 +67,7 @@ export interface Parser {
 }
 
 export const merge = (a: StyleObject, b: StyleObject): StyleObject => {
-  const result: StyleObject = Object.assign({}, a, b)
+  const result: StyleObject = { ...a, ...b }
   for (const key in a) {
     if (!a[key] || typeof b[key] !== 'object') continue
     Object.assign(result, {
@@ -94,10 +94,10 @@ const defaults = {
 const createMediaQuery = (n: string | number): string => `@media screen and (min-width: ${n})`
 const getValue = (n: unknown, scale: unknown): unknown => get(scale, n as string, n)
 
-export const get = (obj: any, key?: string | number, def?: any, p?: number, undef?: any): any => {
+export const get = (obj: any, key?: string | number, def?: any, p = 0, undef?: any): any => {
   const path = typeof key === 'string' ? key.split('.') : [key]
   let value = obj
-  for (p = 0; p < path.length; p++) {
+  for (; p < path.length; p++) {
     value = value ? (value as Record<string, unknown>)[path[p] as string] : undef
   }
   return value === undef ? def : value
@@ -114,12 +114,12 @@ const parseResponsiveStyle = (
   raw.slice(0, mediaQueries.length).forEach((value, i) => {
     const media = mediaQueries[i]
     const style = sx(value, scale, props)
-    if (!media) {
-      Object.assign(styles, style)
-    } else {
+    if (media) {
       Object.assign(styles, {
-        [media]: Object.assign({}, styles[media] as StyleObject, style),
+        [media]: { ...(styles[media] as StyleObject), ...style },
       })
+    } else {
+      Object.assign(styles, style)
     }
   })
   return styles
@@ -137,13 +137,13 @@ const parseResponsiveObject = (
     const breakpoint = (breakpoints as Record<string, string | number>)[key]
     const value = raw[key]
     const style = sx(value, scale, props)
-    if (!breakpoint) {
-      Object.assign(styles, style)
-    } else {
+    if (breakpoint) {
       const media = createMediaQuery(breakpoint)
       Object.assign(styles, {
-        [media]: Object.assign({}, styles[media] as StyleObject, style),
+        [media]: { ...(styles[media] as StyleObject), ...style },
       })
+    } else {
+      Object.assign(styles, style)
     }
   }
   return styles
@@ -154,7 +154,7 @@ export const createParser = (config: ParserConfig): Parser => {
   const parse = ((props: Props): StyleObject => {
     let styles: StyleObject = {}
     let shouldSort = false
-    const isCacheDisabled = props.theme && props.theme.disableStyledSystemCache
+    const isCacheDisabled = props.theme?.disableStyledSystemCache
 
     for (const key in props) {
       if (!config[key]) continue
@@ -257,7 +257,7 @@ export const system = (args: SystemConfig = {}): Parser => {
 export const compose = (...parsers: (Parser | undefined)[]): Parser => {
   const config: ParserConfig = {}
   parsers.forEach((parser) => {
-    if (!parser || !parser.config) return
+    if (!parser?.config) return
     Object.assign(config, parser.config)
   })
 

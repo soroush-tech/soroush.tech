@@ -11,7 +11,7 @@ export type ObjectOrArray<T, K extends keyof never = keyof never> =
 
 export type Scale = ObjectOrArray<number | string>
 
-export type TLengthStyledSystem = string | 0 | number
+export type TLengthStyledSystem = string | number
 
 export interface Theme<TLength = TLengthStyledSystem> {
   breakpoints?: ObjectOrArray<number | string | symbol>
@@ -51,8 +51,6 @@ export type ResponsiveValue<T, ThemeType extends Theme = RequiredTheme> =
   | null
   | Array<T | null>
   | { [key in (ThemeValue<'breakpoints', ThemeType> & string) | number]?: T }
-
-type L = TLengthStyledSystem
 
 export interface SpaceProps<
   ThemeType extends Theme = RequiredTheme,
@@ -101,18 +99,18 @@ export interface PaddingProps<
 }
 
 export interface LayoutProps<ThemeType extends Theme = RequiredTheme> {
-  width?: ResponsiveValue<CSS.Property.Width<L>, ThemeType>
-  height?: ResponsiveValue<CSS.Property.Height<L>, ThemeType>
-  minWidth?: ResponsiveValue<CSS.Property.MinWidth<L>, ThemeType>
-  minHeight?: ResponsiveValue<CSS.Property.MinHeight<L>, ThemeType>
-  maxWidth?: ResponsiveValue<CSS.Property.MaxWidth<L>, ThemeType>
-  maxHeight?: ResponsiveValue<CSS.Property.MaxHeight<L>, ThemeType>
-  size?: ResponsiveValue<CSS.Property.Width<L>, ThemeType>
+  width?: ResponsiveValue<CSS.Property.Width<TLengthStyledSystem>, ThemeType>
+  height?: ResponsiveValue<CSS.Property.Height<TLengthStyledSystem>, ThemeType>
+  minWidth?: ResponsiveValue<CSS.Property.MinWidth<TLengthStyledSystem>, ThemeType>
+  minHeight?: ResponsiveValue<CSS.Property.MinHeight<TLengthStyledSystem>, ThemeType>
+  maxWidth?: ResponsiveValue<CSS.Property.MaxWidth<TLengthStyledSystem>, ThemeType>
+  maxHeight?: ResponsiveValue<CSS.Property.MaxHeight<TLengthStyledSystem>, ThemeType>
+  size?: ResponsiveValue<CSS.Property.Width<TLengthStyledSystem>, ThemeType>
   overflow?: ResponsiveValue<CSS.Property.Overflow, ThemeType>
   overflowX?: ResponsiveValue<CSS.Property.OverflowX, ThemeType>
   overflowY?: ResponsiveValue<CSS.Property.OverflowY, ThemeType>
   display?: ResponsiveValue<CSS.Property.Display, ThemeType>
-  verticalAlign?: ResponsiveValue<CSS.Property.VerticalAlign<L>, ThemeType>
+  verticalAlign?: ResponsiveValue<CSS.Property.VerticalAlign<TLengthStyledSystem>, ThemeType>
 }
 
 export interface TypographyProps<ThemeType extends Theme = RequiredTheme> {
@@ -120,7 +118,7 @@ export interface TypographyProps<ThemeType extends Theme = RequiredTheme> {
   fontSize?: ResponsiveValue<ThemeValue<'fontSizes', ThemeType>, ThemeType>
   fontWeight?: ResponsiveValue<ThemeValue<'fontWeights', ThemeType> | string, ThemeType>
   lineHeight?: ResponsiveValue<ThemeValue<'lineHeights', ThemeType>, ThemeType>
-  letterSpacing?: ResponsiveValue<CSS.Property.LetterSpacing<L>, ThemeType>
+  letterSpacing?: ResponsiveValue<CSS.Property.LetterSpacing<TLengthStyledSystem>, ThemeType>
   textAlign?: ResponsiveValue<CSS.Property.TextAlign, ThemeType>
   fontStyle?: ResponsiveValue<CSS.Property.FontStyle, ThemeType>
 }
@@ -132,10 +130,10 @@ export interface FlexboxProps<ThemeType extends Theme = RequiredTheme> {
   justifyContent?: ResponsiveValue<CSS.Property.JustifyContent, ThemeType>
   flexWrap?: ResponsiveValue<CSS.Property.FlexWrap, ThemeType>
   flexDirection?: ResponsiveValue<CSS.Property.FlexDirection, ThemeType>
-  flex?: ResponsiveValue<CSS.Property.Flex<L>, ThemeType>
+  flex?: ResponsiveValue<CSS.Property.Flex<TLengthStyledSystem>, ThemeType>
   flexGrow?: ResponsiveValue<CSS.Property.FlexGrow, ThemeType>
   flexShrink?: ResponsiveValue<CSS.Property.FlexShrink, ThemeType>
-  flexBasis?: ResponsiveValue<CSS.Property.FlexBasis<L>, ThemeType>
+  flexBasis?: ResponsiveValue<CSS.Property.FlexBasis<TLengthStyledSystem>, ThemeType>
   justifySelf?: ResponsiveValue<CSS.Property.JustifySelf, ThemeType>
   alignSelf?: ResponsiveValue<CSS.Property.AlignSelf, ThemeType>
   order?: ResponsiveValue<CSS.Property.Order, ThemeType>
@@ -144,10 +142,10 @@ export interface FlexboxProps<ThemeType extends Theme = RequiredTheme> {
 export interface PositionProps<ThemeType extends Theme = RequiredTheme> {
   position?: ResponsiveValue<CSS.Property.Position, ThemeType>
   zIndex?: ResponsiveValue<CSS.Property.ZIndex, ThemeType>
-  top?: ResponsiveValue<CSS.Property.Top<L>, ThemeType>
-  right?: ResponsiveValue<CSS.Property.Right<L>, ThemeType>
-  bottom?: ResponsiveValue<CSS.Property.Bottom<L>, ThemeType>
-  left?: ResponsiveValue<CSS.Property.Left<L>, ThemeType>
+  top?: ResponsiveValue<CSS.Property.Top<TLengthStyledSystem>, ThemeType>
+  right?: ResponsiveValue<CSS.Property.Right<TLengthStyledSystem>, ThemeType>
+  bottom?: ResponsiveValue<CSS.Property.Bottom<TLengthStyledSystem>, ThemeType>
+  left?: ResponsiveValue<CSS.Property.Left<TLengthStyledSystem>, ThemeType>
 }
 
 export interface ColorProps<
@@ -161,36 +159,42 @@ export interface ColorProps<
 }
 
 export interface BorderProps<ThemeType extends Theme = RequiredTheme> {
-  border?: ResponsiveValue<CSS.Property.Border<L>, ThemeType>
-  borderWidth?: ResponsiveValue<CSS.Property.BorderWidth<L>, ThemeType>
+  border?: ResponsiveValue<CSS.Property.Border<TLengthStyledSystem>, ThemeType>
+  borderWidth?: ResponsiveValue<CSS.Property.BorderWidth<TLengthStyledSystem>, ThemeType>
   borderStyle?: ResponsiveValue<CSS.Property.BorderStyle, ThemeType>
   borderColor?: ResponsiveValue<ThemeValue<'colors', ThemeType>, ThemeType>
   borderRadius?: ResponsiveValue<ThemeValue<'radii', ThemeType>, ThemeType>
-  borderTop?: ResponsiveValue<CSS.Property.BorderTop<L>, ThemeType>
-  borderRight?: ResponsiveValue<CSS.Property.BorderRight<L>, ThemeType>
-  borderBottom?: ResponsiveValue<CSS.Property.BorderBottom<L>, ThemeType>
-  borderLeft?: ResponsiveValue<CSS.Property.BorderLeft<L>, ThemeType>
+  borderTop?: ResponsiveValue<CSS.Property.BorderTop<TLengthStyledSystem>, ThemeType>
+  borderRight?: ResponsiveValue<CSS.Property.BorderRight<TLengthStyledSystem>, ThemeType>
+  borderBottom?: ResponsiveValue<CSS.Property.BorderBottom<TLengthStyledSystem>, ThemeType>
+  borderLeft?: ResponsiveValue<CSS.Property.BorderLeft<TLengthStyledSystem>, ThemeType>
 }
 
 export interface BackgroundProps<ThemeType extends Theme = RequiredTheme> {
-  background?: ResponsiveValue<CSS.Property.Background<L>, ThemeType>
+  background?: ResponsiveValue<CSS.Property.Background<TLengthStyledSystem>, ThemeType>
   backgroundImage?: ResponsiveValue<CSS.Property.BackgroundImage, ThemeType>
-  backgroundSize?: ResponsiveValue<CSS.Property.BackgroundSize<L>, ThemeType>
-  backgroundPosition?: ResponsiveValue<CSS.Property.BackgroundPosition<L>, ThemeType>
+  backgroundSize?: ResponsiveValue<CSS.Property.BackgroundSize<TLengthStyledSystem>, ThemeType>
+  backgroundPosition?: ResponsiveValue<
+    CSS.Property.BackgroundPosition<TLengthStyledSystem>,
+    ThemeType
+  >
   backgroundRepeat?: ResponsiveValue<CSS.Property.BackgroundRepeat, ThemeType>
 }
 
 export interface GridProps<ThemeType extends Theme = RequiredTheme> {
-  gridGap?: ResponsiveValue<CSS.Property.GridGap<L>, ThemeType>
-  gridColumnGap?: ResponsiveValue<CSS.Property.GridColumnGap<L>, ThemeType>
-  gridRowGap?: ResponsiveValue<CSS.Property.GridRowGap<L>, ThemeType>
+  gridGap?: ResponsiveValue<CSS.Property.GridGap<TLengthStyledSystem>, ThemeType>
+  gridColumnGap?: ResponsiveValue<CSS.Property.GridColumnGap<TLengthStyledSystem>, ThemeType>
+  gridRowGap?: ResponsiveValue<CSS.Property.GridRowGap<TLengthStyledSystem>, ThemeType>
   gridColumn?: ResponsiveValue<CSS.Property.GridColumn, ThemeType>
   gridRow?: ResponsiveValue<CSS.Property.GridRow, ThemeType>
   gridAutoFlow?: ResponsiveValue<CSS.Property.GridAutoFlow, ThemeType>
-  gridAutoColumns?: ResponsiveValue<CSS.Property.GridAutoColumns<L>, ThemeType>
-  gridAutoRows?: ResponsiveValue<CSS.Property.GridAutoRows<L>, ThemeType>
-  gridTemplateColumns?: ResponsiveValue<CSS.Property.GridTemplateColumns<L>, ThemeType>
-  gridTemplateRows?: ResponsiveValue<CSS.Property.GridTemplateRows<L>, ThemeType>
+  gridAutoColumns?: ResponsiveValue<CSS.Property.GridAutoColumns<TLengthStyledSystem>, ThemeType>
+  gridAutoRows?: ResponsiveValue<CSS.Property.GridAutoRows<TLengthStyledSystem>, ThemeType>
+  gridTemplateColumns?: ResponsiveValue<
+    CSS.Property.GridTemplateColumns<TLengthStyledSystem>,
+    ThemeType
+  >
+  gridTemplateRows?: ResponsiveValue<CSS.Property.GridTemplateRows<TLengthStyledSystem>, ThemeType>
   gridTemplateAreas?: ResponsiveValue<CSS.Property.GridTemplateAreas, ThemeType>
   gridArea?: ResponsiveValue<CSS.Property.GridArea, ThemeType>
 }

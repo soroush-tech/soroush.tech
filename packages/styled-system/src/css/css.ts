@@ -15,12 +15,12 @@ export const get = (
   obj: unknown,
   key?: string | number,
   def?: unknown,
-  p?: number,
+  p = 0,
   undef?: unknown
 ): unknown => {
   const path = typeof key === 'string' ? key.split('.') : [key]
   let value = obj
-  for (p = 0; p < path.length; p++) {
+  for (; p < path.length; p++) {
     value = value ? (value as Record<string, unknown>)[path[p] as string] : undef
   }
   return value === undef ? def : value
@@ -233,8 +233,8 @@ export const css =
 
       if (multiples[prop]) {
         const dirs = multiples[prop]
-        for (let i = 0; i < dirs.length; i++) {
-          result[dirs[i]] = value
+        for (const dir of dirs) {
+          result[dir] = value
         }
       } else {
         result[prop] = value
