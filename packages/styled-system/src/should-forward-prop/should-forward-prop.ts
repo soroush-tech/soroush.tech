@@ -13,8 +13,8 @@ const memoize = <V>(fn: (key: string) => V): ((key: string) => V) => {
 export const props = all.propNames
 
 export const createShouldForwardProp = (propNames: string[]): ((prop: string) => boolean) => {
-  const regex = new RegExp(`^(${propNames.join('|')})$`)
-  return memoize((prop) => isPropValid(prop) && !regex.test(prop))
+  const blocked = new Set(propNames)
+  return memoize((prop) => isPropValid(prop) && !blocked.has(prop))
 }
 
 export default createShouldForwardProp(props)

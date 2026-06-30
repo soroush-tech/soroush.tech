@@ -19,4 +19,11 @@ describe('should-forward-prop', () => {
     expect(fn('href')).toBe(true) // served from cache
     expect(fn('m')).toBe(false)
   })
+
+  it('handles regex-metacharacter prop names without throwing (exact match, no ReDoS)', () => {
+    expect(() => createShouldForwardProp(['foo(bar'])).not.toThrow() // unbalanced paren threw with RegExp
+    // 'hre.' would have matched 'href' via the old `.` wildcard and wrongly blocked it.
+    const fn = createShouldForwardProp(['hre.'])
+    expect(fn('href')).toBe(true)
+  })
 })
