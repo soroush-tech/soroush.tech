@@ -59,10 +59,12 @@ Prop interfaces exported: `SpaceProps`, `MarginProps`, `PaddingProps`, `LayoutPr
 
 ## Custom style functions are typed too
 
-`system()` / `createParser()` / `compose()` return a `Parser`. Its call signature is
-engine-agnostic — `<P extends { theme?: unknown }>(props: P) => CSSObject` — so the
-returned function drops straight into Emotion's or styled-components' `styled()` as an
-interpolation, with **no `any`**.
+`system()` / `createParser()` / `compose()` return a `Parser` — a callable that drops
+straight into Emotion's or styled-components' `styled()` as an interpolation. Its call
+signature is currently loosened to `(...args: any[]): any` to match the original
+`@styled-system` `styleFn`, so the style functions stay permissive interpolations on any
+host element. A stricter `<P extends { theme?: unknown }>(props: P) => CSSObject`
+signature is planned for a future major.
 
 ## Drop-in for existing `styled-system` + `@types/styled-system`
 

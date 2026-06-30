@@ -15,8 +15,7 @@ import styled from 'styled-components'
 import { system } from '@soroush.tech/styled-system'
 
 const textDecoration = system({
-  prop: 'textDecoration',
-  cssProperty: 'textDecoration',
+  textDecoration: true,
 })
 
 const Link = styled.a`

@@ -14,7 +14,7 @@ Styled System has a optional utility that can be passed directly to this API.
 Install the following utility to make sure your Emotion styled components do not render style props as HTML.
 
 ```sh
-npm i @soroush.tech/styled-system/should-forward-prop
+npm i @soroush.tech/styled-system
 ```
 
 In your styled component definition, pass this utility function as an option to the `styled` HOC.

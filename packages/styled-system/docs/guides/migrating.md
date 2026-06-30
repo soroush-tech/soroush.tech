@@ -31,31 +31,13 @@ The following has been removed from v5 and you should make these changes to migr
 - Negative padding values are no longer returned. This would have been invalid CSS and generally should not cause issues for migration.
 - The internal `merge` utility no longer deeply merges since it is not needed internally.
 
-## Updating Prop Types
+## Prop types
 
-If you've made use of the `.propTypes` object on Styled System functions, follow these steps to migrate to version 5.
-
-1. Install the prop types package
-
-```sh
-npm install @styled-system/prop-types
-```
-
-2. Replace existing prop type definitions in your components with prop types from the new package.
-
-```js
-import styled from 'styled-components'
-import { color, space } from '@soroush.tech/styled-system'
-import propTypes from '@styled-system/prop-types'
-
-const Box = styled('div')(color, space)
-
-Box.propTypes = {
-  // new API
-  ...propTypes.color,
-  ...propTypes.space,
-}
-```
+`@soroush.tech/styled-system` does not ship a `prop-types` package — the old
+`@styled-system/prop-types` is out of scope for this rewrite, and React 19 removed
+`propTypes` for function components entirely. Use TypeScript for prop typing instead
+(see [TypeScript](../typescript.md)): every style function carries its own typed prop
+interface (`SpaceProps`, `ColorProps`, …).
 
 ## New Features
 
