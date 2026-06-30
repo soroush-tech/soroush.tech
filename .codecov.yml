@@ -25,6 +25,12 @@ flag_management:
     - name: vite-plugin-watch
       paths:
         - packages/vite-plugin-watch/
+    - name: styled-system
+      paths:
+        - packages/styled-system/
+    - name: playwright-coverage
+      paths:
+        - packages/playwright-coverage/
     - name: api
       paths:
         - workers/api/
@@ -61,6 +67,14 @@ component_management:
       name: vite-plugin-watch
       paths:
         - packages/vite-plugin-watch/**
+    - component_id: styled-system
+      name: styled-system
+      paths:
+        - packages/styled-system/**
+    - component_id: playwright-coverage
+      name: playwright-coverage
+      paths:
+        - packages/playwright-coverage/**
     - component_id: api
       name: api
       paths:

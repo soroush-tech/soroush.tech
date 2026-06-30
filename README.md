@@ -1,16 +1,3 @@
-| Flag                     | Coverage                                                                                                                                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `web:unit`               | [![unit](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=unit&label=unit)](https://codecov.io/github/soroush-tech/soroush.tech?flag=unit)                                                                         |
-| `web:unit:browser`       | [![browser](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=browser&label=browser)](https://codecov.io/github/soroush-tech/soroush.tech?flag=browser)                                                             |
-| `web:storybook`          | [![storybook](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=storybook&label=storybook)](https://codecov.io/github/soroush-tech/soroush.tech?flag=storybook)                                                     |
-| `web:e2e`                | [![e2e](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=e2e&label=e2e)](https://codecov.io/github/soroush-tech/soroush.tech?flag=e2e)                                                                             |
-| `worker:api`             | [![api](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=api&label=api)](https://codecov.io/github/soroush-tech/soroush.tech?flag=api)                                                                             |
-| `schema`                 | [![schema](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=schema&label=schema)](https://codecov.io/github/soroush-tech/soroush.tech?flag=schema)                                                                 |
-| `eslint-config`          | [![eslint-config](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=eslint-config&label=eslint-config)](https://codecov.io/github/soroush-tech/soroush.tech?flag=eslint-config)                                     |
-| `vite-plugin-msw-server` | [![vite-plugin-msw-server](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-msw-server&label=vite-plugin-msw-server)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-msw-server) |
-| `vite-plugin-sitemap`    | [![vite-plugin-sitemap](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-sitemap&label=vite-plugin-sitemap)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-sitemap)             |
-| `vite-plugin-watch`      | [![vite-plugin-watch](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-watch&label=vite-plugin-watch)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-watch)                     |
-
 # soroush.tech
 
 **Personal portfolio of Masoud Soroush**  
@@ -42,6 +29,25 @@ pnpm dev       # starts the web app dev server
 it bootstraps `apps/web/.env.local` and `workers/api/.env` from their `default.env`
 templates (never overwriting an existing file, skipped in CI). It runs automatically
 on `pnpm install`; re-run it any time with `pnpm prepare` (or `pnpm run setup`).
+
+---
+
+## 📊 Coverage
+
+| Flag                     | Coverage                                                                                                                                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `web:unit`               | [![unit](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=unit&label=unit)](https://codecov.io/github/soroush-tech/soroush.tech?flag=unit)                                                                         |
+| `web:unit:browser`       | [![browser](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=browser&label=browser)](https://codecov.io/github/soroush-tech/soroush.tech?flag=browser)                                                             |
+| `web:storybook`          | [![storybook](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=storybook&label=storybook)](https://codecov.io/github/soroush-tech/soroush.tech?flag=storybook)                                                     |
+| `web:e2e`                | [![e2e](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=e2e&label=e2e)](https://codecov.io/github/soroush-tech/soroush.tech?flag=e2e)                                                                             |
+| `worker:api`             | [![api](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=api&label=api)](https://codecov.io/github/soroush-tech/soroush.tech?flag=api)                                                                             |
+| `schema`                 | [![schema](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=schema&label=schema)](https://codecov.io/github/soroush-tech/soroush.tech?flag=schema)                                                                 |
+| `eslint-config`          | [![eslint-config](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=eslint-config&label=eslint-config)](https://codecov.io/github/soroush-tech/soroush.tech?flag=eslint-config)                                     |
+| `vite-plugin-msw-server` | [![vite-plugin-msw-server](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-msw-server&label=vite-plugin-msw-server)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-msw-server) |
+| `vite-plugin-sitemap`    | [![vite-plugin-sitemap](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-sitemap&label=vite-plugin-sitemap)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-sitemap)             |
+| `vite-plugin-watch`      | [![vite-plugin-watch](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=vite-plugin-watch&label=vite-plugin-watch)](https://codecov.io/github/soroush-tech/soroush.tech?flag=vite-plugin-watch)                     |
+| `styled-system`          | [![styled-system](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=styled-system&label=styled-system)](https://codecov.io/github/soroush-tech/soroush.tech?flag=styled-system)                                     |
+| `playwright-coverage`    | [![playwright-coverage](https://codecov.io/github/soroush-tech/soroush.tech/branch/main/graph/badge.svg?flag=playwright-coverage&label=playwright-coverage)](https://codecov.io/github/soroush-tech/soroush.tech?flag=playwright-coverage)             |
 
 ---
 

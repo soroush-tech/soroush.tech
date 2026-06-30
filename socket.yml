@@ -1,6 +1,12 @@
 # Socket security configuration — https://docs.socket.dev/docs/socket-yml
 version: 2
 
+# Ported upstream demo apps (examples/styled-system/*) — not shipped, not in the
+# pnpm workspace, not built in CI. Ignore their manifests so demo-only dependencies
+# (react-scripts, react 16, emotion 10, …) don't raise alerts on the repo.
+projectIgnorePaths:
+  - examples/**
+
 # Disable the "obfuscated code" alert. The only packages it flags in this repo are
 # reputable build-tooling transitives that never ship in our published packages:
 #   - yargs            ← msw's CLI (msw is core; yargs only powers `msw init`)
