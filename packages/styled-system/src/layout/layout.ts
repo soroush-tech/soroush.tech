@@ -1,6 +1,6 @@
 import { get, system, type SystemConfig, type Transform } from '@soroush.tech/styled-system/core'
 
-const isNumber = (n: unknown): n is number => typeof n === 'number' && !isNaN(n)
+const isNumber = (n: unknown): n is number => typeof n === 'number' && !Number.isNaN(n)
 
 const getWidth: Transform = (n, scale) =>
   get(scale, n as string, !isNumber(n) || n > 1 ? n : n * 100 + '%')

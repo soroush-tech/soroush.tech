@@ -57,36 +57,8 @@ type L = TLengthStyledSystem
 export interface SpaceProps<
   ThemeType extends Theme = RequiredTheme,
   TVal = ThemeValue<'space', ThemeType>,
-> {
-  m?: ResponsiveValue<TVal, ThemeType>
-  margin?: ResponsiveValue<TVal, ThemeType>
-  mt?: ResponsiveValue<TVal, ThemeType>
-  marginTop?: ResponsiveValue<TVal, ThemeType>
-  mr?: ResponsiveValue<TVal, ThemeType>
-  marginRight?: ResponsiveValue<TVal, ThemeType>
-  mb?: ResponsiveValue<TVal, ThemeType>
-  marginBottom?: ResponsiveValue<TVal, ThemeType>
-  ml?: ResponsiveValue<TVal, ThemeType>
-  marginLeft?: ResponsiveValue<TVal, ThemeType>
-  mx?: ResponsiveValue<TVal, ThemeType>
-  marginX?: ResponsiveValue<TVal, ThemeType>
-  my?: ResponsiveValue<TVal, ThemeType>
-  marginY?: ResponsiveValue<TVal, ThemeType>
-  p?: ResponsiveValue<TVal, ThemeType>
-  padding?: ResponsiveValue<TVal, ThemeType>
-  pt?: ResponsiveValue<TVal, ThemeType>
-  paddingTop?: ResponsiveValue<TVal, ThemeType>
-  pr?: ResponsiveValue<TVal, ThemeType>
-  paddingRight?: ResponsiveValue<TVal, ThemeType>
-  pb?: ResponsiveValue<TVal, ThemeType>
-  paddingBottom?: ResponsiveValue<TVal, ThemeType>
-  pl?: ResponsiveValue<TVal, ThemeType>
-  paddingLeft?: ResponsiveValue<TVal, ThemeType>
-  px?: ResponsiveValue<TVal, ThemeType>
-  paddingX?: ResponsiveValue<TVal, ThemeType>
-  py?: ResponsiveValue<TVal, ThemeType>
-  paddingY?: ResponsiveValue<TVal, ThemeType>
-}
+>
+  extends MarginProps<ThemeType, TVal>, PaddingProps<ThemeType, TVal> {}
 
 export interface MarginProps<
   ThemeType extends Theme = RequiredTheme,

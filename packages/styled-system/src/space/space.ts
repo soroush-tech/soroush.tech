@@ -8,7 +8,7 @@ import {
 
 const spaceScale = [0, 4, 8, 16, 32, 64, 128, 256, 512]
 
-const isNumber = (n: unknown): n is number => typeof n === 'number' && !isNaN(n)
+const isNumber = (n: unknown): n is number => typeof n === 'number' && !Number.isNaN(n)
 
 const getMargin: Transform = (n, scale) => {
   if (!isNumber(n)) {
