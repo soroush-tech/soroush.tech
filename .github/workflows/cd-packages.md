@@ -14,7 +14,7 @@ on:
       package: # which package to publish
         required: true
         type: choice
-        options: [vite-plugin-msw-server]
+        options: [playwright-coverage, styled-system, vite-plugin-msw-server] # generated — see below
       notes: # GitHub Release notes (markdown)
         required: true
         type: string
@@ -61,7 +61,7 @@ permissions:
 | #   | Step                 | Detail                                                                                                                                                                                                                                                                                                                       |
 | --- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | Checkout             | `actions/checkout@v5`, no persisted creds                                                                                                                                                                                                                                                                                    |
-| 2   | Validate package     | `inputs.package` (read via `$PKG` env, never spliced into shell) must exist under `packages/` and be non-`private`. The choice list is static YAML, so this catches drift and blocks a private dir.                                                                                                                          |
+| 2   | Validate package     | `inputs.package` (read via `$PKG` env, never spliced into shell) must exist under `packages/` and be non-`private`. Defense-in-depth in case the generated choice list is hand-edited or a private dir slips through.                                                                                                        |
 | 3   | Read Node.js version | `cat .nvmrc` → `$GITHUB_ENV` (`NODE_VERSION`)                                                                                                                                                                                                                                                                                |
 | 4   | Setup pnpm           | `pnpm/action-setup@v5`                                                                                                                                                                                                                                                                                                       |
 | 5   | Setup Node           | `actions/setup-node@v5`, `node-version: $NODE_VERSION`, `cache: pnpm` (deps cache), `registry-url: https://registry.npmjs.org`                                                                                                                                                                                               |
@@ -112,6 +112,24 @@ itself has no release-notes field** — the GitHub Release is the canonical home
 and the package README can link to it.
 
 ---
+
+## The `package` choice list
+
+`workflow_dispatch` `choice` options must be literal YAML — GitHub can't populate them from
+the repo at dispatch time — so the list is **generated**, not hand-maintained. Between the
+`# gen:publish-options start` / `end` markers, `scripts/gen-publish-options.mjs` writes every
+non-`private` package under `packages/`, sorted. Regenerate after adding, removing, or
+un-`private`-ing a package:
+
+```sh
+pnpm gen:publish-options   # rewrites the options block; commit the result
+```
+
+The **husky `pre-commit` hook** runs `pnpm gen:publish-options --check` and fails the commit
+if the list is stale — so a package can't be added to `packages/` without its dropdown entry
+landing in the same change. This is enforced at commit time, not in the workflow: an unlisted
+package simply can't be dispatched, and re-checking a listed one during publish would only
+catch drift that publishing can't act on.
 
 ## Releasing a package
 
