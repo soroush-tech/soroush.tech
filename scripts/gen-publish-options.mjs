@@ -63,11 +63,11 @@ const edits = [
   },
 ]
 
-const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
 
 function applyRegion(source, { start, end, lines }, path) {
   const region = new RegExp(
-    `([ \\t]*)${escape(start)}[^\\n]*\\n[\\s\\S]*?\\n[ \\t]*${escape(end)}[^\\n]*`
+    String.raw`([ \t]*)${escape(start)}[^\n]*\n[\s\S]*?\n[ \t]*${escape(end)}[^\n]*`
   )
   const match = region.exec(source)
   if (!match) {
