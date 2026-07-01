@@ -94,6 +94,36 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
 - `prepublishOnly: pnpm build`; verify the tarball with `pnpm pack` before publishing.
 
+### Releasing to npm — always via pnpm, never `npm publish`
+
+The `publishConfig` → `dist` swap above is a **pnpm feature**. `pnpm pack` / `pnpm publish` rewrite the top-level `exports`/`main`/`module`/`types` to the `dist` targets before packing. **`npm publish` does not** — it ships the raw `exports: "./src/index.ts"`, but the tarball only contains `dist` (`files: ["dist"]`), so **every consumer's `import` fails with `MODULE_NOT_FOUND`** (`.../src/index.ts` not found). A package published this way looks fine in `npm view` metadata but is dead on install.
+
+So release **only** one of these two ways:
+
+1. **CI (preferred)** — dispatch the [`cd-packages.yml`](../.github/workflows/cd-packages.yml) workflow (manual `workflow_dispatch`, main-only, npm Trusted Publishing via OIDC). It runs `pnpm publish`, so the swap is always applied and there is no long-lived token. Add the package to the workflow's `package` choice list first.
+2. **Local, only if you must** — from the repo root:
+
+   ```sh
+   # bump the version in packages/<name>/package.json first (a version can't be republished)
+   pnpm --filter '@soroush.tech/<name>' publish --no-git-checks --otp=<code>
+   ```
+
+   `--no-git-checks` is needed off a clean/main branch; quote the `@scope/name` in PowerShell (a bare `@` is the splat operator). **Do not** `cd packages/<name> && npm publish` — that is the exact thing that ships the broken `./src` exports.
+
+**Verify the published artifact, not just the metadata.** Download the real tarball and confirm `exports` resolves to `dist`:
+
+```sh
+npm pack '@soroush.tech/<name>@<version>'        # downloads from the registry
+tar -xzf soroush.tech-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
+# exports must point at ./dist/*, and the tarball must NOT rely on any ./src file
+```
+
+If a broken version already went out, you can't overwrite it — **bump, republish with pnpm, then deprecate** the bad ones:
+
+```sh
+npm deprecate '@soroush.tech/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
+```
+
 ---
 
 ## Testing — 100% coverage, no exceptions
@@ -103,7 +133,7 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
 - Co-locate `index.test.ts` next to `src/index.ts`; vitest with v8 coverage.
 - Every package ships a `vitest.config.ts` with `coverage.reporter: ['text', 'lcov']` (v8 provider, `thresholds: { 100: true }`). The `lcov` reporter is **required** — CI reads each package's `coverage/lcov.info` to rewrite `SF:` paths and upload to Codecov, so a package without it (or relying on vitest's default reporters) breaks the coverage step.
 - Each package exposes `test` and `test:coverage` scripts; the root aggregates with `pnpm -r test:coverage`.
-- **Register the package with Codecov** so its coverage surfaces and doesn't regress to "No report uploaded". In [`.codecov.yml`](../.codecov.yml) add the package under **both** `flag_management.individual_flags` (it inherits `carryforward: true`, so the badge keeps its last report on commits that don't re-upload the flag) **and** `component_management.individual_components` — each pointing at `packages/<name>/` (use the `/**` glob for the component). Then add a row to the **Coverage** table in the root [`README.md`](../README.md), reusing the existing badge URL shape (`?flag=<name>&label=<name>`). Flag name == component id == directory name.
+- **Register the package with Codecov** so its coverage surfaces and doesn't regress to "No report uploaded". Run `pnpm gen:publish-options` to sync [`.codecov.yml`](../.codecov.yml): it regenerates every package's entry under **both** `flag_management.individual_flags` (which inherits `carryforward: true`, so the badge keeps its last report on commits that don't re-upload the flag) **and** `component_management.individual_components` (`packages/<name>/` for the flag, the `/**` glob for the component). The pre-commit `--check` fails if these drift. Then add a row to the **Coverage** table in the root [`README.md`](../README.md), reusing the existing badge URL shape (`?flag=<name>&label=<name>`). Flag name == component id == directory name.
 - Plugin code that depends on the Vite/Rollup runtime is exercised by invoking the exported factory and asserting the returned plugin object's hooks; environment-dependent calls jsdom/node can't run are isolated behind injectable inputs (e.g. the msw server is passed in) so they stay unit-testable.
 
 ---

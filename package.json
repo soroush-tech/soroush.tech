@@ -13,6 +13,7 @@
     "postprepare": "pnpm -r run setup",
     "setup": "pnpm -r run setup",
     "format": "prettier --write .",
+    "gen:publish-options": "node scripts/gen-publish-options.mjs",
     "dev": "pnpm --parallel -r dev",
     "dev:web": "pnpm --filter @soroush/web dev",
     "dev:api": "pnpm --filter @soroush/api dev",
