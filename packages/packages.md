@@ -94,6 +94,36 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
 - `prepublishOnly: pnpm build`; verify the tarball with `pnpm pack` before publishing.
 
+### Releasing to npm — always via pnpm, never `npm publish`
+
+The `publishConfig` → `dist` swap above is a **pnpm feature**. `pnpm pack` / `pnpm publish` rewrite the top-level `exports`/`main`/`module`/`types` to the `dist` targets before packing. **`npm publish` does not** — it ships the raw `exports: "./src/index.ts"`, but the tarball only contains `dist` (`files: ["dist"]`), so **every consumer's `import` fails with `MODULE_NOT_FOUND`** (`.../src/index.ts` not found). A package published this way looks fine in `npm view` metadata but is dead on install.
+
+So release **only** one of these two ways:
+
+1. **CI (preferred)** — dispatch the [`cd-packages.yml`](../.github/workflows/cd-packages.yml) workflow (manual `workflow_dispatch`, main-only, npm Trusted Publishing via OIDC). It runs `pnpm publish`, so the swap is always applied and there is no long-lived token. Add the package to the workflow's `package` choice list first.
+2. **Local, only if you must** — from the repo root:
+
+   ```sh
+   # bump the version in packages/<name>/package.json first (a version can't be republished)
+   pnpm --filter '@soroush.tech/<name>' publish --no-git-checks --otp=<code>
+   ```
+
+   `--no-git-checks` is needed off a clean/main branch; quote the `@scope/name` in PowerShell (a bare `@` is the splat operator). **Do not** `cd packages/<name> && npm publish` — that is the exact thing that ships the broken `./src` exports.
+
+**Verify the published artifact, not just the metadata.** Download the real tarball and confirm `exports` resolves to `dist`:
+
+```sh
+npm pack '@soroush.tech/<name>@<version>'        # downloads from the registry
+tar -xzf soroush.tech-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
+# exports must point at ./dist/*, and the tarball must NOT rely on any ./src file
+```
+
+If a broken version already went out, you can't overwrite it — **bump, republish with pnpm, then deprecate** the bad ones:
+
+```sh
+npm deprecate '@soroush.tech/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
+```
+
 ---
 
 ## Testing — 100% coverage, no exceptions
