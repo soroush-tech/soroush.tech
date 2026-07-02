@@ -246,7 +246,7 @@
     "@emotion/is-prop-valid": "^1.4.0",
     "@soroush.tech/eslint-config": "workspace:*",
     "@vitest/coverage-v8": "^4.1.9",
-    "eslint": "^10.5.0",
+    "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "tsdown": "^0.22.3",
     "typescript": "~6.0.3",
